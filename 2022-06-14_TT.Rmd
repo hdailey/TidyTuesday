@@ -1,0 +1,112 @@
+---
+title: "Tidy Tuesday - June 14, 2022"
+output: html_notebook
+---
+```{r}
+library(tidyverse)
+library(scales)
+library(patchwork)
+library(lubridate)
+library(geofacet)
+library(ggtext)
+library(sysfonts)
+```
+
+
+```{r}
+#Read in data
+tuesdata <- tidytuesdayR::tt_load(Sys.Date())
+
+#process and clean data
+drought <- tuesdata$drought %>%
+  subset(select = -c(`0`,`-9`)) %>%                     #Drop 0 and -9 column
+  mutate(DATE = gsub('d_', "", DATE)) %>%               #Find pattern in date
+  mutate(dateFmt = as.Date(DATE, format = '%Y%m%d')) %>%       #Convert Date
+  mutate(dateTmp = as.integer(str_extract(DATE, "\\d\\d\\d\\d\\d\\d\\d\\d"))) %>%
+  filter(dateTmp > 20000101) %>%
+  mutate(year = as.integer(str_extract(dateTmp, "\\d\\d\\d\\d"))) %>%
+  mutate(state = str_replace(state,    "-", " ")) %>% #Remove space
+  mutate(state = str_to_title(state)) %>%
+  mutate(state_abb = state.abb[match(state, state.name)])
+
+
+droughtCleaned <- drought %>%
+  group_by(year, state, state_abb) %>%
+  summarise(across(D0:D4, ~mean(.x)))
+
+tmpPlot <- ggplot(droughtCleaned) + 
+  geom_text(aes(x = 2015, y = 50, label = droughtCleaned$state_abb),
+            size = 5, color = "grey90") +
+    scale_x_continuous(limits = c(2000, 2022),
+                     breaks = c(2000, 2022)) +
+  geom_area(aes(x = year, y = D0), fill= "#d3c453") +
+  geom_area(aes(x = year, y = D1), fill= "#e5995e") +
+  geom_area(aes(x = year, y = D2), fill= "#dd7137") +
+  geom_area(aes(x = year, y = D3), fill= "#c64430") +
+  geom_area(aes(x = year, y = D4), fill= "#96190b") +
+  facet_geo(~state, grid = us_state_grid2) + 
+  theme_minimal() +
+  theme(
+    strip.text = element_blank(),
+    panel.grid.major.x = element_blank(),
+    panel.grid.major.y = element_blank(),
+    panel.grid.minor.x = element_blank(),
+    panel.grid.minor.y = element_blank(),
+    axis.title = element_blank(),
+    axis.text = element_text(size = 8))
+
+
+tmpPlot
+```
+
+```
+
+
+
+
+
+
+```{r}
+#Generate histogram for each drought index category -- from MattHondrakis, not piped
+droughtPairs <- gather(keep(drought, is.numeric))
+colnames(droughtPairs) <- c('DroughtIndex', 'SPI')
+
+
+plotDI <- ggplot(droughtPairs, aes(SPI)) + 
+  geom_histogram() + 
+  facet_wrap(~DroughtIndex)
+
+plotDI
+```
+
+```{r}
+#Drought by State
+drought_fips <- tuesdata$`drought-fips`
+
+drought_fips %>%
+  group_by(State) %>%
+  summarise(avg = mean(DSCI)) %>%
+  arrange(-avg) %>%
+  head(25) %>%
+  ggplot(aes(avg, fct_reorder(State, avg))) + geom_col(color = 'black', fill = 'lightblue') +
+  labs(y = "", x = "Average Drought", 
+       title = "Top 25 States with Most Severe Drought", subtitle = "Drought Scale = 0-500") +
+  theme(plot.title = element_text(hjust = 0.5),
+        plot.subtitle = element_text(hjust = 0.5))
+```
+
+```{r}
+#Average Drought
+avgDrought <- drought_fips %>%
+  group_by(date) %>%
+  summarize(avgDrought = mean(DSCI)) %>%
+  mutate(month = month(date, label = TRUE))
+
+avgDrought %>%
+  ggplot(aes(date, avgDrought)) +
+  geom_line() +
+  geom_point(aes(color = as.numeric(month))) +
+  facet_wrap(~year(date), scales = 'free') +
+  scale_color_gradient2(low = 'blue', mid = 'black', high = 'red', midpoint = 6)
+```
+
