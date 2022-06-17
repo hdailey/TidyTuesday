@@ -4,30 +4,99 @@ output: html_notebook
 ---
 ```{r}
 library(tidyverse)
-library(scales)
-library(patchwork)
+#library(scales)
+#library(patchwork)
 library(lubridate)
 library(geofacet)
 library(ggtext)
-library(sysfonts)
+#library(sysfonts)
+library(cowplot)
 ```
 
 
 ```{r}
 #Read in data
-tuesdata <- tidytuesdayR::tt_load(Sys.Date())
+tuesdata <- tidytuesdayR::tt_load("2022-06-14")
 
 #process and clean data
 drought <- tuesdata$drought %>%
-  subset(select = -c(`0`,`-9`)) %>%                     #Drop 0 and -9 column
-  mutate(DATE = gsub('d_', "", DATE)) %>%               #Find pattern in date
-  mutate(dateFmt = as.Date(DATE, format = '%Y%m%d')) %>%       #Convert Date
-  mutate(dateTmp = as.integer(str_extract(DATE, "\\d\\d\\d\\d\\d\\d\\d\\d"))) %>%
-  filter(dateTmp > 20000101) %>%
-  mutate(year = as.integer(str_extract(dateTmp, "\\d\\d\\d\\d"))) %>%
-  mutate(state = str_replace(state,    "-", " ")) %>% #Remove space
-  mutate(state = str_to_title(state)) %>%
-  mutate(state_abb = state.abb[match(state, state.name)])
+  subset(select = -c(`0`,`-9`)) %>%                                  #Drop 0 and -9 column
+  mutate(DATE = gsub('d_', "", DATE),                                #Find pattern in date
+         DATE = as.Date(DATE, format = '%Y%m%d'),                 #Convert Date
+         state = str_replace(state,    "-", " "),                    #Remove space
+         state = str_to_title(state),
+         state_abb = state.abb[match(state, state.name)],
+         D0 = D0 - D1,
+         D1 = D1 - D2,
+         D2 = D2 - D3,
+         D3 = D3 - D4,
+         W0 = W0 - W1,
+         W1 = W1 - W2,
+         W2 = W2 - W3,
+         W3 = W3 - W4) %>%
+  filter(year(DATE) >= 2000,
+         !state %in% c('Hawaii', 'Alaska')) %>%
+  group_by(state_abb, DATE, state) %>%
+  pivot_longer(-c(state_abb, DATE, state), names_to = 'DI', values_to = 'Perc')
+
+drought <- drought %>%
+  mutate(Perc = ifelse(grepl('D', DI) == Perc, Perc, Perc * -1), 
+         DI = factor(DI), 
+                       levels = c('D4', 'D3', 'D2', 'D1', 'D0',
+                                  'W4', 'W3', 'W2', 'W1', 'W0'),
+                       labels = c('Exceptional Drought', 'Extreme Drought',
+                                  'Severe Drought', 'Moderate Drought',
+                                  'Abnormally Dry', 'Exceptionally Wet',
+                                  'Extreme Wet', 'Severe Wet', 'Moderate Wet',
+                                  'Abnormally Wet'))
+  
+#Generate Grid (US - HI, AK)
+gridUS = us_state_grid1 %>%
+  filter(!code %in% c('HI', 'AK'))
+
+#plot
+
+##Generate Color Palette
+colPal <- c("black", "black", "black", "blue", "red",
+            "black", "black", "black", "black", "black") 
+
+
+plotDrought <- ggplot(drought) +
+  geom_text(aes(as.Date('2010-10-15'), y = 65, label = state_abb), 
+            size = 4, color = 'grey70', family = 'sans', fontface = 'bold') +
+  geom_area(aes(x = DATE, y = Perc, fill = labels)) +
+  scale_fill_manual(values = colPal) +
+  facet_geo(~state, grid = gridUS) +
+  theme_void() +
+  theme(plot.background = element_rect(fill = 'aliceblue', colour = 'aliceblue'),
+        strip.text = element_blank(),
+        legend.direction = 'horizontal',
+        legend.position = 'top',
+        legend.title = element_text(family = 'sans', face = 'bold', size = 45, hjust = 0.5, color = cols[7]),
+        legend.text = element_text(family = 'sans', face = 'bold', color = 'grey60', size = 17, vjust = 5),
+        plot.margin = margin(6.5, 1, 1.5, 1, unit = 'cm')) +
+  guides(fill = guide_legend(nrow = 2, byrow = TRUE, reverse = TRUE, title = 'Conditions',
+                             title.position = 'top', label.position = 'bottom',
+                             keywidth = 8, vjust = -5))
+
+Annotated <- ggdraw(plotDrought) +
+  draw_text(x=0.5, y=0.95, text="Drought & Wet Conditions", family= "sans",
+            fontface="bold", size=88, color= cols[6]) +
+  draw_text(x=0.5, y=0.86, 
+            text="Plot displays abnormal drought and wet conditions in the United States from 2012 to 2022. Area plot\nrepresents the total land area of each state experiencing the specified condition.", 
+            family= "sans", fontface="bold", size=25, color=cols[7], lineheight=1) +
+  draw_text('Source: National Integrated Drought Information System', x=0.5, y=0.02, 
+            fontface="bold", size=16, family = "sans", color=cols[6])
+
+ggsave("~/Desktop/DroughtPlot.png", width=18, height = 13)
+
+
+
+
+
+  # mutate(dateTmp = as.integer(str_extract(DATE, "\\d\\d\\d\\d\\d\\d\\d\\d"))) %>
+  # filter(dateTmp > 20000101) %>%
+  # mutate(year = as.integer(str_extract(dateTmp, "\\d\\d\\d\\d"))) %>%
 
 
 droughtCleaned <- drought %>%
