@@ -9,7 +9,7 @@ library(tidyverse)
 library(lubridate)
 library(geofacet)
 library(ggtext)
-#library(sysfonts)
+library(sysfonts)
 library(cowplot)
 ```
 
@@ -17,16 +17,24 @@ library(cowplot)
 ```{r}
 #Read in data
 tuesdata <- tidytuesdayR::tt_load("2022-06-14")
-
-#process and clean data
 drought <- tuesdata$drought %>%
-  subset(select = -c(`0`,`-9`)) %>%                                  #Drop 0 and -9 column
+  subset(select = -c(`0`, `-9`)) %>%
   mutate(DATE = gsub('d_', "", DATE),                                #Find pattern in date
-         DATE = as.Date(DATE, format = '%Y%m%d'),                 #Convert Date
+         DATE = as.Date(DATE, format = '%Y%m%d'),                    #Convert Date
          state = str_replace(state,    "-", " "),                    #Remove space
          state = str_to_title(state),
-         state_abb = state.abb[match(state, state.name)],
-         D0 = D0 - D1,
+         state_abb = state.abb[match(state, state.name)])
+
+#Process and Clean -- Average by Date and State
+droughtCleaned <- drought %>%
+  group_by(DATE, state) %>%
+  summarize(across(D0:W4, ~mean(.x)))
+
+
+
+#process and clean data -- Mapped 
+droughtWet <- drought %>%                               
+  mutate(D0 = D0 - D1,
          D1 = D1 - D2,
          D2 = D2 - D3,
          D3 = D3 - D4,
@@ -37,145 +45,69 @@ drought <- tuesdata$drought %>%
   filter(year(DATE) >= 2000,
          !state %in% c('Hawaii', 'Alaska')) %>%
   group_by(state_abb, DATE, state) %>%
-  pivot_longer(-c(state_abb, DATE, state), names_to = 'DI', values_to = 'Perc')
-
-drought <- drought %>%
-  mutate(Perc = ifelse(grepl('D', DI) == Perc, Perc, Perc * -1), 
-         DI = factor(DI), 
-                       levels = c('D4', 'D3', 'D2', 'D1', 'D0',
-                                  'W4', 'W3', 'W2', 'W1', 'W0'),
-                       labels = c('Exceptional Drought', 'Extreme Drought',
-                                  'Severe Drought', 'Moderate Drought',
-                                  'Abnormally Dry', 'Exceptionally Wet',
-                                  'Extreme Wet', 'Severe Wet', 'Moderate Wet',
-                                  'Abnormally Wet'))
+  pivot_longer(-c(state_abb, DATE, state), names_to = 'DI', values_to = 'Perc') %>%
+  mutate(Perc = ifelse(grepl('D', DI), Perc * 1, Perc * -1))
   
 #Generate Grid (US - HI, AK)
 gridUS = us_state_grid1 %>%
   filter(!code %in% c('HI', 'AK'))
 
-#plot
+#Generate Color Palette
+colPal <- c("#FDDBC7", "#D1E5F0", "#67001F", "#053061", "#B2182B",
+            "#2166AC", "#F4A582", "#92C5DE", "#D6604D", "#4393C3") 
 
-##Generate Color Palette
-colPal <- c("black", "black", "black", "blue", "red",
-            "black", "black", "black", "black", "black") 
-
-
-plotDrought <- ggplot(drought) +
-  geom_text(aes(as.Date('2010-10-15'), y = 65, label = state_abb), 
+#Plot
+plotDrought <- ggplot(droughtWet) +
+  geom_text(aes(as.Date('2018-10-15'), y = 65, label = state_abb), 
             size = 4, color = 'grey70', family = 'sans', fontface = 'bold') +
-  geom_area(aes(x = DATE, y = Perc, fill = labels)) +
-  scale_fill_manual(values = colPal) +
+  geom_area(aes(x = DATE, y = Perc, fill = DI)) +
+  scale_fill_manual(values = c("#E0F3F8", "#ABD9E9", "#74ADD1", "#4575B4", "#313695",
+                             "#FEE090", "#FDAE61", "#F46D43", "#D73027", "#A50026"),
+                    breaks = c("W0", "W1", 'W2', "W3", "W4", "D0", "D1", "D2", "D3", "D4"),                 
+                    labels = c("Abnormal Wet Spell", "Moderate Wet Spell", "Severe Wet Spell", 
+                               "Extreme Wet Spell", "Exceptional Wet Spell",
+                               "Abnormally Dry", "Moderate Drought", "Severe Drought",
+                               "Extreme Drought", "Exceptional Drought")) +
   facet_geo(~state, grid = gridUS) +
   theme_void() +
-  theme(plot.background = element_rect(fill = 'aliceblue', colour = 'aliceblue'),
+  theme(plot.background = element_rect(fill = 'white', colour = 'white'),
+        plot.margin = margin(3,0.5,0.5,0.5, "cm"),
         strip.text = element_blank(),
         legend.direction = 'horizontal',
-        legend.position = 'top',
-        legend.title = element_text(family = 'sans', face = 'bold', size = 45, hjust = 0.5, color = cols[7]),
-        legend.text = element_text(family = 'sans', face = 'bold', color = 'grey60', size = 17, vjust = 5),
-        plot.margin = margin(6.5, 1, 1.5, 1, unit = 'cm')) +
-  guides(fill = guide_legend(nrow = 2, byrow = TRUE, reverse = TRUE, title = 'Conditions',
-                             title.position = 'top', label.position = 'bottom',
+        legend.position = 'bottom',
+        legend.justification = 'center',
+        legend.text = element_text(margin = margin(0, -1, 0, -1, "cm"), family = "sans", face = "bold",
+                                   size = 10, color = "grey60"),
+        legend.title = element_text(family = 'sans', face = 'bold', size = 16, 
+                                    hjust = 0.5, color = 'grey60'),
+        legend.key.size = unit(0.5, "cm")) +
+  guides(fill = guide_legend(nrow = 1, byrow = TRUE, reverse = FALSE, title = 'Drought Conditions',
+                             title.position = 'top', title.justification = 'center',
+                             label.position = 'bottom', 
                              keywidth = 8, vjust = -5))
 
-Annotated <- ggdraw(plotDrought) +
-  draw_text(x=0.5, y=0.95, text="Drought & Wet Conditions", family= "sans",
-            fontface="bold", size=88, color= cols[6]) +
-  draw_text(x=0.5, y=0.86, 
-            text="Plot displays abnormal drought and wet conditions in the United States from 2012 to 2022. Area plot\nrepresents the total land area of each state experiencing the specified condition.", 
-            family= "sans", fontface="bold", size=25, color=cols[7], lineheight=1) +
-  draw_text('Source: National Integrated Drought Information System', x=0.5, y=0.02, 
-            fontface="bold", size=16, family = "sans", color=cols[6])
+plotDroughtAnn <- ggdraw(plotDrought) +
+  draw_text("Drought & Wet Conditions Across the United States", x = 0.5, y = 0.9,
+            fontface = "bold", size = 28, family = "sans", color = "grey60") +
+  draw_text('Source: National Integrated Drought Information System', x = 0.9, y = 0.01,
+            fontface = "bold", size = 8, family = "sans", color = 'grey60')
 
-ggsave("~/Desktop/DroughtPlot.png", width=18, height = 13)
+#Process and Clean -- Drought by State
+droughtFIPS <- tuesdata$`drought-fips`
 
-
-
-
-
-  # mutate(dateTmp = as.integer(str_extract(DATE, "\\d\\d\\d\\d\\d\\d\\d\\d"))) %>
-  # filter(dateTmp > 20000101) %>%
-  # mutate(year = as.integer(str_extract(dateTmp, "\\d\\d\\d\\d"))) %>%
-
-
-droughtCleaned <- drought %>%
-  group_by(year, state, state_abb) %>%
-  summarise(across(D0:D4, ~mean(.x)))
-
-tmpPlot <- ggplot(droughtCleaned) + 
-  geom_text(aes(x = 2015, y = 50, label = droughtCleaned$state_abb),
-            size = 5, color = "grey90") +
-    scale_x_continuous(limits = c(2000, 2022),
-                     breaks = c(2000, 2022)) +
-  geom_area(aes(x = year, y = D0), fill= "#d3c453") +
-  geom_area(aes(x = year, y = D1), fill= "#e5995e") +
-  geom_area(aes(x = year, y = D2), fill= "#dd7137") +
-  geom_area(aes(x = year, y = D3), fill= "#c64430") +
-  geom_area(aes(x = year, y = D4), fill= "#96190b") +
-  facet_geo(~state, grid = us_state_grid2) + 
-  theme_minimal() +
-  theme(
-    strip.text = element_blank(),
-    panel.grid.major.x = element_blank(),
-    panel.grid.major.y = element_blank(),
-    panel.grid.minor.x = element_blank(),
-    panel.grid.minor.y = element_blank(),
-    axis.title = element_blank(),
-    axis.text = element_text(size = 8))
-
-
-tmpPlot
-```
-
-```
-
-
-
-
-
-
-```{r}
-#Generate histogram for each drought index category -- from MattHondrakis, not piped
-droughtPairs <- gather(keep(drought, is.numeric))
-colnames(droughtPairs) <- c('DroughtIndex', 'SPI')
-
-
-plotDI <- ggplot(droughtPairs, aes(SPI)) + 
-  geom_histogram() + 
-  facet_wrap(~DroughtIndex)
-
-plotDI
-```
-
-```{r}
-#Drought by State
-drought_fips <- tuesdata$`drought-fips`
-
-drought_fips %>%
+plotDroughtFIPS <- droughtFIPS %>%
   group_by(State) %>%
   summarise(avg = mean(DSCI)) %>%
   arrange(-avg) %>%
-  head(25) %>%
-  ggplot(aes(avg, fct_reorder(State, avg))) + geom_col(color = 'black', fill = 'lightblue') +
+  ggplot(aes(avg, fct_reorder(State, avg))) + 
+  geom_col(width = 0.8, color = 'black', fill = 'tomato') +
   labs(y = "", x = "Average Drought", 
-       title = "Top 25 States with Most Severe Drought", subtitle = "Drought Scale = 0-500") +
+       title = "Severe Drought by State", subtitle = "Drought Scale = 0-200") +
+  theme_cowplot() +
   theme(plot.title = element_text(hjust = 0.5),
-        plot.subtitle = element_text(hjust = 0.5))
+        plot.subtitle = element_text(hjust = 0.5),
+        axis.text =  element_text(size = 8))
+
+
+
 ```
-
-```{r}
-#Average Drought
-avgDrought <- drought_fips %>%
-  group_by(date) %>%
-  summarize(avgDrought = mean(DSCI)) %>%
-  mutate(month = month(date, label = TRUE))
-
-avgDrought %>%
-  ggplot(aes(date, avgDrought)) +
-  geom_line() +
-  geom_point(aes(color = as.numeric(month))) +
-  facet_wrap(~year(date), scales = 'free') +
-  scale_color_gradient2(low = 'blue', mid = 'black', high = 'red', midpoint = 6)
-```
-
