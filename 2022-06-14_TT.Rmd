@@ -4,8 +4,6 @@ output: html_notebook
 ---
 ```{r}
 library(tidyverse)
-#library(scales)
-#library(patchwork)
 library(lubridate)
 library(geofacet)
 library(ggtext)
@@ -17,6 +15,9 @@ library(cowplot)
 ```{r}
 #Read in data
 tuesdata <- tidytuesdayR::tt_load("2022-06-14")
+
+
+#process and clean data
 drought <- tuesdata$drought %>%
   subset(select = -c(`0`, `-9`)) %>%
   mutate(DATE = gsub('d_', "", DATE),                                #Find pattern in date
@@ -29,8 +30,6 @@ drought <- tuesdata$drought %>%
 droughtCleaned <- drought %>%
   group_by(DATE, state) %>%
   summarize(across(D0:W4, ~mean(.x)))
-
-
 
 #process and clean data -- Mapped 
 droughtWet <- drought %>%                               
@@ -47,6 +46,7 @@ droughtWet <- drought %>%
   group_by(state_abb, DATE, state) %>%
   pivot_longer(-c(state_abb, DATE, state), names_to = 'DI', values_to = 'Perc') %>%
   mutate(Perc = ifelse(grepl('D', DI), Perc * 1, Perc * -1))
+
   
 #Generate Grid (US - HI, AK)
 gridUS = us_state_grid1 %>%
@@ -71,7 +71,7 @@ plotDrought <- ggplot(droughtWet) +
   facet_geo(~state, grid = gridUS) +
   theme_void() +
   theme(plot.background = element_rect(fill = 'white', colour = 'white'),
-        plot.margin = margin(3,0.5,0.5,0.5, "cm"),
+        plot.margin = margin(3, 0.5, 0.5, 0.5, "cm"),
         strip.text = element_blank(),
         legend.direction = 'horizontal',
         legend.position = 'bottom',
@@ -83,14 +83,17 @@ plotDrought <- ggplot(droughtWet) +
         legend.key.size = unit(0.5, "cm")) +
   guides(fill = guide_legend(nrow = 1, byrow = TRUE, reverse = FALSE, title = 'Drought Conditions',
                              title.position = 'top', title.justification = 'center',
-                             label.position = 'bottom', 
+                             label.position = 'bottom',
                              keywidth = 8, vjust = -5))
 
 plotDroughtAnn <- ggdraw(plotDrought) +
-  draw_text("Drought & Wet Conditions Across the United States", x = 0.5, y = 0.9,
+  draw_text("Drought Conditions Across the United States", x = 0.5, y = 0.95,
             fontface = "bold", size = 28, family = "sans", color = "grey60") +
+  draw_text("2000-2022", x = 0.5, y = 0.9, fontface = 'bold', 
+            size = 20, family = 'sans', color = 'grey60') +
   draw_text('Source: National Integrated Drought Information System', x = 0.9, y = 0.01,
-            fontface = "bold", size = 8, family = "sans", color = 'grey60')
+            fontface = "bold", size = 8, family = "sans", color = 'grey60', vjust = -0.001)
+
 
 #Process and Clean -- Drought by State
 droughtFIPS <- tuesdata$`drought-fips`
@@ -107,7 +110,4 @@ plotDroughtFIPS <- droughtFIPS %>%
   theme(plot.title = element_text(hjust = 0.5),
         plot.subtitle = element_text(hjust = 0.5),
         axis.text =  element_text(size = 8))
-
-
-
 ```
