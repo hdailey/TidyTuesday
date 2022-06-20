@@ -9,7 +9,7 @@ library(tidyverse)
 library(lubridate)
 library(geofacet)
 library(ggtext)
-#library(sysfonts)
+library(sysfonts)
 library(cowplot)
 ```
 
@@ -17,6 +17,8 @@ library(cowplot)
 ```{r}
 #Read in data
 tuesdata <- tidytuesdayR::tt_load("2022-06-14")
+font_add_google("Roboto")
+
 
 #process and clean data
 drought <- tuesdata$drought %>%
@@ -40,15 +42,15 @@ drought <- tuesdata$drought %>%
   pivot_longer(-c(state_abb, DATE, state), names_to = 'DI', values_to = 'Perc')
 
 drought <- drought %>%
-  mutate(Perc = ifelse(grepl('D', DI) == Perc, Perc, Perc * -1), 
-         DI = factor(DI), 
-                       levels = c('D4', 'D3', 'D2', 'D1', 'D0',
-                                  'W4', 'W3', 'W2', 'W1', 'W0'),
-                       labels = c('Exceptional Drought', 'Extreme Drought',
-                                  'Severe Drought', 'Moderate Drought',
-                                  'Abnormally Dry', 'Exceptionally Wet',
-                                  'Extreme Wet', 'Severe Wet', 'Moderate Wet',
-                                  'Abnormally Wet'))
+  mutate(Perc = ifelse(grepl('D', DI), Perc * 1, Perc * -1)) 
+         # DI = factor(DI), 
+         #               levels = c('D4', 'D3', 'D2', 'D1', 'D0',
+         #                          'W4', 'W3', 'W2', 'W1', 'W0'),
+         #               labels = c('Exceptional Drought', 'Extreme Drought',
+         #                          'Severe Drought', 'Moderate Drought',
+         #                          'Abnormally Dry', 'Exceptionally Wet',
+         #                          'Extreme Wet', 'Severe Wet', 'Moderate Wet',
+         #                          'Abnormally Wet'))
   
 #Generate Grid (US - HI, AK)
 gridUS = us_state_grid1 %>%
@@ -57,36 +59,46 @@ gridUS = us_state_grid1 %>%
 #plot
 
 ##Generate Color Palette
-colPal <- c("black", "black", "black", "blue", "red",
-            "black", "black", "black", "black", "black") 
+colPal <- c("#FDDBC7", "#D1E5F0", "#67001F", "#053061", "#B2182B",
+            "#2166AC", "#F4A582", "#92C5DE", "#D6604D", "#4393C3") 
 
 
 plotDrought <- ggplot(drought) +
-  geom_text(aes(as.Date('2010-10-15'), y = 65, label = state_abb), 
+  geom_text(aes(as.Date('2018-10-15'), y = 65, label = state_abb), 
             size = 4, color = 'grey70', family = 'sans', fontface = 'bold') +
-  geom_area(aes(x = DATE, y = Perc, fill = labels)) +
-  scale_fill_manual(values = colPal) +
+  geom_area(aes(x = DATE, y = Perc, fill = DI)) +
+  scale_fill_manual(values = c("#E0F3F8", "#ABD9E9", "#74ADD1", "#4575B4", "#313695",
+                             "#FEE090", "#FDAE61", "#F46D43", "#D73027", "#A50026"),
+                    breaks = c("W0", "W1", 'W2', "W3", "W4", "D0", "D1", "D2", "D3", "D4"),                 
+                    labels = c("Abnormal Wet Spell", "Moderate Wet Spell", "Severe Wet Spell", 
+                               "Extreme Wet Spell", "Exceptional Wet Spell",
+                               "Abnormally Dry", "Moderate Drought", "Severe Drought",
+                               "Extreme Drought", "Exceptional Drought")) +
   facet_geo(~state, grid = gridUS) +
   theme_void() +
-  theme(plot.background = element_rect(fill = 'aliceblue', colour = 'aliceblue'),
+  theme(plot.background = element_rect(fill = 'grey95', colour = 'grey95'),
+        plot.margin = margin(3,0.5,0.5,0.5, "cm"),
         strip.text = element_blank(),
         legend.direction = 'horizontal',
-        legend.position = 'top',
-        legend.title = element_text(family = 'sans', face = 'bold', size = 45, hjust = 0.5, color = cols[7]),
-        legend.text = element_text(family = 'sans', face = 'bold', color = 'grey60', size = 17, vjust = 5),
-        plot.margin = margin(6.5, 1, 1.5, 1, unit = 'cm')) +
-  guides(fill = guide_legend(nrow = 2, byrow = TRUE, reverse = TRUE, title = 'Conditions',
-                             title.position = 'top', label.position = 'bottom',
+        legend.position = 'bottom',
+        legend.justification = 'left',
+        legend.text = element_text(margin = margin(0, -1, 0, -1, "cm"), family = "sans", face = "bold",
+                                   size = 10, color = "grey60"),
+        legend.title = element_text(family = 'sans', face = 'bold', size = 16, 
+                                    hjust = 0.5, color = 'grey60'),
+        legend.key.size = unit(0.5, "cm")) +
+  guides(fill = guide_legend(nrow = 1, byrow = TRUE, reverse = FALSE, title = 'Drought Conditions',
+                             title.position = 'top', label.position = 'bottom', 
                              keywidth = 8, vjust = -5))
 
 Annotated <- ggdraw(plotDrought) +
-  draw_text(x=0.5, y=0.95, text="Drought & Wet Conditions", family= "sans",
-            fontface="bold", size=88, color= cols[6]) +
-  draw_text(x=0.5, y=0.86, 
-            text="Plot displays abnormal drought and wet conditions in the United States from 2012 to 2022. Area plot\nrepresents the total land area of each state experiencing the specified condition.", 
-            family= "sans", fontface="bold", size=25, color=cols[7], lineheight=1) +
+  draw_text(x=0.5, y=0.95, text="Drought & Wet Conditions Across the United States", family= "sans",
+            fontface="bold", size=32, color= colPal[6]) +
+  draw_text(x=0.5, y=0.90, 
+            text="Plot displays abnormal drought and wet conditions in the United States from 2000 to 2022. Area plot\nrepresents the total land area of each state experiencing the specified condition.", 
+            family= "sans", fontface="bold", size=16, color=colPal[7], lineheight=1) +
   draw_text('Source: National Integrated Drought Information System', x=0.5, y=0.02, 
-            fontface="bold", size=16, family = "sans", color=cols[6])
+            fontface="bold", size=10, family = "sans", color=colPal[6])
 
 ggsave("~/Desktop/DroughtPlot.png", width=18, height = 13)
 
