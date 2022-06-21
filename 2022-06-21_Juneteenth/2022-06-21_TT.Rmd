@@ -1,6 +1,44 @@
+```{r}
 library(tidyverse)
+library(sysfonts)
 library(showtext)
+```
 
+
+
+
+```{r}
+#Load Data
 tuesdata <- tidytuesdayR::tt_load("2022-06-21")
+firsts <- tuesdata$firsts
 
-#Process and Clean Data
+#Load Fonts and color palette
+
+
+#Plot Data
+firstsPrep <- firsts %>%
+  filter(gender == "Female African American Firsts",
+         category == "Education & Science")
+
+firstsPrep
+```
+
+```{r}
+#load data
+past <- tuesdata$blackpast
+
+#load color palette
+colPal <- c("dc143c")
+
+#Filter Past for US
+pastUS <- past %>%
+  filter(country == "United States")
+
+pastUSShort <- pastUS %>%
+  count(subject, sort = TRUE) %>%
+  filter(n >= 10)
+
+pastUSFiltered <- pastUS %>%
+  filter(subject %in% pastUSShort$subject)
+```
+
