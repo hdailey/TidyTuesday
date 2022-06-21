@@ -1,0 +1,6 @@
+library(tidyverse)
+library(showtext)
+
+tuesdata <- tidytuesdayR::tt_load("2022-06-21")
+
+#Process and Clean Data
