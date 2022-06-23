@@ -18,7 +18,59 @@ firsts <- tuesdata$firsts
 #Plot Data
 firstsPrep <- firsts %>%
   filter(gender == "Female African American Firsts",
-         category == "Education & Science")
+         category == "Education & Science",
+         person != c("Don Newcombe (Brooklyn Dodgers)[171]")) %>%
+  mutate(name = gsub("(.*),.*", "\\1", person)) %>%        #Remove comma
+  mutate(name = gsub("\\[.*?\\]", "", name)) %>%           #Remove brackets
+  mutate(name = gsub("\\(.*)", "", name)) %>%              #Remove parenthesis sets and text
+  mutate(name = gsub("\\;.*", "", name)) %>%               #Remove semi-colon and text after
+  mutate(name = gsub("\\,.*", "", name)) %>%               #Remove comma and text after
+  mutate(name = gsub("\\(.*", "", name)) %>%               #Remove final parenthesis and text
+  #mutate(name = gsub("at.*", "\\1", name)) %>%
+  mutate(yearST = year,
+         yearFN = year) %>%
+  mutate(name = stringr::str_trim(name)) %>%
+  #close in year -- edit spacing
+  mutate(yearST = ifelse(year == 1998, 1997, yearST)) %>%
+  mutate(yearST = ifelse(year == 1993, 1994, yearST)) %>%
+  mutate(yearST = ifelse(year == 1884, 1885, yearST)) %>%
+  mutate(yearST = ifelse(year == 1864, 1865, yearST)) %>%
+  mutate(yearFN = ifelse(year == 1998, 1997, yearFN)) %>%
+  mutate(yearFN = ifelse(year == 1993, 1994, yearFN)) %>%
+  mutate(yearFN = ifelse(year == 1884, 1885, yearFN)) %>%
+  mutate(yearFN = ifelse(year == 1864, 1865, yearFN)) %>%
+  #same year -- edit spacing
+  mutate(yearST = ifelse(name == "Dr. Mae Jemison", 1989, yearST))
+  
+  
+  
+
+
+plotFirst <- firstsPrep %>%
+  ggplot() +
+  geom_segment(aes(x = min(year), xend = max(year),
+                   y = 0, yend = 0)) +
+  geom_point(aes(x = year, y = 0), pch = 21, fill = "grey90", colour = "black", size = 2) +
+  #year
+  geom_text(aes(x = yearFN, y = 1, label = year), hjust = 0, family = "sans", size = 10) +  # Need to edit
+  coord_flip() +
+  #name
+  geom_text(aes(x = yearST, y = -0.25, label = name), fontface = "bold", hjust = 1, family = "sans", size = 10) +
+  #accomplishment
+  geom_text(aes(x = yearST, y = 20, label = accomplishment), hjust = 1, family = "sans", size = 10) +
+  ylim(-5,25) +
+  labs(title = "African American Women in Science and Education") +
+  theme_void() +
+  theme(plot.title = element_text(colour = "black", size = 32, face = "bold", family = "sans", hjust = 0.25),
+        axis.title.x = element_blank(),
+        axis.title.y = element_blank(),
+        panel.background = element_rect(fill = "#d0bba8", colour = "#d0bba8"),
+        plot.background = element_rect(fill = "#d0bba8", colour = "#d0bba8"))
+
+ggsave(filename = "2022-06-21_TT.png", width = 9, height = 9, unit = "in")
+
+
+
 
 firstsPrep
 ```
