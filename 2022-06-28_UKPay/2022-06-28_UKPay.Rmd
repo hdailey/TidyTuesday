@@ -53,6 +53,11 @@ paygapClean$lon <- lon
 paygapClean <- paygapClean %>%
   filter(lat != "NA")
 
+#General Stats for comparison
+totMen <- sum(paygapClean$diff_mean_hourly_percent >0)   #2041, 94%
+avgMen <- slice_mean(paygapClean, n = 1, diff_mean_hourly_percent) #14.6%
+maxMen <- slice_max(paygapClean, n = 1, diff_mean_hourly_percent) #Virgin Atlantic, 66.4%
+
 #Plot
 UK <- ne_countries(scale = "medium", type = "map_units", returnclass = "sf", country = "United Kingdom")
 
@@ -63,11 +68,12 @@ plotUK <- ggplot() +
             size = 3,
             pch = 21) +
   theme_void() +
-  labs(title = "The United Kingdom's Gender Pay Gap", tag = "Text Here") +
+  labs(title = "The United Kingdom's Gender Pay Gap", tag =str_wrap("With a sample of 2,171 companies having more than 5,000 but less than 20,000 employees, approximately 94% paid men a greater salary than women. On average, these companies paid men 15% more than women. Virgin Atlantic has the greatest pay discrepancy with paying men 66% more than women. Data: gender-pay-gap.service.gov.uk")) +
   guides(fill = guide_colorbar(title.position = "top", title.hjust = 0.5)) +
   scale_fill_gradient2(name = "Mean % Pay Gap",
                        limits = c(-100, 100), breaks = c(-100, 0, 100)) +
   theme(legend.position = "left",
+        #plot.background = element_rect(),
         plot.margin = unit(c(0.5, 5, 0.5, -1), unit = "cm"),
         plot.tag = element_text(size = 10, colour = "black", family = "sans"),
         plot.tag.position = c(1.3, 0.7),
@@ -80,17 +86,18 @@ plotUK <- ggplot() +
         )
 
 plotUK2 <- ggplot(data = paygapClean, mapping = aes(x = diff_mean_hourly_percent)) +
-  stat_eye(slab_fill = "coral", slab_alpha = 1,
-               slab_colour = "black") +
-  geom_boxplot(width = 0.15,
+  stat_slabinterval(slab_fill = "coral", slab_alpha = 1,
+               slab_colour = "black", slab_size = 1) +
+  geom_boxplot(width = 0.25,
                outlier.shape = NA,
                fill = "white",
-               colour = "coral") +
-  scale_x_continuous(limits = c(-100, 100)) +
+               colour = "black") +
+  scale_x_continuous(limits = c(-100, 100), breaks = c(-100, -50, 0, 50, 100)) +
   ylim(-1, 1) +
   guides(fill = "none", alpha = "none") +
-  theme_void() +
-  theme(axis.title = element_blank(),
+  theme_minimal() +
+  theme(#plot.background = element_rect(),
+        axis.title = element_blank(),
         axis.text.x = element_text(family = "sans", hjust = 0.5, size = 8, color = "black"),
         axis.line.x = element_line(),
         axis.text.y = element_blank(), 
@@ -106,13 +113,9 @@ plotUK2 <- ggplot(data = paygapClean, mapping = aes(x = diff_mean_hourly_percent
 plotFinal = plotUK + inset_element(plotUK2, left = 1.1, right = 2.25, top = 0.5, bottom = 0.1,
                                    align_to = 'plot')
   
+ggsave(filename = "2022-06-28_TT.png", width = 15, height = 11, unit = "in")
 
 
 ```
 
-
-```{r}
-plotUKPay <- ggplot(paygapClean) %>%
-  geom_col(aes(x = sic_codes, y = ))
-```
 
