@@ -31,18 +31,18 @@ firstsPrep <- firsts %>%
          yearFN = year) %>%
   mutate(name = stringr::str_trim(name)) %>%
   #close in year -- edit spacing
-  mutate(yearST = ifelse(year == 1998, 1996, yearST)) %>%
+  mutate(yearST = ifelse(year == 1998, 1997, yearST)) %>%
   mutate(yearST = ifelse(year == 1993, 1994, yearST)) %>%
   mutate(yearST = ifelse(year == 1884, 1885, yearST)) %>%
   mutate(yearST = ifelse(year == 1864, 1865, yearST)) %>%
-  mutate(yearFN = ifelse(year == 1998, 1996, yearFN)) %>%
+  mutate(yearFN = ifelse(year == 1998, 1997, yearFN)) %>%
   mutate(yearFN = ifelse(year == 1993, 1994, yearFN)) %>%
   mutate(yearFN = ifelse(year == 1884, 1885, yearFN)) %>%
   mutate(yearFN = ifelse(year == 1864, 1865, yearFN)) %>%
   #same year -- edit spacing
   mutate(yearST = ifelse(name == "Dr. Mae Jemison", 1989, yearST))
   
-  
+firstsPrep$name[18] = "Shirley Ann Jackson"
   
 
 
@@ -50,24 +50,24 @@ plotFirst <- firstsPrep %>%
   ggplot() +
   geom_segment(aes(x = min(year), xend = max(year),
                    y = 0, yend = 0)) +
-  geom_point(aes(x = year, y = 0), pch = 21, fill = "grey90", colour = "black", size = 4) +
+  geom_point(aes(x = year, y = 0), pch = 21, fill = "grey90", colour = "black", size = 8) +
   #year
-  geom_text(aes(x = yearFN, y = 1, label = year), hjust = 1, family = "sans", size = 4) +  # Need to edit
+  geom_text(aes(x = yearFN, y = 1, label = year), hjust = 0, family = "sans", size = 10) +  # Need to edit
   coord_flip() +
   #name
-  geom_text(aes(x = yearST, y = 0, label = name), hjust = -1, fontface = "bold", family = "sans", size = 4) +
+  geom_text(aes(x = yearST, y = -0.25, label = name), fontface = "bold", hjust = 1, family = "sans", size = 10) +
   #accomplishment
-  geom_text(aes(x = yearST, y = 50, label = accomplishment), hjust = 1, family = "sans", size = 4) +
-  ylim(-10,75) +
+  geom_text(aes(x = yearST, y = 20, label = accomplishment), hjust = 1, family = "sans", size = 10) +
+  ylim(-5,25) +
   labs(title = "African American Women in Science and Education") +
-  #theme_void() +
-  theme(plot.title = element_text(colour = "black", size = 32, face = "bold", family = "sans", hjust = 0.25),
+  theme_void() +
+  theme(plot.title = element_text(colour = "black", size = 32, face = "bold", family = "sans", hjust = 0.5),
         axis.title.x = element_blank(),
         axis.title.y = element_blank(),
         panel.background = element_rect(fill = "#d0bba8", colour = "#d0bba8"),
         plot.background = element_rect(fill = "#d0bba8", colour = "#d0bba8"))
 
-ggsave(filename = "2022-06-21_TT.png", width = 14, height = 14, unit = "in")
+ggsave(filename = "2022-06-21_TT.png", width = 40, height = 25, unit = "in")
 
 
 
