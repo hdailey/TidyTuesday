@@ -94,6 +94,7 @@ plotDroughtAnn <- ggdraw(plotDrought) +
   draw_text('Source: National Integrated Drought Information System', x = 0.9, y = 0.01,
             fontface = "bold", size = 8, family = "sans", color = 'grey60', vjust = -0.001)
 
+ggsave(filename = "2022-06-14_TT.png", width = 20, height = 9, unit = "in")
 
 #Process and Clean -- Drought by State
 droughtFIPS <- tuesdata$`drought-fips`
