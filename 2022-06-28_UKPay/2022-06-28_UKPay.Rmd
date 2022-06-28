@@ -1,5 +1,118 @@
 ```{r}
-#load data
+library(tidyverse)
+library(PostcodesioR)
+library(ggtext)
+library(showtext)
+library(rnaturalearth)
+library(rnaturalearthdata)
+library(patchwork)
+library(ggdist)
+```
+
+```{r}
+#Load Data
 tuesdata <- tidytuesdayR::tt_load("2022-06-28")
+paygap <- tuesdata$paygap
+```
+
+```{r}
+#Data Cleaning
+paygapClean <- paygap[, c("employer_id",
+                          "employer_name",
+                          "company_number",
+                          "sic_codes",
+                          "employer_size",
+                          "post_code",
+                          "address",
+                          "diff_mean_hourly_percent"
+  )]
+
+paygapClean <- paygapClean %>%
+  mutate(post_code = str_trim(post_code)) %>%
+  filter(employer_size != "Not Provided", employer_size == "5000 to 19,999",
+         post_code != "NA")
+
+getlatlon <- function(post_code) {
+  df <- postcode_lookup(post_code)
+  lat <- df$latitude
+  lon <- df$longitude
+  return(c(lat, lon))
+}
+
+lat <- numeric(length = nrow(paygapClean))
+lon <- numeric(length = nrow(paygapClean))
+for (i in seq_len(nrow(paygapClean))) {
+  latlonComb <- getlatlon(paygapClean$post_code[i])
+  lat[i] = latlonComb[1]
+  lon[i] = latlonComb[2]
+}
+
+paygapClean$lat <- lat
+paygapClean$lon <- lon
+
+paygapClean <- paygapClean %>%
+  filter(lat != "NA")
+
+#Plot
+UK <- ne_countries(scale = "medium", type = "map_units", returnclass = "sf", country = "United Kingdom")
+
+plotUK <- ggplot() +
+  geom_sf(data = UK, fill = "white", colour = "black") + 
+  geom_point(data = paygapClean,
+            aes(x = lon, y = lat, fill = diff_mean_hourly_percent),
+            size = 3,
+            pch = 21) +
+  theme_void() +
+  labs(title = "The United Kingdom's Gender Pay Gap", tag = "Text Here") +
+  guides(fill = guide_colorbar(title.position = "top", title.hjust = 0.5)) +
+  scale_fill_gradient2(name = "Mean % Pay Gap",
+                       limits = c(-100, 100), breaks = c(-100, 0, 100)) +
+  theme(legend.position = "left",
+        plot.margin = unit(c(0.5, 5, 0.5, -1), unit = "cm"),
+        plot.tag = element_text(size = 10, colour = "black", family = "sans"),
+        plot.tag.position = c(1.3, 0.7),
+        plot.title = element_text(colour = "black", size=16, hjust = 0, 
+                                  vjust=0, family="sans", face="bold"),
+        plot.subtitle = element_text(colour = "black", size = 12, hjust = 0,
+                                     vjust = 0, family = "sans", face = "bold"),
+        legend.text = element_text(size = 8, colour = "black", family="sans", face="bold"),
+        legend.title = element_text(size = 8, colour = "black", family="sans", face="bold"),
+        )
+
+plotUK2 <- ggplot(data = paygapClean, mapping = aes(x = diff_mean_hourly_percent)) +
+  stat_eye(slab_fill = "coral", slab_alpha = 1,
+               slab_colour = "black") +
+  geom_boxplot(width = 0.15,
+               outlier.shape = NA,
+               fill = "white",
+               colour = "coral") +
+  scale_x_continuous(limits = c(-100, 100)) +
+  ylim(-1, 1) +
+  guides(fill = "none", alpha = "none") +
+  theme_void() +
+  theme(axis.title = element_blank(),
+        axis.text.x = element_text(family = "sans", hjust = 0.5, size = 8, color = "black"),
+        axis.line.x = element_line(),
+        axis.text.y = element_blank(), 
+        panel.grid = element_blank(),
+        plot.title = element_text(family = "sans", hjust = 0, size = 22, color = "black",
+                                  margin = margin(t = 10, r = 0, b = 10, l = 0)),
+        plot.subtitle = element_text(family = "sans", hjust = 0, size = 12, color = "black"),
+        legend.position = "none",
+        axis.ticks.y = element_blank(),
+        axis.ticks.x = element_line()
+  )
+
+plotFinal = plotUK + inset_element(plotUK2, left = 1.1, right = 2.25, top = 0.5, bottom = 0.1,
+                                   align_to = 'plot')
+  
+
 
 ```
+
+
+```{r}
+plotUKPay <- ggplot(paygapClean) %>%
+  geom_col(aes(x = sic_codes, y = ))
+```
+
