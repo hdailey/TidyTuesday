@@ -84,6 +84,7 @@ plotUK <- ggplot() +
                                   vjust = 0, family ="Roboto", face ="bold"),
         legend.text = element_text(size = 16, colour = "black", family="Roboto", face="bold"),
         legend.title = element_text(size = 16, colour = "black", family="Roboto", face="bold"),
+        legend.text = element_text(size = 12, colour = "black", family="Roboto", face="bold")
         )
 
 # plotUK2 <- ggplot(data = paygapClean, mapping = aes(x = diff_mean_hourly_percent)) +
@@ -115,6 +116,7 @@ plotUK <- ggplot() +
 #                                    align_to = "plot")
   
 ggsave(filename = "2022-06-28_TT.png", plotUK, width = 20, height = 15, unit = "in", bg = "white")
+
 
 
 ```
