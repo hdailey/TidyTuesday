@@ -12,6 +12,7 @@ library(ggdist)
 ```{r}
 #Load Fonts
 font_add("Roboto", "C:/Users/HDailey/AppData/Local/Microsoft/Windows/Fonts/Roboto-Regular.ttf", "C:/Users/HDailey/AppData/Local/Microsoft/Windows/Fonts/Roboto-Bold.ttf")
+font_add("Source Sans Pro", "C:/Users/HDailey/AppData/Local/Microsoft/Windows/Fonts/SourceSansPro-Regular.ttf", "C:/Users/HDailey/AppData/Local/Microsoft/Windows/Fonts/SourceSansPro-Bold.ttf")
 
 #Load Data
 tuesdata <- tidytuesdayR::tt_load("2022-06-28")
@@ -88,9 +89,47 @@ plotUK <- ggplot() +
         )
   
 ggsave(filename = "2022-06-28_TT.png", plotUK, width = 20, height = 15, unit = "in", bg = "white")
-
-
-
 ```
 
+```{r}
+#Data Cleaning
+paygapClean <- paygap[, c("employer_id",
+                          "employer_name",
+                          "company_number",
+                          "sic_codes",
+                          "employer_size",
+                          "post_code",
+                          "address",
+                          "diff_mean_hourly_percent"
+  )]
+
+paygapClean <- paygapClean %>%
+  mutate(post_code = str_trim(post_code),
+         size = as.factor(parse_number(employer_size)),
+         signPerc = diff_mean_hourly_percent >= 0 ) %>%
+  filter(employer_size != "Not Provided", #employer_size == "Less than 250",
+         post_code != "NA") %>%
+  arrange(abs(diff_mean_hourly_percent))
+
+plotPayGap <- paygapClean %>%
+  ggplot(aes(x = size, 
+             y = diff_mean_hourly_percent, 
+             fill = signPerc)) +
+ # geom_boxplot()
+  stat_halfeye() +
+  ylim(-100, 100) +
+  theme_void() +
+  labs(title = "Pay Disparities in the UK by Employer Size") +
+  theme(panel.background = element_rect(colour = "grey95", fill = "grey95"),
+        plot.background = element_rect(color = "grey95", fill = "grey95"),
+        plot.margin = unit(c(0.5, 5, 0.5, -1), unit = "cm"),
+        plot.title = element_text(colour = "black", size = 32, hjust = 0.5, 
+                                  vjust = 0, family ="Source Sans Pro", face ="bold"),
+        legend.position = "bottom",
+        legend.text = element_text(size = 16, colour = "black", family="Source Sans Pro", face="bold"),
+        legend.title = element_text(size = 16, colour = "black", family="Source Sans Pro", face="bold")
+        )
+
+ggsave(filename = "2022-06-28_TT-02.png", plotPayGap, width = 20, height = 15, unit = "in", bg = "white")
+```
 
