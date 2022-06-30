@@ -86,34 +86,6 @@ plotUK <- ggplot() +
         legend.title = element_text(size = 16, colour = "black", family="Roboto", face="bold"),
         legend.text = element_text(size = 12, colour = "black", family="Roboto", face="bold")
         )
-
-# plotUK2 <- ggplot(data = paygapClean, mapping = aes(x = diff_mean_hourly_percent)) +
-#   stat_slabinterval(slab_fill = "#FDDBC7", slab_alpha = 0.75,
-#                slab_colour = "black", slab_size = 1) +
-#   geom_boxplot(width = 0.25,
-#                outlier.shape = NA,
-#                fill = "white",
-#                colour = "#FDDBC7") +
-#   scale_x_continuous(limits = c(-100, 100), breaks = c(-100, -50, 0, 50, 100)) +
-#   ylim(-1, 1) +
-#   guides(fill = "none", alpha = "none") +
-#   theme_minimal() +
-#   theme(#plot.background = element_rect(),
-#         axis.title = element_blank(),
-#         axis.text.x = element_text(family = "sans", hjust = 0.5, size = 8, color = "black"),
-#         axis.line.x = element_line(),
-#         axis.text.y = element_blank(), 
-#         panel.grid = element_blank(),
-#         plot.title = element_text(family = "sans", hjust = 0, size = 22, color = "black",
-#                                   margin = margin(t = 10, r = 0, b = 10, l = 0)),
-#         plot.subtitle = element_text(family = "sans", hjust = 0, size = 12, color = "black"),
-#         legend.position = "none",
-#         axis.ticks.y = element_blank(),
-#         axis.ticks.x = element_line()
-#   )
-# 
-# plotFinal = plotUK + inset_element(plotUK2, left = 1.3, right = 2, top = 0.4, bottom = 0.1,
-#                                    align_to = "plot")
   
 ggsave(filename = "2022-06-28_TT.png", plotUK, width = 20, height = 15, unit = "in", bg = "white")
 
