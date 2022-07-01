@@ -106,10 +106,13 @@ paygapClean <- paygap[, c("employer_id",
 paygapClean <- paygapClean %>%
   mutate(post_code = str_trim(post_code),
          size = as.factor(parse_number(employer_size)),
-         signPerc = diff_mean_hourly_percent >= 0 ) %>%
+         signPerc = diff_mean_hourly_percent >= 0,
+         signPerc = ifelse(signPerc == FALSE, "Female", "Male")) %>%
   filter(employer_size != "Not Provided", #employer_size == "Less than 250",
          post_code != "NA") %>%
   arrange(abs(diff_mean_hourly_percent))
+
+levels(paygapClean$size) <- c("Less Than 250", "250-499", "500-999", "1,000-4,999", "5,000-19,999")
 
 plotPayGap <- paygapClean %>%
   ggplot(aes(x = size, 
@@ -119,15 +122,20 @@ plotPayGap <- paygapClean %>%
   stat_halfeye() +
   ylim(-100, 100) +
   theme_void() +
-  labs(title = "Pay Disparities in the UK by Employer Size") +
+  labs(title = "Pay Disparities in the UK by Employer Size", fill = guide_legend(title = "Greater % Pay"),
+       x = "Employer Size", y = "Percent Difference in Pay") +
   theme(panel.background = element_rect(colour = "grey95", fill = "grey95"),
         plot.background = element_rect(color = "grey95", fill = "grey95"),
-        plot.margin = unit(c(0.5, 5, 0.5, -1), unit = "cm"),
+        plot.margin = unit(c(0.5, 1, 0.25, 0.25), unit = "cm"),
         plot.title = element_text(colour = "black", size = 32, hjust = 0.5, 
                                   vjust = 0, family ="Source Sans Pro", face ="bold"),
-        legend.position = "bottom",
-        legend.text = element_text(size = 16, colour = "black", family="Source Sans Pro", face="bold"),
-        legend.title = element_text(size = 16, colour = "black", family="Source Sans Pro", face="bold")
+        legend.position = c(0.9, 0.2),
+        legend.text = element_text(size = 16, colour = "black", family = "Source Sans Pro", face = "bold"),
+        legend.title = element_text(size = 16, colour = "black", family = "Source Sans Pro", face = "bold"),
+        axis.text = element_text(size = 16, colour = "black", family = "Source Sans Pro", face = "bold"),
+        axis.title = element_text(size = 16, colour = "black", family = "Source Sans Pro", face = "bold"),
+        axis.title.y = element_text(angle = 90, margin = margin(t = 0, r = 20, b = 0, l = 0)),
+        axis.title.x = element_text(margin = margin(t = 20, r = 0, b = 0, l = 0))
         )
 
 ggsave(filename = "2022-06-28_TT-02.png", plotPayGap, width = 20, height = 15, unit = "in", bg = "white")
