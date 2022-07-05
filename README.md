@@ -2,6 +2,8 @@
 Tidy Tuesday Data Analysis
 
 June 28, 2022 - UK Pay Gap
+![image](https://user-images.githubusercontent.com/91282117/177357688-1d8d64db-7cd6-4459-8016-135dbed9892e.png)
+
 ![image](https://user-images.githubusercontent.com/91282117/176729174-1120d3ec-32f8-4c04-af33-c2d3c4516fad.png)
 
 June 21, 2022 - Juneteenth
