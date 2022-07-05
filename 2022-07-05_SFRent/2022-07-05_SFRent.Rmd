@@ -9,7 +9,7 @@ library(cowplot)
 
 ```{r}
 #Read in data
-tuesdata <- tidytuesdayR::tt_load("2022-06-14")
+tuesdata <- tidytuesdayR::tt_load("2022-07-05")
 
 #Read in fonts
 font_add("Roboto", "C:/Users/HDailey/AppData/Local/Microsoft/Windows/Fonts/Roboto-Regular.ttf", "C:/Users/HDailey/AppData/Local/Microsoft/Windows/Fonts/Roboto-Bold.ttf")
