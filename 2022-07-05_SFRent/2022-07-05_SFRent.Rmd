@@ -1,0 +1,17 @@
+```{r}
+library(tidyverse)
+library(lubridate)
+library(geofacet)
+library(ggtext)
+library(sysfonts)
+library(cowplot)
+```
+
+```{r}
+#Read in data
+tuesdata <- tidytuesdayR::tt_load("2022-06-14")
+
+#Read in fonts
+font_add("Roboto", "C:/Users/HDailey/AppData/Local/Microsoft/Windows/Fonts/Roboto-Regular.ttf", "C:/Users/HDailey/AppData/Local/Microsoft/Windows/Fonts/Roboto-Bold.ttf")
+font_add("Source Sans Pro", "C:/Users/HDailey/AppData/Local/Microsoft/Windows/Fonts/SourceSansPro-Regular.ttf", "C:/Users/HDailey/AppData/Local/Microsoft/Windows/Fonts/SourceSansPro-Bold.ttf")
+```
