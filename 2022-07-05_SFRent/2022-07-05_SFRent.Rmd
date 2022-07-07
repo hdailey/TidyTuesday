@@ -5,6 +5,8 @@ library(ggtext)
 library(sysfonts)
 library(ggstream)
 library(wesanderson)
+library(tigris)
+library(sf)
 ```
 
 ```{r}
@@ -84,3 +86,5 @@ plotRent <- ggplot(data = sfData,
 
 ggsave(filename = "2022-07-05_TT.png", width = 20, height = 9, unit = "in")
 ```
+
+
