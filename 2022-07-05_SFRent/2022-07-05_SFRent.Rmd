@@ -3,9 +3,7 @@ library(tidyverse)
 library(lubridate)
 library(ggtext)
 library(sysfonts)
-library(cowplot)
 library(ggstream)
-library(ggridges)
 library(wesanderson)
 ```
 
@@ -35,7 +33,6 @@ sfData <- rentData %>%
          beds < 7) %>%
   select(date, beds, price) %>%
   mutate(beds = factor(beds),
-         #beds = as.character(beds),
          date = round_date(ymd(date), unit = "months")) %>%
   group_by(date, beds) %>%
   summarise(mean_rent = mean(price))
