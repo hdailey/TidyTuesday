@@ -1,6 +1,8 @@
 # TidyTuesday
 Tidy Tuesday Data Analysis
 
+July 5, 2022 - Bay Area Rental Prices
+
 June 28, 2022 - UK Pay Gap
 ![image](https://user-images.githubusercontent.com/91282117/177357688-1d8d64db-7cd6-4459-8016-135dbed9892e.png)
 
