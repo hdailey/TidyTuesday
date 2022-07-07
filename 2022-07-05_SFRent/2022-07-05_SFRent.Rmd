@@ -4,24 +4,32 @@ library(lubridate)
 library(ggtext)
 library(sysfonts)
 library(cowplot)
+library(ggstream)
 library(ggridges)
+library(wesanderson)
 ```
 
 ```{r}
 #Read in data
 tuesdata <- tidytuesdayR::tt_load("2022-07-05")
 
-#Read in fonts
+#Read in fonts, color palettes and set
 font_add("Roboto", "C:/Users/HDailey/AppData/Local/Microsoft/Windows/Fonts/Roboto-Regular.ttf", "C:/Users/HDailey/AppData/Local/Microsoft/Windows/Fonts/Roboto-Bold.ttf")
 font_add("Source Sans Pro", "C:/Users/HDailey/AppData/Local/Microsoft/Windows/Fonts/SourceSansPro-Regular.ttf", "C:/Users/HDailey/AppData/Local/Microsoft/Windows/Fonts/SourceSansPro-Bold.ttf")
+font_add("Impact", "C:/Users/HDailey/AppData/Local/Microsoft/Windows/Fonts/Impact.ttf")
+
+pal1 <- wes_palette("Zissou1", 7, type = "continuous")
+font1 <- "Roboto"
+font2 <- "Source Sans Pro"
+font3 <- "Impact"
 
 #Set data
 rentData <- tuesdata$rent
 permitData <- tuesdata$sf_permits
 consData <- tuesdata$new_construction
 
-alamedaData <- rentData %>%
-  filter(#county == "alameda",
+sfData <- rentData %>%
+  filter(county == "san francisco",
          !is.na(beds),
          !is.na(date),
          beds < 7) %>%
@@ -31,23 +39,51 @@ alamedaData <- rentData %>%
          date = round_date(ymd(date), unit = "months")) %>%
   group_by(date, beds) %>%
   summarise(mean_rent = mean(price))
+```
 
 
-#plot
-plotRent <- ggplot(data = alamedaData,
-                   mapping = aes(x = date, y = beds, height = mean_rent, fill = stat(y))) + 
-  geom_density_ridges(scale = 20, stat = "identity") +
-  scale_fill_viridis_c()
-
-plotRent2 <- ggplot(data = alamedaData,
+```{r}
+plotRent <- ggplot(data = sfData,
                     mapping = aes(x = date, y = mean_rent)) +
-  geom_stream(geom = "polygon", aes(fill = beds), bw = 0.25) +
-  # scale_x_continuous(breaks = c(ymd("20040101", "20080101", "20120101", "20160101")),
-  #                    labels = c("2004", "2008", "2012", "2016"),
-  #                    limits = c(ymd("20000101", "20220101"))) +
-  # scale_y_continuous(limits = c(-28000, 28000)) +
-  # scale_fill_carto_d(palette = "Prism", direction = -1) +
-  # scale_colour_carto_d(palette = "Prism", direction = -1) +
   theme_void() +
-  theme(panel.grid = element_blank())
+  geom_stream(geom = "polygon", aes(fill = beds), bw = 0.3, color = "black", lwd = 0.25) +
+  scale_fill_manual(values = pal1) +
+  labs(title = "Average Rental Costs in San Francisco County",
+       caption = "Data: Pennington, Kate (2018). Bay Area Craigslist Housing Posts, 2000-2018.") +
+  scale_x_continuous(breaks = c(round_date(ymd(c("20040101", "20080101", "20120101", "20160101")),
+                                           unit = "months")),
+                     labels = c("2004", "2008", "2012", "2016"),
+                     limits = c(round_date(ymd(c("20000101", "20220101")),
+                                           unit = "months"))) +
+  geom_vline(xintercept = as.numeric(c(round_date(ymd(c("20040101", "20080101", "20120101", "20160101")),
+                                           unit = "months"))),
+             linetype = "dashed") + 
+  theme(panel.grid = element_blank(),
+        plot.title = element_text(hjust = 0.5, family = "Roboto", size = 28, face = "bold",
+                                  margin = margin(20, 0, 5, 0)),
+        plot.caption = element_text(hjust = 0.5, family = "Roboto", size = 10, colour = "grey40",
+                                    margin = margin(20, 0, 5, 0)),
+        plot.caption.position = "plot",
+        legend.direction = "horizontal",
+        legend.position = "bottom",
+        legend.justification = "center",
+        legend.text = element_text(family = "Roboto", size = 9, color = "grey40", face = "bold"),
+        legend.box.margin = margin(t = 30),
+        legend.background = element_rect(color = "grey40",
+                                         size = 0.3,
+                                         fill = "grey90"),
+        legend.title = element_text(family = "Roboto", face = "bold"), 
+        legend.key.height = unit(0.5, "lines"),
+        legend.key.width = unit(2.5, "lines"),
+        plot.background = element_rect(fill = "grey88", colour = "grey88"),
+        plot.margin = margin(rep(20, 4)),
+        axis.text.x = element_text(hjust = 0.5, family = "Roboto", size = 12, face = "bold",
+                                   margin = margin(b = 10)),
+        axis.ticks.x = element_line(linetype = 2, colour = "black")) +
+  guides(fill = guide_legend(nrow = 1, byrow = TRUE, reverse = FALSE, title = 'Number of Bedrooms',
+                             title.position = 'top', title.hjust = 0.5,
+                             label.position = 'bottom',
+                             keywidth = 5, vjust = -5))
+
+ggsave(filename = "2022-07-05_TT.png", width = 20, height = 9, unit = "in")
 ```
