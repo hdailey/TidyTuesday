@@ -1,10 +1,10 @@
 ```{r}
 library(tidyverse)
 library(lubridate)
-library(geofacet)
 library(ggtext)
 library(sysfonts)
 library(cowplot)
+library(ggridges)
 ```
 
 ```{r}
@@ -14,4 +14,40 @@ tuesdata <- tidytuesdayR::tt_load("2022-07-05")
 #Read in fonts
 font_add("Roboto", "C:/Users/HDailey/AppData/Local/Microsoft/Windows/Fonts/Roboto-Regular.ttf", "C:/Users/HDailey/AppData/Local/Microsoft/Windows/Fonts/Roboto-Bold.ttf")
 font_add("Source Sans Pro", "C:/Users/HDailey/AppData/Local/Microsoft/Windows/Fonts/SourceSansPro-Regular.ttf", "C:/Users/HDailey/AppData/Local/Microsoft/Windows/Fonts/SourceSansPro-Bold.ttf")
+
+#Set data
+rentData <- tuesdata$rent
+permitData <- tuesdata$sf_permits
+consData <- tuesdata$new_construction
+
+alamedaData <- rentData %>%
+  filter(#county == "alameda",
+         !is.na(beds),
+         !is.na(date),
+         beds < 7) %>%
+  select(date, beds, price) %>%
+  mutate(beds = factor(beds),
+         #beds = as.character(beds),
+         date = round_date(ymd(date), unit = "months")) %>%
+  group_by(date, beds) %>%
+  summarise(mean_rent = mean(price))
+
+
+#plot
+plotRent <- ggplot(data = alamedaData,
+                   mapping = aes(x = date, y = beds, height = mean_rent, fill = stat(y))) + 
+  geom_density_ridges(scale = 20, stat = "identity") +
+  scale_fill_viridis_c()
+
+plotRent2 <- ggplot(data = alamedaData,
+                    mapping = aes(x = date, y = mean_rent)) +
+  geom_stream(geom = "polygon", aes(fill = beds), bw = 0.25) +
+  # scale_x_continuous(breaks = c(ymd("20040101", "20080101", "20120101", "20160101")),
+  #                    labels = c("2004", "2008", "2012", "2016"),
+  #                    limits = c(ymd("20000101", "20220101"))) +
+  # scale_y_continuous(limits = c(-28000, 28000)) +
+  # scale_fill_carto_d(palette = "Prism", direction = -1) +
+  # scale_colour_carto_d(palette = "Prism", direction = -1) +
+  theme_void() +
+  theme(panel.grid = element_blank())
 ```
