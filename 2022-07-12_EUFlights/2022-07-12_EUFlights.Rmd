@@ -1,0 +1,21 @@
+```{r packages}
+library(tidyverse)
+library(wesanderson)
+```
+
+```{r load data}
+tuesdata <- tidytuesday::tt_load("2022-07-12")
+
+#Load Fonts
+font_add("Roboto", "C:/Users/HDailey/AppData/Local/Microsoft/Windows/Fonts/Roboto-Regular.ttf", "C:/Users/HDailey/AppData/Local/Microsoft/Windows/Fonts/Roboto-Bold.ttf")
+font_add("Source Sans Pro", "C:/Users/HDailey/AppData/Local/Microsoft/Windows/Fonts/SourceSansPro-Regular.ttf", "C:/Users/HDailey/AppData/Local/Microsoft/Windows/Fonts/SourceSansPro-Bold.ttf")
+font_add("Impact", "C:/Users/HDailey/AppData/Local/Microsoft/Windows/Fonts/Impact.ttf")
+
+#Load Palette
+pal1 <- wes_palette("Zissou1", 7, type = "continuous")
+```
+
+```{r data analysis}
+
+ggsave(filename = "2022-07-12_TT.png", width = 20, height = 9, unit = "in")
+```
