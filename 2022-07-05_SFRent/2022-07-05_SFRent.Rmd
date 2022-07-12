@@ -5,8 +5,6 @@ library(ggtext)
 library(sysfonts)
 library(ggstream)
 library(wesanderson)
-library(tigris)
-library(sf)
 ```
 
 ```{r}
