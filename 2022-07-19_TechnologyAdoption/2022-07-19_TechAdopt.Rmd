@@ -1,0 +1,20 @@
+```{r packages}
+library(tidyverse)
+library(showtext)
+library(lubridate)
+```
+
+```{r load}
+#load data
+tuesdata <- tidytuesdayR::tt_load("2022-07-19")
+
+#load fonts
+font_add("Roboto", "C:/Users/HDailey/AppData/Local/Microsoft/Windows/Fonts/Roboto-Regular.ttf", "C:/Users/HDailey/AppData/Local/Microsoft/Windows/Fonts/Roboto-Bold.ttf")
+font_add("Source Sans Pro", "C:/Users/HDailey/AppData/Local/Microsoft/Windows/Fonts/SourceSansPro-Regular.ttf", "C:/Users/HDailey/AppData/Local/Microsoft/Windows/Fonts/SourceSansPro-Bold.ttf")
+font_add("Impact", "C:/Users/HDailey/AppData/Local/Microsoft/Windows/Fonts/Impact.ttf")
+
+#load palette
+```
+
+```{r data analysis}
+```
