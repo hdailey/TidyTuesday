@@ -18,13 +18,14 @@ font_add("Impact", "C:/Users/HDailey/AppData/Local/Microsoft/Windows/Fonts/Impac
 #Load Palette
 ```
 
-```{r data analysis}
+```{r data analysis, message = FALSE}
 minDate = min(tuesdata$flights$FLT_DATE)
 maxDate = max(tuesdata$flights$FLT_DATE)
 
 flights <- tuesdata$flights %>%
   filter(str_detect(APT_NAME, c("Paris"))) %>%
-  mutate(yr_week = str_c(isoyear(FLT_DATE), "/",
+  mutate(APT_NAME = str_replace(APT_NAME, ".*?-", ""),
+         yr_week = str_c(isoyear(FLT_DATE), "/",
                          formatC(isoweek(FLT_DATE), format = "f", digits = 0,
                                          width = 2, flag = "0")),
          week_day = wday(FLT_DATE, week_start = 1)) %>%
@@ -48,18 +49,35 @@ flights <- flights %>%
   mutate(APT_NAME = factor(APT_NAME, levels = factor_levels))
 
 #Plot Data
-ggplot(data = flights, mapping = aes(x = yr_week, y = week_day, fill = n_flights)) +
+pltFlights <- ggplot(data = flights, mapping = aes(x = yr_week, y = week_day, fill = n_flights)) +
   geom_raster() +
   facet_wrap(~APT_NAME, ncol = 1, strip.position = "left") +
-  scale_y_reverse(breaks = 7:1, labels = rev(c("M", "T", "W", "Th", "F", "Sa", "Su"))) +
+  scale_y_reverse(breaks = 7:1, labels = rev(c("M", "T", "W", "Th", "F", "Sa", "Su")), position = "right") +
   scale_x_discrete(breaks = c("2016/01", "2017/01", "2018/01", "2019/01", "2020/01", "2021/01", "2022/01"), 
                    labels = 2016:2022) +
-  scale_fill_distiller(palette = "OrRd", direction = 1) +
-  guides(fill = guide_colorbar(title.position = "top"))
+  scale_fill_distiller(name = "Number of Daily Flights", palette = "OrRd", direction = 1) +
+  guides(fill = guide_colorbar(title.position = "top")) +
+  labs(x = "", y = "", title = "Paris Airports", caption = "Data: Eurocontrol | inspired by: nrennie, #TidyTuesday",
+       subtitle = str_wrap("The number of flights departing or arriving at airports in Paris is half to less than half of
+                           pre-COVID-19 pandemic levels.", 100)) +
+  theme(legend.position = "bottom",
+        panel.background = element_rect(colour = "grey95", fill = "grey95"), 
+        plot.background = element_rect(colour = "grey95", fill = "grey95"),
+        strip.background = element_rect(colour = "grey95", fill = "grey95"),
+        legend.background = element_rect(colour = "grey95", fill = "grey95"),
+        legend.key.width = unit(2.5, "cm"), 
+        axis.ticks.y.left = element_blank(),
+        plot.margin = unit(c(0.25, 0.5, 0.5, 0.25), unit = "cm"),
+        plot.title = element_text(family = "Roboto", hjust = 0.5, size = 24, face = "bold"),
+        strip.text = element_text(family = "Roboto", hjust = 0.5, size = 14, face = "bold"),
+        plot.subtitle = element_text(family = "Roboto", hjust = 0.5, size = 14),
+        axis.text.y.right = element_text(family = "Roboto", hjust = 0.5, size = 10),
+        axis.text.x = element_text(family = "Roboto", hjust = 0.5, size = 12),
+        legend.title = element_text(family = "Roboto", hjust = 0.5, size = 12),
+        legend.text = element_text(family = "Roboto", hjust = 0.5, size = 10))
 
 
-
-ggsave(filename = "2022-07-12_TT.png", width = 20, height = 9, unit = "in")
+ggsave(pltFlights, filename = "2022-07-12_TT.png", width = 20, height = 9, unit = "in")
 ```
 
 
