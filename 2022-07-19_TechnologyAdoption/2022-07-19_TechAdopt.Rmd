@@ -131,14 +131,14 @@ plotLegend <- ggplot(data = filter(techAdoptViz, iso3c == "USA")) +
   theme(plot.background = element_rect(fill = "transparent", colour = "transparent"), 
         panel.background = element_rect(fill = "transparent", colour = "transparent"), 
         legend.position = "bottom",
-        strip.text = element_text(size = 30, family = "Roboto"), 
+        strip.text = element_text(size = 16, family = "Roboto"), 
         legend.title = element_blank(), 
-        legend.text = element_text(size = 20, family = "Roboto"), 
+        legend.text = element_text(size = 16, family = "Roboto"), 
         plot.title = element_text(family = "Roboto", 
                                   hjust = 0.5, 
                                   face = "italic",
                                   margin = margin(t = 10, b = 10), 
-                                  size = 36), 
+                                  size = 16), 
         plot.margin = unit(c(0.2, 0.2, 0.2, 0.2), unit = "cm"))
 
 plotData <- ggplot(data = techAdoptViz) + 
@@ -152,6 +152,8 @@ plotData <- ggplot(data = techAdoptViz) +
   scale_fill_manual(breaks = c("value", "no_value"),
                     labels = c("Immunised", "Not Immunised"),
                     values = c("#990c58", "#949398")) +
+  labs(title = "Measles Vaccinations", 
+       subtitle = str_wrap("The inner bar represents the percentage of children who received a measles immunisation in 1980, whilst the outer bar represents the percentage in 2015. An increase in immunisation levels between 1980 and 2015 is seen across all countries.\n#TidyTuesday | Data: data.nber.org (10.3386/w15319)", 50)) +
   facet_wrap(~iso3c, nrow = 2) +
   theme_void() +
   theme(legend.position = "none", 
@@ -160,27 +162,22 @@ plotData <- ggplot(data = techAdoptViz) +
         legend.text = element_text(size = 12, family = "Roboto"), 
         plot.background = element_rect(fill = "grey80", color = "grey80"), 
         panel.background = element_rect(fill = "grey80", color = "grey80"), 
-, 
-                                  
-        plot.margin = unit(c(0.1, 0.1, 0.1, 0.1), unit = "cm"))
-
-#Join plots
-plotFinal <- plotData + inset_element(plotLegend, 0.6, 0.6, 1.15, 1, 
-                                      align_to = "full") +
-   labs(title = "Measles Vaccinations", 
-       subtitle = str_wrap("The inner bar represents the percentage of children who received a measles immunisation in 1980, whilst the outer bar represents the percentage in 2015. An increase in immunisation levels between 1980 and 2015 is seen across all countries.\n#TidyTuesday | Data: data.nber.org (10.3386/w15319)", 50)) +
-  plot_layout(widths = c(5,1)) +
-  theme(plot.background = element_rect(fill = "#dedede", colour = "#dedede"), 
-        panel.background = element_rect(fill = "#dedede", colour = "#dedede"),
-        plot.margin = unit(c(0.1, 0.1, 0.1, 0.1), unit = "cm"),
-                plot.title = element_text(family = "Roboto", 
+        plot.title = element_text(family = "Roboto", 
                                   margin = margin(t = 1, b = 1), 
                                   face = "bold", 
                                   size = 24), 
         plot.subtitle = element_text(family = "Roboto", 
                                   margin = margin(t = 10, b = 10), 
                                   size = 10, 
-                                  lineheight = 0.5))
+                                  lineheight = 0.5), 
+                                  
+        plot.margin = unit(c(0.1, 0.1, 0.1, 0.1), unit = "cm"))
+
+#Join plots
+plotFinal <- plotData + inset_element(plotLegend, -0.5, 0.1, 0.68, 0.4, 
+                                      align_to = "plot") &
+  theme(plot.background = element_rect(fill = "#dedede", colour = "#dedede"), 
+        panel.background = element_rect(fill = "#dedede", colour = "#dedede"))
 
 
 
