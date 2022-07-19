@@ -2,6 +2,7 @@
 library(tidyverse)
 library(showtext)
 library(lubridate)
+library(RColorBrewer)
 ```
 
 ```{r load}
@@ -16,5 +17,63 @@ font_add("Impact", "C:/Users/HDailey/AppData/Local/Microsoft/Windows/Fonts/Impac
 #load palette
 ```
 
-```{r data analysis}
+```{r}
+countries <- c("GBR", "USA", "SWE", "BRA", "NZL", "VEN")
+
+technology <- tuesdata$technology
+
+# prep data
+raw_data <- technology %>% 
+  filter(label == "% children who received a measles immunization") %>% 
+  filter(year %in% c(1980, 2010)) %>% 
+  rename(Year = year) %>% 
+  filter(iso3c %in% countries) %>% 
+  select(-c(group, category, variable, label)) %>% 
+  mutate(no_value = 100 - value) %>% 
+  pivot_longer(cols = c(value, no_value), names_to = "YN", values_to = "perc") %>% 
+  pivot_wider(names_from = "Year", values_from = "perc") %>% 
+  mutate(YN = factor(YN)) %>% 
+  mutate(perc_1980 = `1980`/100, 
+         perc_2010 = `2010`/100) %>% 
+  select(-c(`1980`, `2010`)) %>% 
+  group_by(iso3c) %>% 
+  mutate(ymax_1980 = cumsum(perc_1980), 
+         ymax_2010 = cumsum(perc_2010))
+```
+
+
+
+```{r data analysis, warning = FALSE}
+techAdopt <- tuesdata$technology %>%
+  filter(category == "Vaccines",
+         label == "% children who received a measles immunization",
+         year %in% c(1980, 2015), 
+         iso3c %in% c("USA", "GBR", "NZL", "BRA", "GHA", "IRQ")) %>%
+  
+  mutate(year = factor(year)) %>%
+  select(-c(group, category, variable, label))
+
+
+pltTech <- ggplot(data = techAdopt, aes(x = value, y = iso3c, fill = year)) + 
+  geom_bar(stat = "identity", position = position_dodge2(width = 0.8)) +
+  scale_fill_brewer(palette = "Dark2") +
+  theme_void() +
+  labs(x = "% Vaccinated Against Measles", y = "Country",
+       title = "Measles Vaccination Percentages", subtitle = "1980 to 2015") +
+  guides(fill = guide_legend(title.position = "top")) + 
+  theme(legend.position = "bottom",
+        panel.background = element_rect(colour = "grey95", fill = "grey95"), 
+        plot.background = element_rect(colour = "grey95", fill = "grey95"),
+        strip.background = element_rect(colour = "grey95", fill = "grey95"),
+        legend.background = element_rect(colour = "grey95", fill = "grey95"),
+        legend.key.width = unit(2.5, "cm"), 
+        axis.ticks.y = element_blank(), 
+        plot.margin = unit(c(0.25, 0.5, 0.5, 0.25), unit = "cm"),
+        plot.title = element_text(family = "Roboto", hjust = 0.5, size = 24, face = "bold"),
+        strip.text = element_text(family = "Roboto", hjust = 0.5, size = 14, face = "bold"),
+        plot.subtitle = element_text(family = "Roboto", hjust = 0.5, size = 14),
+        axis.text.y = element_text(family = "Roboto", hjust = 1.5, size = 12),
+        axis.text.x = element_text(family = "Roboto", hjust = 0.5, size = 12),
+        legend.title = element_text(family = "Roboto", hjust = 0.5, size = 12),
+        legend.text = element_text(family = "Roboto", hjust = 0.5, size = 10))
 ```
