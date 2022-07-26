@@ -65,10 +65,11 @@ techAdopt <- tuesdata$technology %>%
   select(-c(group, category, variable, label))
 
 
-pltTech <- ggplot(data = techAdopt, aes(x = value, y = iso3c, fill = year)) + 
+pltTech <- ggplot(data = techAdopt, aes(x = iso3c, y = value, fill = year)) + 
   geom_bar(stat = "identity", position = position_dodge2(width = 0.8)) +
   scale_fill_brewer(palette = "Dark2") +
   theme_void() +
+  coord_flip() +
   labs(x = "% Vaccinated Against Measles", y = "Country",
        title = "Measles Vaccination Percentages", subtitle = "1980 to 2015") +
   guides(fill = guide_legend(title.position = "top")) + 
