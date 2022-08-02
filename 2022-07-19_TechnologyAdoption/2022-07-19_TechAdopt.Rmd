@@ -2,11 +2,8 @@
 library(tidyverse)
 library(showtext)
 library(lubridate)
-library(RColorBrewer)
-library(scales)
-library(ggforce)
-library(patchwork)
-library(forcats)
+library(countrycode)
+library(rcartocolor)
 ```
 
 ```{r load}
@@ -15,44 +12,7 @@ tuesdata <- tidytuesdayR::tt_load("2022-07-19")
 
 #load fonts
 font_add("Roboto", "C:/Users/HDailey/AppData/Local/Microsoft/Windows/Fonts/Roboto-Regular.ttf", "C:/Users/HDailey/AppData/Local/Microsoft/Windows/Fonts/Roboto-Bold.ttf")
-font_add("Source Sans Pro", "C:/Users/HDailey/AppData/Local/Microsoft/Windows/Fonts/SourceSansPro-Regular.ttf", "C:/Users/HDailey/AppData/Local/Microsoft/Windows/Fonts/SourceSansPro-Bold.ttf")
-font_add("Impact", "C:/Users/HDailey/AppData/Local/Microsoft/Windows/Fonts/Impact.ttf")
-
-#load palette
 ```
-
-```{r}
-countries <- c("GBR", "USA", "SWE", "BRA", "NZL", "VEN")
-
-technology <- tuesdata$technology
-
-# prep data
-raw_data <- technology %>% 
-  filter(label == "% children who received a measles immunization") %>% 
-  filter(year %in% c(1980, 2010)) %>% 
-  rename(Year = year) %>% 
-  filter(iso3c %in% countries) %>% 
-  select(-c(group, category, variable, label)) %>% 
-  mutate(no_value = 100 - value) %>% 
-  pivot_longer(cols = c(value, no_value), names_to = "YN", values_to = "perc") %>% 
-  pivot_wider(names_from = "Year", values_from = "perc") %>% 
-  mutate(YN = factor(YN)) %>% 
-  mutate(perc_1980 = `1980`/100, 
-         perc_2010 = `2010`/100) %>% 
-  select(-c(`1980`, `2010`)) %>% 
-  group_by(iso3c) %>% 
-  mutate(ymax_1980 = cumsum(perc_1980), 
-         ymax_2010 = cumsum(perc_2010))
-
-plot_data <- raw_data %>% 
-  ungroup() %>% 
-  mutate(ymin_1980 = c(rbind(rep(0, length(countries)), (slice_head(raw_data, n = -1) %>% pull(ymax_1980))))) %>% 
-  mutate(ymin_2010 = c(rbind(rep(0, length(countries)), (slice_head(raw_data, n = -1) %>% pull(ymax_2010))))) %>% 
-  group_by(iso3c) %>% 
-  mutate_at(vars(starts_with("y", ignore.case = FALSE)), rescale, to = pi*c(-.5,.5), from = 0:1)
-```
-
-
 
 ```{r data analysis, warning = FALSE}
 techAdopt <- tuesdata$technology %>%
@@ -91,101 +51,43 @@ pltTech <- ggplot(data = techAdopt, aes(x = iso3c, y = value, fill = year)) +
 
 pltTech
 ```
-```{r percentages visualization}
-countries <- c("USA", "GBR", "NZL", "BRA", "GHA", "IRQ")
-
-techAdoptViz <- techAdopt %>%
-  mutate(noVal = 100 - value) %>%
-  pivot_longer(cols = c(value, noVal), names_to = "YN", values_to = "perc") %>%
-  pivot_wider(names_from = "year", values_from = "perc") %>%
-  mutate(YN = factor(YN),
-         perc1980 = `1980`/100,
-         perc2015 = `2015`/100) %>%
-  select(-c(`1980`, `2015`)) %>%
-  group_by(iso3c) %>%
-  mutate(max1980 = cumsum(perc1980),
-         max2015 = cumsum(perc2015))
-
-techAdoptViz <- techAdoptViz %>%
-  ungroup %>%
-  mutate(min1980 = c(rbind(rep(0, length(countries)), (slice_head(techAdoptViz, n = -1) %>% pull(max1980))))) %>%
-  mutate(min2015 = c(rbind(rep(0, length(countries)), (slice_head(techAdoptViz, n = -1) %>% pull(max2015))))) %>%
-  group_by(iso3c) %>%
-  mutate_at(vars(starts_with("y", ignore.case = FALSE)), rescale, to = pi*c(-0.5, 0.5), from = 0:1)
-
-#legend plot
-text_df <- tibble(x = c(0.35, 0.85),
-                  y = c(-0.1, -0.1), 
-                  label = c(1980, 2015))
-
-plotLegend <- ggplot(data = filter(techAdoptViz, iso3c == "USA")) +
-  geom_arc_bar(aes(x0 = 0, y0 = 0, r0 = 0.7, r = 1,
-                   start = min2015, end = max2015, fill = YN),
-               color = "tomato") +
-  geom_arc_bar(aes(x0 = 0, y0 = 0, r0 = 0.2, r = 0.5,
-                   start = min1980, end = max1980, fill = YN),
-               color = "blue") +
-  geom_text(data = text_df, mapping = aes(x = x, y = y, label = label), family = "Roboto", size = 10) +
-  coord_fixed() +
-  facet_wrap(~iso3c) +
-  theme_void() +
-  theme(plot.background = element_rect(fill = "transparent", colour = "transparent"), 
-        panel.background = element_rect(fill = "transparent", colour = "transparent"), 
-        legend.position = "bottom",
-        strip.text = element_text(size = 16, family = "Roboto"), 
-        legend.title = element_blank(), 
-        legend.text = element_text(size = 16, family = "Roboto"), 
-        plot.title = element_text(family = "Roboto", 
-                                  hjust = 0.5, 
-                                  face = "italic",
-                                  margin = margin(t = 10, b = 10), 
-                                  size = 16), 
-        plot.margin = unit(c(0.2, 0.2, 0.2, 0.2), unit = "cm"))
-
-plotData <- ggplot(data = techAdoptViz) + 
-  geom_arc_bar(aes(x0 = 0, y0 = 0, r0 = 0.7, r = 1, start = min2015, end = max2015, fill = YN), 
-               colour = "#949398") + 
-  geom_arc_bar(aes(x0 = 0, y0 = 0, r0 = 0.2, r = 0.5, start = min1980, end = max1980, fill = YN), 
-               colour = "#949398") + 
-  geom_text(data = text_df, mapping = aes(x = x, y = y, label = label),
-            family = "Roboto", size = 6) +
-  coord_fixed(ratio = 1) + 
-  scale_fill_manual(breaks = c("value", "no_value"),
-                    labels = c("Immunised", "Not Immunised"),
-                    values = c("#990c58", "#949398")) +
-  labs(title = "Measles Vaccinations", 
-       subtitle = str_wrap("The inner bar represents the percentage of children who received a measles immunisation in 1980, whilst the outer bar represents the percentage in 2015. An increase in immunisation levels between 1980 and 2015 is seen across all countries.\n#TidyTuesday | Data: data.nber.org (10.3386/w15319)", 50)) +
-  facet_wrap(~iso3c, nrow = 2) +
-  theme_void() +
-  theme(legend.position = "none", 
-        legend.title = element_blank(), 
-        strip.text = element_text(size = 24, family = "Roboto"), 
-        legend.text = element_text(size = 12, family = "Roboto"), 
-        plot.background = element_rect(fill = "grey80", color = "grey80"), 
-        panel.background = element_rect(fill = "grey80", color = "grey80"), 
-        plot.title = element_text(family = "Roboto", 
-                                  margin = margin(t = 1, b = 1), 
-                                  face = "bold", 
-                                  size = 24), 
-        plot.subtitle = element_text(family = "Roboto", 
-                                  margin = margin(t = 10, b = 10), 
-                                  size = 10, 
-                                  lineheight = 0.5), 
-                                  
-        plot.margin = unit(c(0.1, 0.1, 0.1, 0.1), unit = "cm"))
-
-#Join plots
-plotFinal <- plotData + inset_element(plotLegend, -0.5, 0.1, 0.68, 0.4, 
-                                      align_to = "plot") &
-  theme(plot.background = element_rect(fill = "#dedede", colour = "#dedede"), 
-        panel.background = element_rect(fill = "#dedede", colour = "#dedede"))
+```{r map visualization}
+mapAdoptData <- tuesdata$technology %>%
+  filter(str_detect(label, "immunization")) %>%
+  filter(year == 2019) %>%
+  mutate(label = str_extract(label, "a .+ immunization"),
+         label = str_remove_all(label, "a | immunization")) %>%
+  rename(immunization = label) %>%
+  right_join(
+     map_data("world") %>%
+       tibble() %>%
+       mutate(iso3c = countrycode(region,
+                                  origin = "country.name",
+                                  destination = "iso3c")),
+     by = "iso3c")
+  
+mapAdoptData %>%
+  filter(immunization != "YFV") %>%
+  ggplot(aes(long, lat, group = group.y, fill = value)) +
+  geom_polygon() +
+  scale_fill_carto_c(palette = "Earth", direction = 1) +
+  facet_wrap(~immunization) +
+  ggthemes::theme_map() +
+  guides(fill = guide_colorbar(title.position = "top", title.hjust = 0.5)) +
+  theme(plot.margin = margin(0.25, 0.5, 0.25, 0.5, "cm"),
+        legend.direction = 'horizontal',
+        legend.position = 'top',
+        legend.justification = 'center',
+        legend.title = element_text(family = 'Roboto', size = 12),
+        legend.text = element_text(margin = margin(0, -1, 0, -1, "cm"), family = "Roboto",
+                                   size = 10),
+        strip.text = element_text(size = 12),
+        strip.background = element_blank(),
+        plot.title = element_text(hjust = 0.5, family = "Roboto", size = 17)) +
+  labs(title = "Percentage of Children Vaccine Immunization in 2019",
+       fill = "Percentage")
 
 
-
-
-
-
-
+ggsave("2022-07-19.png", height = 8, width = 16, bg = "white")
 
 ```
-
