@@ -1,3 +1,111 @@
+```{r libraries}
+library(tidyverse)
+library(lubridate)
+library(wesanderson)
+library(showtext)
+library(rcartocolor)
+```
+
 ```{r load data}
-tuesdata <- tidytuesdayR::tt_load('2022-08-02')
+#tuesdata <- tidytuesdayR::tt_load('2022-08-02')
+font_add("Roboto", "C:/Users/HDailey/AppData/Local/Microsoft/Windows/Fonts/Roboto-Regular.ttf", "C:/Users/HDailey/AppData/Local/Microsoft/Windows/Fonts/Roboto-Bold.ttf")
+frogData <- tuesdata$frogs %>%
+  mutate(gender = ifelse(Female == 1, "Female", "Male"),
+         date = parse_date_time(SurveyDate, "%m/%d/%Y")) %>%
+         #date = as.Date.POSIXct(date)) %>%
+  select(-c(Site, Female))
+```
+
+```{r count by type and gender}
+frogData %>%
+  count(Type, gender, month = month(date, label = TRUE)) %>%
+  mutate(type = fct_reorder(Type, -n, sum)) %>%
+  ggplot(aes(month, n, fill = type, group = type)) +
+  geom_area(alpha = 0.7) +
+  facet_grid(gender ~ type) +
+  theme(legend.position = "none") +
+  labs(y = "# of survey frogs",
+       x = NULL,
+       title = "# of Survey Frogs per Month")
+```
+
+```{r type and water}
+frogData %>%
+  count(Water, Type) %>%
+  mutate(Water = str_to_title(Water),
+         Water = fct_reorder(Water, n),
+         Type = fct_reorder(Type, -n, sum)) %>%
+  ggplot(aes(n, Water, fill = Type)) +
+  geom_col() +
+  labs(x = "# of frogs",
+       y = "",
+       fill = "",
+       title = "# of frogs by water type")
+```
+
+```{r gender and detection}
+frogData %>%
+  count(gender, Detection) %>%
+  mutate(Detection = fct_reorder(Detection, n, sum)) %>%
+  ggplot(aes(gender, Detection, fill = n)) +
+  geom_tile(color = "white",
+            lwd = 1.5, 
+            linetype = 1) +
+  geom_text(aes(label = n), color = "black", size = 8) +
+  scale_fill_gradientn(colors = wes_palette("GrandBudapest1", type = "continuous")) +
+  labs(x = "",
+       y = "",
+       fill = "# of frogs",
+       title = "Frog Detection by Gender")
+```
+
+```{r frequency and gender}
+frogData%>%
+  ggplot(aes(Frequency, gender, fill = gender)) +
+  geom_violin(show.legend = FALSE, alpha = 0.5) +
+  scale_fill_manual(values = wes_palette("GrandBudapest1", 2, type = "discrete")) +
+  labs(y = "",
+       title = "Frequency of Frogs by Gender")
+```
+
+```{r Structure and subsite}
+frogData %>%
+  count(Subsite, Structure) %>%
+  mutate(Structure = str_to_title(Structure),
+         Structure = fct_reorder(Structure, n),
+         Subsite = fct_reorder(Subsite, -n, sum),
+         Subsite = fct_recode(Subsite,
+                              `North Resevoir` = "N Res",
+                              `Southeast Pond` = "SE Pond",
+                              `West Resevoir` = "W Res",
+                              `Northeast Resevoir` = "NE Res",
+                              )) %>%
+  ggplot(aes(n, Subsite, fill = Structure)) +
+  geom_col() +
+  labs(x = "Number of Frogs Observed",
+       y = NULL,
+       title = "Oregon Spotted Frog",
+       subtitle = str_wrap("Radio-telemetry was used to study Oregon spotted frogs at Crane Prairie Reservoir, OR between September and November of 2018. Oregon spotted frogs were most commonly found in areas with herbaceous vegetation."),
+       caption = "Data: USGS.gov | #TidyTuesday") +
+  scale_fill_carto_d(palette = "Earth", direction = -1) +
+  scale_y_discrete(limits = rev) +
+  #scale_fill_manual(values = wes_palette("Darjeeling1", 5, type = "discrete")) +
+  guides(fill = guide_legend(reverse = TRUE)) +
+  theme(legend.position = "bottom",
+        legend.title = element_blank(),
+        plot.margin = unit(c(0.5, 3, 0.5, 0.5), "cm"),
+        plot.title = element_text(family = "Roboto", hjust = 0.5, size = 24, margin = margin(b = 10)),
+        plot.background = element_rect(colour = "white", fill = "white"),
+        panel.background = element_rect(colour = "white", fill = "white"),
+        legend.background = element_rect(colour = "white", fill = "white"),
+        legend.key = element_rect(colour = "white", fill = "white"),
+        legend.text = element_text(family = "Roboto", size = 10),
+        plot.subtitle = element_text(family = "Roboto", hjust = 0.5, size = 12),
+        plot.caption = element_text(family = "Roboto", hjust = 1, size = 8),
+        axis.text = element_text(family = "Roboto", size = 10),
+        axis.title = element_text(family = "Roboto", size = 10),
+        axis.ticks = element_blank(),
+        panel.grid = element_blank())
+
+ggsave(filename = "2022-08-02_TT.png")  
 ```
