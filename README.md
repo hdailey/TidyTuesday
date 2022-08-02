@@ -5,7 +5,7 @@ August 02, 2022 - Oregon Spotted Frog
 ![image](https://user-images.githubusercontent.com/91282117/182450144-40d0c6d0-5768-4113-9cb9-60088aeaac12.png)
 
 July 19, 2022 - Technology Adoption
-TBD
+![image](https://user-images.githubusercontent.com/91282117/182464986-c7f26404-912e-49ca-acdd-58cffcb4177d.png)
 
 July 12, 2022 - EU Flights
 ![image](https://user-images.githubusercontent.com/91282117/179805679-165c1472-f9b6-4495-b9e3-0804cba97dc3.png)
