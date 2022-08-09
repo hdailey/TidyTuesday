@@ -1,3 +1,87 @@
 ```{r library and data}
+#libraries
+library(tidyverse)
+library(lubridate)
+library(showtext)
+library(rcartocolor)
+library(ggpubr)
+library(cowplot)
+#data
+tuesdata <- tidytuesdayR::tt_load('2022-08-09')
+
+#fonts
+font_add_google("Roboto")
+showtext_auto()
+```
+
+```{r data manipulation, warning = FALSE}
+wheels <- tuesdata$wheels %>%
+  filter(!is.na(status),
+         !is.na(diameter),
+         !is.na(ride_duration_minutes),
+         is.na(closed),
+         status == "Operating") %>%
+  arrange(., desc(height))
+
+plotWheels <- wheels %>%
+  ggplot(aes(x = height, y = diameter)) +
+  theme_bw() +
+  geom_point(aes(color = ride_duration_minutes), size = 4) +
+  scale_color_carto_c(palette = "Earth") +
+  geom_smooth(method = "lm", alpha = 0.25, size = 1, color = "black") +
+  labs(x = "Height (feet)",
+       y = "Diameter (feet)",
+       ) +
+  guides(color = guide_colorbar(title = "Ride Duration (min)", 
+                                direction = "horizontal", 
+                                title.position = "top", title.hjust = 0.5,
+                                title.vjust = -0.5,
+                                barwidth = 20, barheight = 1)) +
+  theme(plot.margin = margin(2, 0.5, 0.25, 0.5, "cm"),
+        plot.background = element_rect(fill = 'white', colour = 'white'),
+        legend.position = "bottom",
+        legend.direction = "horizontal",
+        legend.justification = "center",
+        legend.background = element_rect(colour = "white", fill = "white"),
+        legend.key = element_rect(colour = "white", fill = "white"),
+        legend.text = element_text(margin = margin(0, -1, 0, -1, "cm"), family = "Roboto", size = 20),
+        legend.title = element_text(family = "Roboto", size = 25),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        axis.text = element_text(family = "Roboto", size = 25),
+        axis.title = element_text(family = "Roboto", size = 25)) +
+  ggrepel::geom_label_repel(data = wheels, aes(label = country), size = 12, max.overlaps = 15) +
+  stat_cor(label.x = 460, label.y = 125, size = 12) +
+  stat_regline_equation(label.x = 460, label.y = 100, size = 12)
+
+plotWheelsAnn <- ggdraw(plotWheels) +
+  draw_text("Operational Ferris Wheels Throughout the World", x = 0.5, y = 0.95,
+            fontface = "bold", size = 60, family = "Roboto", color = "black") +
+  draw_text(str_wrap("Of the ferris wheel globally, only 28 are currently operating with approximately 65-percent operating in Asian countries. Of these 65-percent, the average ride duration was approximately 20 minutes compared to only 14 minutes for ferris wheels operating in other regions."), lineheight = 0.5, size = 32, x = 0.5, y = 0.83) +
+  draw_text('Source: ferriswheels | #TidyTuesday', x = 0.9, y = 0.01,
+            fontface = "bold", size = 20, family = "Roboto", color = 'black', vjust = -0.001)
+  
+  
+ggsave(filename = "2022-08-09_FerrisWheels.png", width = 11, height = 8, unit = "in")
+
+
 
 ```
+
+```{r}
+wheelsAsia <- wheels %>%
+  filter(country != "USA",
+         country != "UK",
+         country != "Russia",
+         country != "Canada",
+         country != "Austria",
+         country != "Mexico")
+avgWheelsAsia <- mean(wheelsAsia$ride_duration_minutes)
+
+wheelsOther <- wheels %>%
+    filter(country %in% c("USA", "UK", "Russia", "Canada", "Mexico", "Austria"))
+
+avgWheelsOther <- mean(wheelsOther$ride_duration_minutes)
+
+```
+
