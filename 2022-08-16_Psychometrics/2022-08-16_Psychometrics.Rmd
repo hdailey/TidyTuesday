@@ -1,4 +1,5 @@
 ```{r packages and data}
 library(tidyverse)
 
+tuesdata <- tidytuesdayR::tt_load('2022-08-16')
 ```
