@@ -1,5 +1,218 @@
 ```{r packages and data}
+#libraries
 library(tidyverse)
+library(lubridate)
+library(showtext)
+library(ggpointdensity)
 
+
+#data
 tuesdata <- tidytuesdayR::tt_load('2022-08-16')
+
+characters <- tuesdata$characters
+myers_briggs <- tuesdata$myers_briggs
+psych_stats <- tuesdata$psych_stats
+
+#fonts
+font_add_google("Montserrat")
+showtext_auto()
+```
+
+```{r data analysis}
+happySad <- psych_stats %>%
+  filter(question == "happy/sad") %>%
+  mutate(score = if_else(personality == "happy", avg_rating, 100 - avg_rating))
+
+mbHappySad <- myers_briggs %>%
+  left_join(happySad)
+
+mbHappySad %>%
+  ggplot(aes(score, y = avg_match_perc)) +
+  geom_pointdensity() +
+  geom_smooth(method = "lm") +
+  geom_tile(aes(x = 50, y = 80, width = Inf, height = 8,
+            fill = case_when(
+              str_starts(myers_briggs, "INTP") ~ "grey70",
+              str_starts(myers_briggs, "ENT|EST") ~ "#A2BEFF",
+              str_starts(myers_briggs, "INT|IST") ~ "coral",
+              TRUE ~ "cornflowerblue")
+            )) +
+  geom_text(aes(x = 500, y = 80, label = myers_briggs), 
+            color = "white", stat = "unique", family = "Roboto", fontface = "bold") +
+  scale_y_continuous(breaks = seq(30, 70, 10)) +
+  scale_color_viridis_c(option = "turbo") +
+  scale_fill_identity() +
+  facet_wrap(vars(myers_briggs)) +
+  labs(
+    title = "Happy vs Sad Characters",
+    subtitle = "",
+    x = "Happy/Sad score of character (higher score = Happier)",
+    y = "Average match percentage") +
+  theme_minimal() +
+  theme(
+    legend.position = "none",
+    plot.background = element_rect(fill = "grey97", color = NA),
+    strip.text = element_blank(),
+    axis.text = element_text(color = "grey60", size = 7),
+    axis.title.x = element_text(margin = margin(10, 0, 0, 0)),
+    axis.title.y = element_text(margin = margin(0, 10, 0, 0)),
+    plot.margin = margin(20, 20, 20, 20),
+    plot.title = element_text(size = 20)
+  )
+
+```
+
+```{r plot 2 libraries}
+library(igraph)
+library(ggraph)
+library(tidygraph)
+library(ggforce)
+
+font_add_google("Montserrat")
+showtext_auto()
+```
+
+```{r plot 2 data analysis}
+#Network to see similarities between Harry Potter Characters
+##Set Seed
+set.seed(19941130)
+
+##Intersection
+psycho_df <- psych_stats %>%
+  filter(uni_name == "Harry Potter" & avg_rating >= 80) %>%
+  group_by(char_name, question) %>%
+  slice_max(order_by = avg_rating, n = 1, with_ties = FALSE) %>%
+  ungroup() %>%
+  group_by(question) %>%
+  mutate(question_id = cur_group_id(),
+         personality = str_c(question_id, personality, sep = "_")) %>%
+  ungroup() %>%
+  select(char_name, question, personality) %>%
+  group_by(char_name) %>%
+  summarise(personality = list(as.character(personality))) %>%
+  rename("from" = "char_name") %>%
+  crossing(rename(., "to" = "from", "personality_to" = "personality")) %>%
+  mutate(frequency = map2_dbl(personality, personality_to, ~length(base::intersect(.x, .y)))) %>%
+  select(from, to, frequency) %>%
+  filter(from != to) %>%
+  mutate(similarity = case_when(frequency <= quantile(frequency, probs = 0.80) ~ "q80",
+                                                  frequency <= quantile(frequency, probs = 0.90) ~ "q90",
+                                                  frequency <= quantile(frequency, probs = 0.95) ~ "q95",
+                                                  frequency <= quantile(frequency, probs = 0.99) ~ "q99",
+                                                  TRUE ~ "Top1")) %>%
+  arrange(frequency)
+
+##Network
+##Network Vertices
+psycho_ve <- psycho_df %>%
+  group_by(to) %>%
+  summarise(links = sum(frequency)) %>%
+  select(to, links)
+
+##Network Object
+psycho_ig <- igraph::graph_from_data_frame(d = psycho_df,
+                                           vertices = psycho_ve,
+                                           directed = FALSE)
+
+##Network tidy
+psycho_tg <- tidygraph::as_tbl_graph(psycho_ig) %>%
+             tidygraph::activate(nodes) %>%
+             mutate(label = name)
+
+size <- igraph::V(psycho_tg)$links
+
+##Legend Annotation
+data_label <- tibble(x = seq(1.75, 2.25, length.out = 30),
+                     y = seq(-1.35, -1.35, length.out = 30),
+                     color  = psycho_ve %>% pull(links) %>% sort(),
+                     alpha  = psycho_ve %>% pull(links) %>% sort(),    
+                     size   = psycho_ve %>% pull(links) %>% sort())
+
+##Plot
+##Aesthetics
+background     <- "#141C26"
+lines_color    <- "#A6444C"
+title_color    <- "#F2C230"
+subtitle_color <- "#FFAB16"
+text_color     <- "#F2F2F2"
+caption_color  <- "#6C7D8C"
+
+##Annotation
+annotation_title_text <- c("Harry Potter")
+annotation_text <- c("The Open-Source Psychometrics Project, it has recruited more than 3 million volunteers to rate characters from different series, according to 400 descriptive adjectives and other properties. The responses can be aggregated to create profiles that users can match as part of a personality test. In total, the project collects information on more than 2,000 characters, with 400 descriptive adjectives rated on a scale of 1 to 100, depending on how strongly one would identify the character's particular characteristic. From the data set, Harry Potter characters have been selected, to investigate which characters share the greatest number of the strongest characteristics (rating >80%) in common or similarity.")
+annotation_text <- stringr::str_wrap(annotation_text, 70) %>% 
+                   stringr::str_replace_all("\n","<br>")
+
+rm(Plot)
+Plot <- psycho_tg %>%
+        ggraph::ggraph(layout = "igraph", algorithm = 'fr') +
+        ggraph::geom_edge_arc(aes(edge_width = similarity, alpha = similarity, colour = similarity), 
+                              lineend = "round", strength = .1) +
+        ggraph::geom_node_point(aes(colour = links), 
+                                fill = background, size = log(size) * 1.5, alpha = 1.0, shape = 21) +
+        ggraph::geom_node_point(aes(colour = links), size = log(size) * 1.0, alpha = 1.0) +
+        ### Annotations ###
+        ggraph::geom_node_label(aes(label = label), colour = text_color, size = log(size) * 0.60, 
+                                family = "Montserrat", fontface = "bold", repel = FALSE, 
+                                nudge_y = -0.04, nudge_x = 0.00, alpha = 0.6, fill = background, label.size = NA) +
+        ggtext::geom_richtext(aes(x = 1.26, y = -1.33), label = annotation_text, color = subtitle_color, size = 4, 
+                              family = "Montserrat", fill = "transparent", label.size = NA, 
+                              hjust = 0.5, vjust = 0.5) +#, 
+                              #margin = margin(t = 0.1, r = 0.1, b = 0.5, l = 0.1, unit = "cm")) +
+        ### Scales ###
+        ggraph::scale_edge_width_manual(values = c(seq(0.2, 1.0, length.out = 4), 2.0), 
+                                        breaks = c("q80","q90","q95","q99","Top1")) +
+        ggraph::scale_edge_alpha_manual(values = c(seq(0.2, 0.5, length.out = 4), 0.8), 
+                                        breaks = c("q80","q90","q95","q99","Top1")) +
+        ggraph::scale_edge_colour_manual(values = viridis::inferno(n = length(unique(psycho_df$similarity)), 
+                                                                   begin = 0.5, end = 0.9, direction = 1)) +
+        scale_colour_gradientn(colors = viridis::plasma(n = length(unique(psycho_ve$links)), 
+                                                        begin = 0.5, end = 0.9, direction = 1)) +
+        #guides(edge_width = "none", edge_alpha = "none", colour = "none", edge_colour = "none") +
+        coord_cartesian(ylim = c(-1.4, 1.4)) +
+  theme(
+    ## Plot Aesthetic ##
+    panel.background = element_rect(fill = background, color = NA),
+    plot.background  = element_rect(fill = background, color = NA),
+    ## Titles & Caption ##
+    plot.title.position = "panel",
+    plot.title = ggtext::element_markdown(color = title_color, family = "Montserrat",
+                                          face = "plain", size = 42, hjust = 0.5, halign = 0.5, vjust = 0.5,
+                                          valign = 0.5, margin = unit(c(0.1, 0.1, 0.1, 0.1), "cm")),
+    plot.caption.position = "panel",
+    plot.caption = ggtext::element_markdown(color = caption_color, family = "Montserrat", size = 10,
+                                            hjust = 1, vjust = 0,
+                                            margin = margin(t = -0.5, r = 0.1, b = 0.1, l = 0.0, unit = "cm")),
+    ## Margin ##
+    plot.margin = margin(t = 0.5, r = 1.5, b = 0.5, l = 1.5, unit = "cm")) +
+    ### Labels ###
+    ggplot2::labs(x = "",
+                  y = "",
+                  title = annotation_title_text)
+# 
+# Final_Plot <- Plot +
+#               ### Legend Annotation ###
+#               ggforce::geom_link2(data = data_label, aes(x = x, y = y, colour = color, 
+#                                                          alpha = alpha, size = size, group = 1), lineend = 'round') +
+#               geom_point(data = data_label[c(1, 30),], aes(x = x, y = y, colour = color), 
+#                          fill = background, alpha = 1.0, size = range(log(size) * 1.5), shape = 21) +
+#               geom_point(data = data_label[c(1, 30),], aes(x = x, y = y, colour = color), 
+#                          alpha = 1.0, size = range(log(size))) +
+#               geom_text(data = data_label[c(1, 30),], aes(x = x, y = y + 0.002), label = c("-","+"), 
+#                         colour = background, alpha = 1.0, size = sort(log(size))[c(1,30)], 
+#                         family = "Montserrat", fontface = "bold", hjust = 0.5, vjust = 0.5) +
+#               geom_text(data = data_label[15,], aes(x = x, y = y + 0.100), 
+#                         label = "How to read the network?", colour = subtitle_color, alpha = 1.0, 
+#                         size = sort(log(size) * 1.5)[1], family = "Montserrat", fontface = "plain") +
+#               geom_text(data = data_label[15,], aes(x = x, y = y + 0.025), label = "Connections Scale", 
+#                         colour = text_color, alpha = 1.0, size = sort(log(size) * 0.8)[1], 
+#                         family = "Montserrat", fontface = "bold") +
+#               geom_text(data = data_label[15,], aes(x = x, y = y - 0.025), label = "Similarity Scale", 
+#                         colour = text_color, alpha = 1.0, size = sort(log(size) * 0.8)[1], 
+#                         family = "Montserrat", fontface = "bold") +
+#               scale_alpha_continuous(range = c(0.0, 1.0)) +
+#               scale_size_continuous(range = c(0.2, 2.0)) +
+#               guides(colour = "none", alpha = "none", size = "none")
+
+ggsave("2022-08-16_Psychometrics.png", Final_Plot, dpi = 326, scale = 1, width = 12, height = 14, units = c("in"))
 ```
