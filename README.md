@@ -5,6 +5,7 @@ August 16, 2022 - Psychometrics
 ![image](https://user-images.githubusercontent.com/91282117/186250478-508d3496-6f76-4266-a0e3-2a23b516d18b.png)
 
 August 08, 2022 - Ferris Wheels
+![image](https://user-images.githubusercontent.com/91282117/186250644-ad38d7dd-836b-417e-b5cf-8ce107d622c0.png)
 
 August 02, 2022 - Oregon Spotted Frog
 ![image](https://user-images.githubusercontent.com/91282117/182450144-40d0c6d0-5768-4113-9cb9-60088aeaac12.png)
