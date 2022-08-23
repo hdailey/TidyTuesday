@@ -1,0 +1,448 @@
+```{r packages and data}
+#libraries
+library(tidyverse)
+library(showtext)
+library(stringr)
+library(ggimage)
+library(patchwork)
+library(egg)
+
+
+#data
+tuesdata <- tidytuesdayR::tt_load('2022-08-16')
+
+characters <- tuesdata$characters
+myers_briggs <- tuesdata$myers_briggs
+psych_stats <- tuesdata$psych_stats
+
+#fonts
+font_add_google("Montserrat")
+showtext_auto()
+```
+```{r coords system}
+#Define coordinate system
+#https://stackoverflow.com/questions/36579767/add-unit-labels-to-radar-plot-and-remove-outer-ring-ggplot2-spider-web-plot-co
+coord_radar <- function (theta = "x", start = 0, direction = 1) {
+  theta <- match.arg(theta, c("x", "y"))
+  r <- if (theta == "x") 
+    "y"
+  else "x"
+  
+  #dirty
+  rename_data <- function(coord, data) {
+    if (coord$theta == "y") {
+      plyr::rename(data, c("y" = "theta", "x" = "r"), warn_missing = FALSE)
+    } else {
+      plyr::rename(data, c("y" = "r", "x" = "theta"), warn_missing = FALSE)
+    }
+  }
+  theta_rescale <- function(coord, x, scale_details) {
+    rotate <- function(x) (x + coord$start) %% (2 * pi) * coord$direction
+    rotate(scales::rescale(x, c(0, 2 * pi), scale_details$theta.range))
+  }
+  
+  r_rescale <- function(coord, x, scale_details) {
+    scales::rescale(x, c(0, 0.4), scale_details$r.range)
+  }
+  
+  ggproto("CordRadar", CoordPolar, theta = theta, r = r, start = start, 
+          direction = sign(direction),
+          is_linear = function(coord) TRUE,
+          render_bg = function(self, scale_details, theme) {
+            scale_details <- rename_data(self, scale_details)
+            
+            theta <- if (length(scale_details$theta.major) > 0)
+              theta_rescale(self, scale_details$theta.major, scale_details)
+            thetamin <- if (length(scale_details$theta.minor) > 0)
+              theta_rescale(self, scale_details$theta.minor, scale_details)
+            thetafine <- seq(0, 2 * pi, length.out = 100)
+            
+            rfine <- c(r_rescale(self, scale_details$r.major, scale_details))
+            
+            # This gets the proper theme element for theta and r grid lines:
+            #   panel.grid.major.x or .y
+            majortheta <- paste("panel.grid.major.", self$theta, sep = "")
+            minortheta <- paste("panel.grid.minor.", self$theta, sep = "")
+            majorr     <- paste("panel.grid.major.", self$r,     sep = "")
+            
+            ggplot2:::ggname("grill", grid::grobTree(
+              ggplot2:::element_render(theme, "panel.background"),
+              if (length(theta) > 0) ggplot2:::element_render(
+                theme, majortheta, name = "angle",
+                x = c(rbind(0, 0.45 * sin(theta))) + 0.5,
+                y = c(rbind(0, 0.45 * cos(theta))) + 0.5,
+                id.lengths = rep(2, length(theta)),
+                default.units = "native"
+              ),
+              if (length(thetamin) > 0) ggplot2:::element_render(
+                theme, minortheta, name = "angle",
+                x = c(rbind(0, 0.45 * sin(thetamin))) + 0.5,
+                y = c(rbind(0, 0.45 * cos(thetamin))) + 0.5,
+                id.lengths = rep(2, length(thetamin)),
+                default.units = "native"
+              ),
+              
+              ggplot2:::element_render(
+                theme, majorr, name = "radius",
+                x = rep(rfine, each = length(thetafine)) * sin(thetafine) + 0.5,
+                y = rep(rfine, each = length(thetafine)) * cos(thetafine) + 0.5,
+                id.lengths = rep(length(thetafine), length(rfine)),
+                default.units = "native"
+              )
+            ))
+          })
+}
+```
+
+```{r web plots}
+# psych_stats %>%
+#   filter(uni_name == "Friends") %>%
+#   group_by(question, personality) %>%
+#   summarise(n = n()) %>%
+#   filter(n == 6) %>%
+#   print(n = 150)
+
+scores <- psych_stats %>%
+  filter(uni_name == "Friends",
+         question %in% c("nurturing/poisonous", "cruel/kind",
+                         "loud/quiet", "loyal/traitorous", "chatty/reserved")) %>%
+  select(c(char_id, personality, avg_rating)) %>%
+  pivot_wider(names_from = "personality", values_from = "avg_rating")
+
+plotScores <- characters %>%
+  filter(uni_name== "Friends") %>%
+  left_join(scores, by = c("id" = "char_id")) %>%
+  select(-c(id, uni_id, uni_name, notability, link))
+
+#rachel plot
+rachelPlot <- filter(plotScores, name == "Rachel Green") %>%
+  pivot_longer(cols = -c(name, image_link), names_to = "trait", values_to = "score") %>%
+  mutate(trait = str_to_upper(trait)) %>%
+  mutate(trait = paste0(trait, "\n", round(score))) %>%
+  arrange(trait)
+
+rachelP <- ggplot(rachelPlot, aes(x = trait,
+                   y = score,
+                   group = name))+
+  geom_polygon(fill = "firebrick",
+               colour = "firebrick", 
+               alpha = 0.4) +
+  geom_point(colour = "firebrick",
+             size = 4) +
+  geom_line(data = data.frame(x = rep(rachelPlot$trait, 2),
+                              y = c(rep(0, length(rachelPlot$trait)), rep(100, length(rachelPlot$trait)))),
+            mapping = aes(x = x,
+                          y = y,
+                          group = x),
+            colour = "white",
+            alpha = 0.5)+
+  geom_point(data = data.frame(x=rachelPlot$trait, y=rep(100, length(rachelPlot$trait))),
+             inherit.aes = FALSE, 
+             mapping = aes(x = x,
+                           y = y),
+             colour = "white",
+             size = 4) +
+  geom_image(data = slice(rachelPlot, n = 1),
+             aes(x = 1,
+                 y = -40,
+                 image = paste0("./images/", slice(rachelPlot, n = 1) %>% pull(name), ".jpg")),
+             size = 0.18) +
+  scale_y_continuous(limits = c(-40, 120),
+                     breaks = seq(0, 100, 20))+
+  coord_radar() +
+  labs(x = "", 
+       y = "",
+       title = str_to_upper(slice(rachelPlot, n = 1) %>% pull(name)),
+       caption = "") +
+  theme(plot.margin = margin(0, 0, -10, -25),
+        plot.background = element_rect(fill = "black", colour = "black"),
+        panel.background = element_rect(fill = "black", colour = "black"),
+        panel.grid.major.x = element_blank(),
+        axis.text.x = element_text(colour = "firebrick", family = "Montserrat", size = 24, face = "bold"),
+        axis.text.y = element_blank(),
+        panel.grid.minor.y = element_blank(),
+        panel.grid = element_line(colour = "white"),
+        plot.title = element_text(colour = "firebrick", hjust = 0.5, family = "Montserrat", size = 32, face = "bold"),
+        plot.caption = element_text(colour="firebrick", size=10, hjust = 0.5, family = "Montserrat")
+  )
+
+#Monica plot
+monicaPlot <- filter(plotScores, name == "Monica Geller") %>%
+  pivot_longer(cols = -c(name, image_link), names_to = "trait", values_to = "score") %>%
+  mutate(trait = str_to_upper(trait)) %>%
+  mutate(trait = paste0(trait, "\n", round(score))) %>%
+  arrange(trait)
+
+monicaP <- ggplot(monicaPlot, aes(x = trait,
+                   y = score,
+                   group = name))+
+  geom_polygon(fill = "dodgerblue",
+               colour = "dodgerblue", 
+               alpha = 0.4) +
+  geom_point(colour = "dodgerblue",
+             size = 4) +
+  geom_line(data = data.frame(x = rep(monicaPlot$trait, 2),
+                              y = c(rep(0, length(monicaPlot$trait)), rep(100, length(monicaPlot$trait)))),
+            mapping = aes(x = x,
+                          y = y,
+                          group = x),
+            colour = "white",
+            alpha = 0.5)+
+  geom_point(data = data.frame(x=monicaPlot$trait, y=rep(100, length(monicaPlot$trait))),
+             inherit.aes = FALSE, 
+             mapping = aes(x = x,
+                           y = y),
+             colour = "white",
+             size = 4) +
+  geom_image(data = slice(monicaPlot, n = 1),
+             aes(x = 1,
+                 y = -40,
+                 image = paste0("./images/", slice(monicaPlot, n = 1) %>% pull(name), ".jpg")),
+             size = 0.18) +
+  scale_y_continuous(limits = c(-40, 120),
+                     breaks = seq(0, 100, 20))+
+  coord_radar() +
+  labs(x = "", 
+       y = "",
+       title = str_to_upper(slice(monicaPlot, n = 1) %>% pull(name)),
+       caption = "") +
+ theme(plot.margin = margin(0, 0, -10, 0),
+        plot.background = element_rect(fill = "black", colour = "black"),
+        panel.background = element_rect(fill = "black", colour = "black"),
+        panel.grid.major.x = element_blank(),
+        axis.text.x = element_text(colour = "dodgerblue", family = "Montserrat", size = 24, face = "bold"),
+        axis.text.y = element_blank(),
+        panel.grid.minor.y = element_blank(),
+        panel.grid = element_line(colour = "white"),
+        plot.title = element_text(colour = "dodgerblue", hjust = 0.5, family = "Montserrat", size = 36, face = "bold"),
+        plot.caption = element_text(colour="dodgerblue", size = 10, hjust = 0.5, family = "Montserrat")
+  )
+
+
+#Phoebe plot
+phoebePlot <- filter(plotScores, name == "Phoebe Buffay") %>%
+  pivot_longer(cols = -c(name, image_link), names_to = "trait", values_to = "score") %>%
+  mutate(trait = str_to_upper(trait)) %>%
+  mutate(trait = paste0(trait, "\n", round(score))) %>%
+  arrange(trait)
+
+phoebeP <- ggplot(phoebePlot, aes(x = trait,
+                   y = score,
+                   group = name))+
+  geom_polygon(fill = "gold",
+               colour = "gold", 
+               alpha = 0.4) +
+  geom_point(colour = "gold",
+             size = 4) +
+  geom_line(data = data.frame(x = rep(phoebePlot$trait, 2),
+                              y = c(rep(0, length(phoebePlot$trait)), rep(100, length(phoebePlot$trait)))),
+            mapping = aes(x = x,
+                          y = y,
+                          group = x),
+            colour = "white",
+            alpha = 0.5)+
+  geom_point(data = data.frame(x=phoebePlot$trait, y=rep(100, length(phoebePlot$trait))),
+             inherit.aes = FALSE, 
+             mapping = aes(x = x,
+                           y = y),
+             colour = "white",
+             size = 4) +
+  geom_image(data = slice(phoebePlot, n = 1),
+             aes(x = 1,
+                 y = -40,
+                 image = paste0("./images/", slice(phoebePlot, n = 1) %>% pull(name), ".jpg")),
+             size = 0.18) +
+  scale_y_continuous(limits = c(-40, 120),
+                     breaks = seq(0, 100, 20))+
+  coord_radar() +
+  labs(x = "", 
+       y = "",
+       title = str_to_upper(slice(phoebePlot, n = 1) %>% pull(name)),
+       caption = "") +
+  theme(plot.margin = margin(0, -50, -10, 0),
+        plot.background = element_rect(fill = "black", colour = "black"),
+        panel.background = element_rect(fill = "black", colour = "black"),
+        panel.grid.major.x = element_blank(),
+        axis.text.x = element_text(colour = "gold", family = "Montserrat", size = 24, face = "bold"),
+       
+        axis.text.y = element_blank(),
+        panel.grid.minor.y = element_blank(),
+        panel.grid = element_line(colour = "white"),
+        plot.title = element_text(colour = "gold", hjust = 0.5, family = "Montserrat", face = "bold", size = 36),
+        plot.caption = element_text(colour="gold", size=10, hjust = 0.5, family = "Montserrat") 
+  ) 
+
+
+#Joey plot
+joeyPlot <- filter(plotScores, name == "Joey Tribbiani") %>%
+  pivot_longer(cols = -c(name, image_link), names_to = "trait", values_to = "score") %>%
+  mutate(trait = str_to_upper(trait)) %>%
+  mutate(trait = paste0(trait, "\n", round(score))) %>%
+  arrange(trait)
+
+joeyP <- ggplot(joeyPlot, aes(x = trait,
+                   y = score,
+                   group = name))+
+  geom_polygon(fill = "firebrick",
+               colour = "firebrick", 
+               alpha = 0.4) +
+  geom_point(colour = "firebrick",
+             size = 4) +
+  geom_line(data = data.frame(x = rep(joeyPlot$trait, 2),
+                              y = c(rep(0, length(joeyPlot$trait)), rep(100, length(joeyPlot$trait)))),
+            mapping = aes(x = x,
+                          y = y,
+                          group = x),
+            colour = "white",
+            alpha = 0.5)+
+  geom_point(data = data.frame(x=joeyPlot$trait, y=rep(100, length(joeyPlot$trait))),
+             inherit.aes = FALSE, 
+             mapping = aes(x = x,
+                           y = y),
+             colour = "white",
+             size = 4) +
+  geom_image(data = slice(joeyPlot, n = 1),
+             aes(x = 1,
+                 y = -40,
+                 image = paste0("./images/", slice(joeyPlot, n = 1) %>% pull(name), ".jpg")),
+             size = 0.18) +
+  scale_y_continuous(limits = c(-40, 120),
+                     breaks = seq(0, 100, 20))+
+  coord_radar() +
+  labs(x = "", 
+       y = "",
+       title = str_to_upper(slice(joeyPlot, n = 1) %>% pull(name)),
+       caption = "") +
+  theme(plot.margin = margin(0, 0, -25, -25),
+        plot.background = element_rect(fill = "black", colour = "black"),
+        panel.background = element_rect(fill = "black", colour = "black"),
+        panel.grid.major.x = element_blank(),
+        axis.text.x = element_text(colour = "firebrick", family = "Montserrat", size = 24, face = "bold"),
+        axis.text.y = element_blank(),
+        panel.grid.minor.y = element_blank(),
+        panel.grid = element_line(colour = "white"),
+        plot.title = element_text(colour = "firebrick", hjust = 0.5, family = "Montserrat", size = 32, face = "bold"),
+        plot.caption = element_text(colour="firebrick", size=10, hjust = 0.5, family = "Montserrat")
+  )
+
+#Chandler plot
+chandlerPlot <- filter(plotScores, name == "Chandler Bing") %>%
+  pivot_longer(cols = -c(name, image_link), names_to = "trait", values_to = "score") %>%
+  mutate(trait = str_to_upper(trait)) %>%
+  mutate(trait = paste0(trait, "\n", round(score))) %>%
+  arrange(trait)
+
+chandlerP <- ggplot(chandlerPlot, aes(x = trait,
+                   y = score,
+                   group = name))+
+  geom_polygon(fill = "dodgerblue",
+               colour = "dodgerblue", 
+               alpha = 0.4) +
+  geom_point(colour = "dodgerblue",
+             size = 4) +
+  geom_line(data = data.frame(x = rep(chandlerPlot$trait, 2),
+                              y = c(rep(0, length(chandlerPlot$trait)), rep(100, length(chandlerPlot$trait)))),
+            mapping = aes(x = x,
+                          y = y,
+                          group = x),
+            colour = "white",
+            alpha = 0.5)+
+  geom_point(data = data.frame(x=chandlerPlot$trait, y=rep(100, length(chandlerPlot$trait))),
+             inherit.aes = FALSE, 
+             mapping = aes(x = x,
+                           y = y),
+             colour = "white",
+             size = 4) +
+  geom_image(data = slice(chandlerPlot, n = 1),
+             aes(x = 1,
+                 y = -40,
+                 image = paste0("./images/", slice(chandlerPlot, n = 1) %>% pull(name), ".jpg")),
+             size = 0.18) +
+  scale_y_continuous(limits = c(-40, 120),
+                     breaks = seq(0, 100, 20))+
+  coord_radar() +
+  labs(x = "", 
+       y = "",
+       title = str_to_upper(slice(chandlerPlot, n = 1) %>% pull(name)),
+       caption = "") +
+  theme(plot.margin = margin(0, 0, -25, 0),
+        plot.background = element_rect(fill = "black", colour = "black"),
+        panel.background = element_rect(fill = "black", colour = "black"),
+        panel.grid.major.x = element_blank(),
+        axis.text.x = element_text(colour = "dodgerblue", family = "Montserrat", size = 24, face = "bold"),
+        axis.text.y = element_blank(),
+        panel.grid.minor.y = element_blank(),
+        panel.grid = element_line(colour = "white"),
+        plot.title = element_text(colour = "dodgerblue", hjust = 0.5, family = "Montserrat", size = 36, face = "bold"),
+        plot.caption = element_text(colour="dodgerblue", size = 10, hjust = 0.5, family = "Montserrat")
+  )
+
+#Ross plot
+rossPlot <- filter(plotScores, name == "Ross Geller") %>%
+  pivot_longer(cols = -c(name, image_link), names_to = "trait", values_to = "score") %>%
+  mutate(trait = str_to_upper(trait)) %>%
+  mutate(trait = paste0(trait, "\n", round(score))) %>%
+  arrange(trait)
+
+rossP <- ggplot(rossPlot, aes(x = trait,
+                   y = score,
+                   group = name))+
+  geom_polygon(fill = "gold",
+               colour = "gold", 
+               alpha = 0.4) +
+  geom_point(colour = "gold",
+             size = 4) +
+  geom_line(data = data.frame(x = rep(rossPlot$trait, 2),
+                              y = c(rep(0, length(rossPlot$trait)), rep(100, length(rossPlot$trait)))),
+            mapping = aes(x = x,
+                          y = y,
+                          group = x),
+            colour = "white",
+            alpha = 0.5)+
+  geom_point(data = data.frame(x=rossPlot$trait, y=rep(100, length(rossPlot$trait))),
+             inherit.aes = FALSE,
+             mapping = aes(x = x,
+                           y = y),
+             colour = "white",
+             size = 4) +
+  geom_image(data = slice(rossPlot, n = 1),
+             aes(x = 1,
+                 y = -40,
+                 image = paste0("./images/", slice(rossPlot, n = 1) %>% pull(name), ".jpg")),
+             size = 0.18) +
+  scale_y_continuous(limits = c(-40, 120),
+                     breaks = seq(0, 100, 20))+
+  coord_radar() +
+  labs(x = "", 
+       y = "",
+       title = str_to_upper(slice(rossPlot, n = 1) %>% pull(name)),
+       caption = "") +
+  theme(plot.margin = margin(0, -50, -25, 0),
+        plot.background = element_rect(fill = "black", colour = "black"),
+        panel.background = element_rect(fill = "black", colour = "black"),
+        panel.grid.major.x = element_blank(),
+        axis.text.x = element_text(colour = "gold", family = "Montserrat", size = 24, face = "bold"),
+       
+        axis.text.y = element_blank(),
+        panel.grid.minor.y = element_blank(),
+        panel.grid = element_line(colour = "white"),
+        plot.title = element_text(colour = "gold", hjust = 0.5, family = "Montserrat", face = "bold", size = 36),
+        plot.caption = element_text(colour="gold", size=10, hjust = 0.5, family = "Montserrat") 
+  ) 
+
+finalPlot <-  (rachelP  + monicaP  + phoebeP) / 
+              (joeyP + chandlerP + rossP) + plot_layout(nrow = 2, widths = c(1, 3))
+
+
+annotatedPlot <- finalPlot + plot_annotation(title = "Friends Attribute Matrix",
+                                             subtitle = "Inspired by the TV series Friends. Personality traits scaled from 0 to 100.",
+                                             caption = "Data: Open-Source Psychometrics Project") &
+  theme(title = element_text(size = 65, family = "Montserrat", face = "bold", color = "white"),
+        plot.subtitle = element_text(size = 36, family = "Montserrat", face = "plain", color = "white"),
+        plot.background = element_rect(color = "black", fill = "black"),
+        plot.caption = element_text(size = 20, family = "Montserrat", face = "plain", color = "white"))
+
+ggsave(annotatedPlot, filename = "2022-08-16_Psychometrics.png", width = 20, height = 16, unit = "in")
+
+```
+
