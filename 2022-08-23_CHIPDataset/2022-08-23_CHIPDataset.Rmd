@@ -52,17 +52,18 @@ plotConsole <- ggplot(chipConsoles) +
   geom_line(aes(x = release_date, y = tdp_w/die_size_mm_2, group = interaction(console, model), color = col), size = 0.25) +
   geom_text_repel(aes(x = release_date, y = tdp_w/die_size_mm_2, label = label, color = colorspace::lighten(col, 0.2)), 
                   size = 4, family = "Roboto", bg.color = "white", seed = 11, lineheight = 0.9) +
-  geom_richtext(data = NULL, aes(x = as.Date("2021-01-01"), y = 1.15, label = "**<span style='color:#1D3E87;'>PlayStation</span>**, **<span style='color:#367C21;'>Xbox</span>** and **<span style='color:lightblue;'>Wii</span>** <br> GPU efficiency<br><span style = 'font-size:18pt'>(watts per mm²)</span><br><span style = 'font-size:12pt; color:gray40'>Source: The CHIP Dataset</span>"), family = "Roboto", size = 10, vjust = 1, hjust = 1, fill = NA, label.color = NA) +
+  annotate(geom = "richtext", label = "<span style= 'color: #1D3E87;'>PlayStation</span> , <span style='color:#367C21;'>Xbox</span><br> and  <span style='color:lightblue;'>Wii</span> GPU Efficiency <br> <span style = 'font-size:14pt; color:gray40'>Source: The CHIP Dataset </span>",
+           x = as.Date("2017-01-01"), y = 1.05, size = 12, lineheight = 0.5, fill = "#fdf6e3") +
   scale_size_area(max_size = 6) +
   scale_x_date(date_labels = "%Y", minor_breaks = "1 year") +
   scale_color_identity() +
   coord_cartesian(clip = "off") +
   theme_solarized(base_family = "Roboto") +
+  labs(x = "Release Year", y = "GPU Efficiency (watts per mm²)") +
   theme(
     legend.position = "none",
     plot.background = element_rect(fill = "#fdf6e3", color = NA),
-    axis.title = element_blank(),
-    plot.margin = margin(10, 5, 5, 5),
+    plot.margin = margin(15, 10, 10, 10),
     axis.text.x = element_text(family = "Roboto", size = 12),
     axis.text.y = element_text(family = "Roboto", size = 12)
   )
