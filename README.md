@@ -5,6 +5,7 @@ August 30, 2022 - Pell Grant
 ![image](https://user-images.githubusercontent.com/91282117/187514049-bb601be9-8113-4019-8f39-9ecc81a1b670.png)
 
 August 23, 2022 - CHIP Dataset
+![image](https://user-images.githubusercontent.com/91282117/187534636-89692677-56f9-4e63-96ae-b8134776ecdb.png)
 
 August 16, 2022 - Psychometrics
 ![image](https://user-images.githubusercontent.com/91282117/186250478-508d3496-6f76-4266-a0e3-2a23b516d18b.png)
