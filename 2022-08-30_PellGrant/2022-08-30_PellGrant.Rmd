@@ -2,6 +2,10 @@
 #libraries
 library(tidyverse)
 library(showtext)
+library(lubridate)
+library(geofacet)
+library(scales)
+library(ggthemes)
 
 #data
 tuesdata <- tidytuesdayR::tt_load("2022-08-30")
@@ -9,4 +13,46 @@ tuesdata <- tidytuesdayR::tt_load("2022-08-30")
 #fonts
 font_add_google("Roboto")
 showtext_auto()
+```
+
+```{r data visualization}
+pell <- tuesdata$pell %>%
+  mutate(YEAR = ISOdate(YEAR, 06, 01)) %>%
+  mutate(YEAR = as.Date(YEAR)) %>%
+  na.omit() %>%
+  group_by(YEAR) %>%
+  summarise(sumAward = sum(AWARD), 
+            sumRecipients = sum(RECIPIENT))
+
+plotPell <- pell %>%
+  ggplot() +
+  geom_bar(aes(x = YEAR, y = sumAward), stat = "identity", color = "darkslategray3", fill = "darkslategray3", 
+           width = 300) +
+  geom_text(aes(x = YEAR, y = sumAward, label = dollar(sumAward, accuracy = 1)),
+            vjust = 1.5, size = 8, fontface = "bold", color = "black") +
+  geom_line(aes(x = YEAR, y = sumRecipients * 1500, group = 1), color = "white") +
+  geom_text(aes(x = YEAR, y = sumRecipients * 1500, label = sumRecipients),
+            vjust = 2, size = 8, fontface = "bold", color = "white") +
+  annotate("rect", xmin = as.Date("2012-06-30"), xmax = as.Date("2016-06-30"), 
+           ymin = 38000000000, ymax = 42000000000, fill = "grey50", color = "grey50", alpha = 0.75) +
+  annotate("text", x = as.Date("2013-06-30"), y = 40000000000, label = "- Number of Borrowers", size = 10, color = "white") +
+  geom_label(aes(x = as.Date("2015-06-30"), y = 40000000000, label = "Total Pell Grant Awarded"), size = 10, fill = "darkslategray3") +
+
+  scale_y_continuous(sec.axis = sec_axis(~./1500, name = ""),
+                     labels = comma) +
+  labs(x = "Year", y = "",
+       title = "Total Number of Pell Grant Recipients and Awards from 2000 through 2021",
+       subtitle = "Steep increases in Recipients and Awards are observed from 2000 through 2010, with declines observed post-2011",
+       caption = "Data: U.S. Department of Education") +
+  theme_solarized_2() +
+  theme(axis.text.x = element_text(family = "Roboto", size = 32, face = "bold"),
+        axis.text.y.left = element_text(family = "Roboto", size = 32, face = "bold"),
+        axis.text.y.right = element_blank(),
+        axis.title.x = element_text(family = "Roboto", size = 32, face = "bold"),
+        axis.ticks.y.right = element_blank(),
+        plot.caption = element_text(family = "Roboto", size = 20),
+        plot.title = element_text(family = "Roboto", size = 48, face = "bold"),
+        plot.subtitle = element_text(family = "Roboto", size = 32))
+
+ggsave(filename = "2022-08-30_TT.png", width = 20, height = 8, unit = "in")
 ```

@@ -1,12 +1,21 @@
 ```{r library data and fonts}
 #libraries
 library(tidyverse)
-
+library(showtext)
 
 #data
-tuesdata <- tidytuesdayR::tt_load('2022-08-23')
+#tuesdata <- tidytuesdayR::tt_load('2022-08-23')
+chips <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2022/2022-08-23/chips.csv')
 
 #fonts
 font_add_google("Roboto")
 showtext_auto()
+```
+```{r data analysis}
+chips <- tuesdata$chips
+
+chips %>%
+  ggplot() +
+  geom_line(aes(x = year, y = transistors_million)) +
+  geom_line(aes(x = year, y = tdp_w))
 ```
