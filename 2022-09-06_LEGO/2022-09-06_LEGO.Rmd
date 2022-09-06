@@ -1,0 +1,8 @@
+```{r library, data, fonts}
+#libraries
+library(tidyverse)
+library(showtext)
+
+#data
+tuesdata <- tidytuesdayR::tt_load('2022-09-06')
+```
