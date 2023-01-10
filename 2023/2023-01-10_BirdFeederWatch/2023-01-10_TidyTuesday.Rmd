@@ -5,12 +5,8 @@ output: html_notebook
 ---
 ```{r}
 library(tidyverse)
-library(sf)
-library(tigris)
 library(lubridate)
-library(grid)
 library(showtext)
-library(cowplot)
 
 #fonts
 font_add_google("Roboto")
