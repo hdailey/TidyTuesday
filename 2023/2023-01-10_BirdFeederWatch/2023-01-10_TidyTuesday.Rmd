@@ -7,6 +7,8 @@ output: html_notebook
 library(tidyverse)
 library(lubridate)
 library(showtext)
+library(tigris)
+library(sf)
 
 #fonts
 font_add_google("Roboto")
@@ -14,4 +16,37 @@ showtext_auto()
 
 #Read in data
 tuesdata <- tidytuesdayR::tt_load(2023, week = 2)
+```
+```{r}
+#Data Exploration
+data <- tuesdata$PFW_2021_public %>%
+  filter(grepl("US-CA", subnational1_code))
+
+locCA <- data$loc_id
+
+dataCount <- tuesdata$PFW_count_site_data_public_2021 %>%
+  filter(loc_id %in% locCA) %>%
+  inner_join(data, dataCount, by = "loc_id") %>%
+  filter(species_code == "acowoo")
+
+caData <- dataCount %>%
+  group_by()
+
+```
+
+```{r}
+#Plot Feeder Locations
+# feederLoc <- st_as_sf(dataCount, coords = c("longitude", "latitude")) %>%
+#   st_set_crs(4269)
+# 
+# caMap <- counties(state = 06) %>%
+#   st_as_sf()
+
+feederMap <- ggplot() +
+  geom_sf(data = caMap, fill = NA) +
+  geom_sf(data = feederLoc, aes(group = loc_id, colour = loc_id)) +
+  theme_minimal() +
+  labs(title = "Acorn Woodpecker Observations at Feeder Watch Locations",
+       caption = "https://feederwatch.org/ | Tidy Tuesday") +
+  theme(legend.position = "none")
 ```
