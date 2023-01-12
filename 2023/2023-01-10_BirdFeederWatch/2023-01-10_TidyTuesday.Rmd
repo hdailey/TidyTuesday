@@ -3,50 +3,99 @@
 title: "Tidy Tuesday - January 10, 2023"
 output: html_notebook
 ---
-```{r}
+```{r Libraries, Fonts, Data}
 library(tidyverse)
 library(lubridate)
 library(showtext)
-library(tigris)
 library(sf)
+library(cowplot)
 
 #fonts
-font_add_google("Roboto")
+font_add_google("Averia Serif Libre")
 showtext_auto()
 
 #Read in data
 tuesdata <- tidytuesdayR::tt_load(2023, week = 2)
 ```
-```{r}
-#Data Exploration
+
+```{r Data Exploration}
 data <- tuesdata$PFW_2021_public %>%
-  filter(grepl("US-CA", subnational1_code))
+  select(c(loc_id, latitude, longitude, subnational1_code, 
+           Month, Day, Year, PROJ_PERIOD_ID, species_code, how_many)) %>%
+  mutate(Date = make_date(year = Year, month = Month, day = Day)) %>%
+  filter(grepl("US-CA", subnational1_code)) %>%
+  arrange(ymd(Date))
 
 locCA <- data$loc_id
 
 dataCount <- tuesdata$PFW_count_site_data_public_2021 %>%
   filter(loc_id %in% locCA) %>%
   inner_join(data, dataCount, by = "loc_id") %>%
-  filter(species_code == "acowoo")
+  mutate(yardType = ifelse(yard_type_pavement == 1, "Pavement",
+                           ifelse(yard_type_garden == 1, "Garden",
+                                  ifelse(yard_type_landsca == 1, "Landscape",
+                                         ifelse(yard_type_woods == 1, "Woods",
+                                                ifelse(yard_type_desert == 1, "Desert", NA)))))) %>%
+  drop_na(yardType) %>%
+  select(c(loc_id, latitude, longitude, Date, yardType, species_code)) %>%
+  filter(species_code == "acowoo") 
+```
 
-caData <- dataCount %>%
-  group_by()
+```{r Feeder Locations}
+feederLoc <- st_as_sf(dataCount, coords = c("longitude", "latitude")) %>%
+  st_set_crs(4269)
+
+caMap <- tigris::counties(state = 06) %>%
+  st_as_sf()
+
+feederMap <- ggplot() +
+  geom_sf(data = caMap, fill = NA) +
+  geom_sf(data = feederLoc, aes(group = loc_id, colour = yardType), size = 2) +
+  scale_colour_manual(values = c("Landscape" = "#b5b991",
+                                 "Woods" = "#edbb8a",
+                                 "Pavement" = "#ca562c",
+                                 "Garden" = "#3d5941")) +
+  theme_void() +
+  theme(legend.position = "none")
+```
+
+```{r Yard Type}
+yardTypeData <- dataCount %>%
+  mutate(yardType = as_factor(yardType)) %>%
+  count(yardType)
+
+
+plotYardType <- ggplot(yardTypeData, aes(n, reorder(yardType, n), fill = yardType)) +
+  geom_col() +
+  geom_text(aes(label = n), hjust = 1, family = "Averia Serif Libre", size = 12) +
+  labs(x = "# of Acorn Woodpeckers",
+       y = "",
+       title = "Number of Acorn Woodpeckers by Yard Type",
+       caption = "Source: FeederWatch | Tidy Tuesday") +
+  rcartocolor::scale_fill_carto_d(palette = "Fall") +
+  theme(legend.position = "none") 
+```
+
+```{r}
+#Final Plot
+plotFinal <- plotYardType +
+  annotation_custom(ggplotGrob(feederMap), xmin = 150, ymax = 3.75) +
+  guides(fill = guide_legend(reverse = TRUE)) +
+  annotate("text", x = 88, y = 2.5, label = str_wrap("FeederWatch data for the 2020-2021 observation season, where citizen scientists report observations of birds visiting feeders. Of the 37 monitoring locations with Acorn Woodpeckers observed, landscaped yards most commonly observed the Acorn Woodpecker at feeders.", width = 50), lineheight = 0.5, family = "Averia Serif Libre", size = 14) +
+  theme(legend.title = element_blank(),
+        plot.margin = unit(c(0.5, 3, 0.5, 0.5), "cm"),
+        plot.title = element_text(family = "Averia Serif Libre", hjust = 0.5, size = 64, margin = margin(b = 10)),
+        plot.background = element_rect(colour = "gray95", fill = "gray95"),
+        panel.background = element_rect(colour = "gray95", fill = "gray95"),
+        plot.caption = element_text(family = "Averia Serif Libre", hjust = 1, size = 20),
+        axis.text = element_text(family = "Averia Serif Libre", colour = "black", size = 32),
+        axis.title = element_blank(),
+        axis.ticks = element_blank(),
+        panel.grid = element_blank())
 
 ```
 
 ```{r}
-#Plot Feeder Locations
-# feederLoc <- st_as_sf(dataCount, coords = c("longitude", "latitude")) %>%
-#   st_set_crs(4269)
-# 
-# caMap <- counties(state = 06) %>%
-#   st_as_sf()
-
-feederMap <- ggplot() +
-  geom_sf(data = caMap, fill = NA) +
-  geom_sf(data = feederLoc, aes(group = loc_id, colour = loc_id)) +
-  theme_minimal() +
-  labs(title = "Acorn Woodpecker Observations at Feeder Watch Locations",
-       caption = "https://feederwatch.org/ | Tidy Tuesday") +
-  theme(legend.position = "none")
+ggsave(plot = plotFinal, filename = "2023-01-10_TT.png", width = 11, height = 8, unit = "in")
 ```
+

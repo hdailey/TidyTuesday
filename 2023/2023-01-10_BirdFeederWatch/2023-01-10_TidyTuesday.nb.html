@@ -1754,65 +1754,129 @@ display: none;
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxudHVlc2RhdGEgPC0gdGlkeXR1ZXNkYXlSOjp0dF9sb2FkKDIwMjMsIHdlZWsgPSAyKVxuXG5gYGAifQ== -->
-<pre class="r"><code>tuesdata &lt;- tidytuesdayR::tt_load(2023, week = 2)
-</code></pre>
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGlicmFyeSh0aWR5dmVyc2UpXG5saWJyYXJ5KGx1YnJpZGF0ZSlcbmxpYnJhcnkoc2hvd3RleHQpXG5saWJyYXJ5KHNmKVxubGlicmFyeShjb3dwbG90KVxuXG4jZm9udHNcbmZvbnRfYWRkX2dvb2dsZShcIkF2ZXJpYSBTZXJpZiBMaWJyZVwiKVxuc2hvd3RleHRfYXV0bygpXG5cbiNSZWFkIGluIGRhdGFcbnR1ZXNkYXRhIDwtIHRpZHl0dWVzZGF5Ujo6dHRfbG9hZCgyMDIzLCB3ZWVrID0gMilcbmBgYCJ9 -->
+<pre class="r"><code>library(tidyverse)
+library(lubridate)
+library(showtext)
+library(sf)
+library(cowplot)
+
+#fonts
+font_add_google(&quot;Averia Serif Libre&quot;)
+showtext_auto()
+
+#Read in data
+tuesdata &lt;- tidytuesdayR::tt_load(2023, week = 2)</code></pre>
 <!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiLS0tIENvbXBpbGluZyAjVGlkeVR1ZXNkYXkgSW5mb3JtYXRpb24gZm9yIDIwMjMtMDEtMTAgLS0tLVxuLS0tIFRoZXJlIGFyZSAyIGZpbGVzIGF2YWlsYWJsZSAtLS1cbi0tLSBTdGFydGluZyBEb3dubG9hZCAtLS1cbiJ9 -->
-<pre><code>--- Compiling #TidyTuesday Information for 2023-01-10 ----
---- There are 2 files available ---
---- Starting Download ---</code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiXG5cdERvd25sb2FkaW5nIGZpbGUgMSBvZiAyOiBgUEZXXzIwMjFfcHVibGljLmNzdmBcblx0RG93bmxvYWRpbmcgZmlsZSAyIG9mIDI6IGBQRldfY291bnRfc2l0ZV9kYXRhX3B1YmxpY18yMDIxLmNzdmBcbiJ9 -->
-<pre><code>
-    Downloading file 1 of 2: `PFW_2021_public.csv`
-    Downloading file 2 of 2: `PFW_count_site_data_public_2021.csv`</code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiLS0tIERvd25sb2FkIGNvbXBsZXRlIC0tLVxuIn0= -->
-<pre><code>--- Download complete ---</code></pre>
-<!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuI0RhdGEgRXhwbG9yYXRpb25cbmRhdGEgPC0gdHVlc2RhdGEkUEZXXzIwMjFfcHVibGljICU+JVxuICBmaWx0ZXIoZ3JlcGwoXCJVUy1DQVwiLCBzdWJuYXRpb25hbDFfY29kZSkpXG5cbmxvY0NBIDwtIGRhdGEkbG9jX2lkXG5cbmRhdGFDb3VudCA8LSB0dWVzZGF0YSRQRldfY291bnRfc2l0ZV9kYXRhX3B1YmxpY18yMDIxICU+JVxuICBmaWx0ZXIobG9jX2lkICVpbiUgbG9jQ0EpICU+JVxuICBpbm5lcl9qb2luKGRhdGEsIGRhdGFDb3VudCwgYnkgPSBcImxvY19pZFwiKSAlPiVcbiAgZmlsdGVyKHNwZWNpZXNfY29kZSA9PSBcImFjb3dvb1wiKVxuXG5gYGAifQ== -->
-<pre class="r"><code>#Data Exploration
-data &lt;- tuesdata$PFW_2021_public %&gt;%
-  filter(grepl(&quot;US-CA&quot;, subnational1_code))
-
-locCA &lt;- data$loc_id
-
-dataCount &lt;- tuesdata$PFW_count_site_data_public_2021 %&gt;%
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuZGF0YUNvdW50IDwtIHR1ZXNkYXRhJFBGV19jb3VudF9zaXRlX2RhdGFfcHVibGljXzIwMjEgJT4lXG4gIGZpbHRlcihsb2NfaWQgJWluJSBsb2NDQSkgJT4lXG4gIGlubmVyX2pvaW4oZGF0YSwgZGF0YUNvdW50LCBieSA9IFwibG9jX2lkXCIpICU+JVxuICBtdXRhdGUoeWFyZFR5cGUgPSBpZmVsc2UoeWFyZF90eXBlX3BhdmVtZW50ID09IDEsIFwiUGF2ZW1lbnRcIixcbiAgICAgICAgICAgICAgICAgICAgICAgICAgIGlmZWxzZSh5YXJkX3R5cGVfZ2FyZGVuID09IDEsIFwiR2FyZGVuXCIsXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgaWZlbHNlKHlhcmRfdHlwZV9sYW5kc2NhID09IDEsIFwiTGFuZHNjYXBlXCIsXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGlmZWxzZSh5YXJkX3R5cGVfd29vZHMgPT0gMSwgXCJXb29kc1wiLFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgaWZlbHNlKHlhcmRfdHlwZV9kZXNlcnQgPT0gMSwgXCJEZXNlcnRcIiwgTkEpKSkpKSkgJT4lXG4gIGRyb3BfbmEoeWFyZFR5cGUpICU+JVxuICBzZWxlY3QoYyhsb2NfaWQsIGxhdGl0dWRlLCBsb25naXR1ZGUsIERhdGUsIHlhcmRUeXBlKSkgJT4lXG4gIGZpbHRlcihzcGVjaWVzX2NvZGUgPT0gXCJhY293b29cIikgXG5cbmBgYCJ9 -->
+<pre class="r"><code>dataCount &lt;- tuesdata$PFW_count_site_data_public_2021 %&gt;%
   filter(loc_id %in% locCA) %&gt;%
   inner_join(data, dataCount, by = &quot;loc_id&quot;) %&gt;%
-  filter(species_code == &quot;acowoo&quot;)
+  mutate(yardType = ifelse(yard_type_pavement == 1, &quot;Pavement&quot;,
+                           ifelse(yard_type_garden == 1, &quot;Garden&quot;,
+                                  ifelse(yard_type_landsca == 1, &quot;Landscape&quot;,
+                                         ifelse(yard_type_woods == 1, &quot;Woods&quot;,
+                                                ifelse(yard_type_desert == 1, &quot;Desert&quot;, NA)))))) %&gt;%
+  drop_na(yardType) %&gt;%
+  select(c(loc_id, latitude, longitude, Date, yardType)) %&gt;%
+  filter(species_code == &quot;acowoo&quot;) 
+</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiRXJyb3IgaW4gYGZpbHRlcigpYDpcbiEgUHJvYmxlbSB3aGlsZSBjb21wdXRpbmcgYC4uMSA9IHNwZWNpZXNfY29kZSA9PSBcImFjb3dvb1wiYC5cbkNhdXNlZCBieSBlcnJvciBpbiBgbWFzayRldmFsX2FsbF9maWx0ZXIoKWA6XG4hIG9iamVjdCAnc3BlY2llc19jb2RlJyBub3QgZm91bmRcbkJhY2t0cmFjZTpcbiAxLiAuLi4gJT4lIGZpbHRlcihzcGVjaWVzX2NvZGUgPT0gXCJhY293b29cIilcbiAzLiBkcGx5cjo6OmZpbHRlci5kYXRhLmZyYW1lKC4sIHNwZWNpZXNfY29kZSA9PSBcImFjb3dvb1wiKVxuIDQuIGRwbHlyOjo6ZmlsdGVyX3Jvd3MoLmRhdGEsIC4uLiwgY2FsbGVyX2VudiA9IGNhbGxlcl9lbnYoKSlcbiA1LiBkcGx5cjo6OmZpbHRlcl9ldmFsKGRvdHMsIG1hc2sgPSBtYXNrLCBlcnJvcl9jYWxsID0gZXJyb3JfY2FsbClcbiA3LiBtYXNrJGV2YWxfYWxsX2ZpbHRlcihkb3RzLCBlbnZfZmlsdGVyKVxuIn0= -->
+<pre><code>Error in `filter()`:
+! Problem while computing `..1 = species_code == &quot;acowoo&quot;`.
+Caused by error in `mask$eval_all_filter()`:
+! object &#39;species_code&#39; not found
+Backtrace:
+ 1. ... %&gt;% filter(species_code == &quot;acowoo&quot;)
+ 3. dplyr:::filter.data.frame(., species_code == &quot;acowoo&quot;)
+ 4. dplyr:::filter_rows(.data, ..., caller_env = caller_env())
+ 5. dplyr:::filter_eval(dots, mask = mask, error_call = error_call)
+ 7. mask$eval_all_filter(dots, env_filter)</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuI1Bsb3QgRmVlZGVyIExvY2F0aW9uc1xuIyBmZWVkZXJMb2MgPC0gc3RfYXNfc2YoZGF0YUNvdW50LCBjb29yZHMgPSBjKFwibG9uZ2l0dWRlXCIsIFwibGF0aXR1ZGVcIikpICU+JVxuIyAgIHN0X3NldF9jcnMoNDI2OSlcbiMgXG4jIGNhTWFwIDwtIHRpZ3Jpczo6Y291bnRpZXMoc3RhdGUgPSAwNikgJT4lXG4jICAgc3RfYXNfc2YoKVxuXG5mZWVkZXJNYXAgPC0gZ2dwbG90KCkgK1xuICBnZW9tX3NmKGRhdGEgPSBjYU1hcCwgZmlsbCA9IE5BKSArXG4gIGdlb21fc2YoZGF0YSA9IGZlZWRlckxvYywgYWVzKGdyb3VwID0gbG9jX2lkLCBjb2xvdXIgPSB5YXJkVHlwZSksIHNpemUgPSAyKSArXG4gIHNjYWxlX2NvbG91cl9tYW51YWwodmFsdWVzID0gYyhcIkxhbmRzY2FwZVwiID0gXCIjYjViOTkxXCIsXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBcIldvb2RzXCIgPSBcIiNlZGJiOGFcIixcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIFwiUGF2ZW1lbnRcIiA9IFwiI2NhNTYyY1wiLFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgXCJHYXJkZW5cIiA9IFwiIzNkNTk0MVwiKSkgK1xuICB0aGVtZV92b2lkKCkgK1xuICB0aGVtZShsZWdlbmQucG9zaXRpb24gPSBcIm5vbmVcIilcbmBgYCJ9 -->
+<pre class="r"><code>#Plot Feeder Locations
+# feederLoc &lt;- st_as_sf(dataCount, coords = c(&quot;longitude&quot;, &quot;latitude&quot;)) %&gt;%
+#   st_set_crs(4269)
+# 
+# caMap &lt;- tigris::counties(state = 06) %&gt;%
+#   st_as_sf()
+
+feederMap &lt;- ggplot() +
+  geom_sf(data = caMap, fill = NA) +
+  geom_sf(data = feederLoc, aes(group = loc_id, colour = yardType), size = 2) +
+  scale_colour_manual(values = c(&quot;Landscape&quot; = &quot;#b5b991&quot;,
+                                 &quot;Woods&quot; = &quot;#edbb8a&quot;,
+                                 &quot;Pavement&quot; = &quot;#ca562c&quot;,
+                                 &quot;Garden&quot; = &quot;#3d5941&quot;)) +
+  theme_void() +
+  theme(legend.position = &quot;none&quot;)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuI1lhcmQgVHlwZSBkYXRhIGFuZCBwbG90XG55YXJkVHlwZURhdGEgPC0gZGF0YUNvdW50ICU+JVxuICBtdXRhdGUoeWFyZFR5cGUgPSBhc19mYWN0b3IoeWFyZFR5cGUpKSAlPiVcbiAgY291bnQoeWFyZFR5cGUpXG5cblxucGxvdFlhcmRUeXBlIDwtIGdncGxvdCh5YXJkVHlwZURhdGEsIGFlcyhuLCByZW9yZGVyKHlhcmRUeXBlLCBuKSwgZmlsbCA9IHlhcmRUeXBlKSkgK1xuICBnZW9tX2NvbCgpICtcbiAgZ2VvbV90ZXh0KGFlcyhsYWJlbCA9IG4pLCBoanVzdCA9IDEsIGZhbWlseSA9IFwiQXZlcmlhIFNlcmlmIExpYnJlXCIsIHNpemUgPSAxMikgK1xuICBsYWJzKHggPSBcIiMgb2YgQWNvcm4gV29vZHBlY2tlcnNcIixcbiAgICAgICB5ID0gXCJcIixcbiAgICAgICB0aXRsZSA9IFwiTnVtYmVyIG9mIEFjb3JuIFdvb2RwZWNrZXJzIGJ5IFlhcmQgVHlwZVwiLFxuICAgICAgIGNhcHRpb24gPSBcIlNvdXJjZTogRmVlZGVyV2F0Y2ggfCBUaWR5IFR1ZXNkYXlcIikgK1xuICByY2FydG9jb2xvcjo6c2NhbGVfZmlsbF9jYXJ0b19kKHBhbGV0dGUgPSBcIkZhbGxcIikgK1xuICB0aGVtZShsZWdlbmQucG9zaXRpb24gPSBcIm5vbmVcIikgXG5gYGAifQ== -->
+<pre class="r"><code>#Yard Type data and plot
+yardTypeData &lt;- dataCount %&gt;%
+  mutate(yardType = as_factor(yardType)) %&gt;%
+  count(yardType)
+
+
+plotYardType &lt;- ggplot(yardTypeData, aes(n, reorder(yardType, n), fill = yardType)) +
+  geom_col() +
+  geom_text(aes(label = n), hjust = 1, family = &quot;Averia Serif Libre&quot;, size = 12) +
+  labs(x = &quot;# of Acorn Woodpeckers&quot;,
+       y = &quot;&quot;,
+       title = &quot;Number of Acorn Woodpeckers by Yard Type&quot;,
+       caption = &quot;Source: FeederWatch | Tidy Tuesday&quot;) +
+  rcartocolor::scale_fill_carto_d(palette = &quot;Fall&quot;) +
+  theme(legend.position = &quot;none&quot;) </code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuI0ZpbmFsIFBsb3RcbnBsb3RGaW5hbCA8LSBwbG90WWFyZFR5cGUgK1xuICBhbm5vdGF0aW9uX2N1c3RvbShnZ3Bsb3RHcm9iKGZlZWRlck1hcCksIHhtaW4gPSAxNTAsIHltYXggPSAzLjc1KSArXG4gIGd1aWRlcyhmaWxsID0gZ3VpZGVfbGVnZW5kKHJldmVyc2UgPSBUUlVFKSkgK1xuICBhbm5vdGF0ZShcInRleHRcIiwgeCA9IDg4LCB5ID0gMi41LCBsYWJlbCA9IHN0cl93cmFwKFwiRmVlZGVyV2F0Y2ggZGF0YSBmb3IgdGhlIDIwMjAtMjAyMSBvYnNlcnZhdGlvbiBzZWFzb24sIHdoZXJlIGNpdGl6ZW4gc2NpZW50aXN0cyByZXBvcnQgb2JzZXJ2YXRpb25zIG9mIGJpcmRzIHZpc2l0aW5nIGZlZWRlcnMuIE9mIHRoZSAzNyBtb25pdG9yaW5nIGxvY2F0aW9ucyB3aXRoIEFjb3JuIFdvb2RwZWNrZXJzIG9ic2VydmVkLCBsYW5kc2NhcGVkIHlhcmRzIG1vc3QgY29tbW9ubHkgb2JzZXJ2ZWQgdGhlIEFjb3JuIFdvb2RwZWNrZXIgYXQgZmVlZGVycy5cIiwgd2lkdGggPSA1MCksIGxpbmVoZWlnaHQgPSAwLjUsIGZhbWlseSA9IFwiQXZlcmlhIFNlcmlmIExpYnJlXCIsIHNpemUgPSAxNCkgK1xuICB0aGVtZSgjbGVnZW5kLnBvc2l0aW9uID0gXCJib3R0b21cIixcbiAgICAgICAgbGVnZW5kLnRpdGxlID0gZWxlbWVudF9ibGFuaygpLFxuICAgICAgICBwbG90Lm1hcmdpbiA9IHVuaXQoYygwLjUsIDMsIDAuNSwgMC41KSwgXCJjbVwiKSxcbiAgICAgICAgcGxvdC50aXRsZSA9IGVsZW1lbnRfdGV4dChmYW1pbHkgPSBcIkF2ZXJpYSBTZXJpZiBMaWJyZVwiLCBoanVzdCA9IDAuNSwgc2l6ZSA9IDY0LCBtYXJnaW4gPSBtYXJnaW4oYiA9IDEwKSksXG4gICAgICAgIHBsb3QuYmFja2dyb3VuZCA9IGVsZW1lbnRfcmVjdChjb2xvdXIgPSBcImdyYXk5NVwiLCBmaWxsID0gXCJncmF5OTVcIiksXG4gICAgICAgIHBhbmVsLmJhY2tncm91bmQgPSBlbGVtZW50X3JlY3QoY29sb3VyID0gXCJncmF5OTVcIiwgZmlsbCA9IFwiZ3JheTk1XCIpLFxuICAgICAgICBwbG90LmNhcHRpb24gPSBlbGVtZW50X3RleHQoZmFtaWx5ID0gXCJBdmVyaWEgU2VyaWYgTGlicmVcIiwgaGp1c3QgPSAxLCBzaXplID0gMjApLFxuICAgICAgICBheGlzLnRleHQgPSBlbGVtZW50X3RleHQoZmFtaWx5ID0gXCJBdmVyaWEgU2VyaWYgTGlicmVcIiwgY29sb3VyID0gXCJibGFja1wiLCBzaXplID0gMzIpLFxuICAgICAgICBheGlzLnRpdGxlID0gZWxlbWVudF9ibGFuaygpLFxuICAgICAgICBheGlzLnRpY2tzID0gZWxlbWVudF9ibGFuaygpLFxuICAgICAgICBwYW5lbC5ncmlkID0gZWxlbWVudF9ibGFuaygpKVxuXG5gYGAifQ== -->
+<pre class="r"><code>#Final Plot
+plotFinal &lt;- plotYardType +
+  annotation_custom(ggplotGrob(feederMap), xmin = 150, ymax = 3.75) +
+  guides(fill = guide_legend(reverse = TRUE)) +
+  annotate(&quot;text&quot;, x = 88, y = 2.5, label = str_wrap(&quot;FeederWatch data for the 2020-2021 observation season, where citizen scientists report observations of birds visiting feeders. Of the 37 monitoring locations with Acorn Woodpeckers observed, landscaped yards most commonly observed the Acorn Woodpecker at feeders.&quot;, width = 50), lineheight = 0.5, family = &quot;Averia Serif Libre&quot;, size = 14) +
+  theme(#legend.position = &quot;bottom&quot;,
+        legend.title = element_blank(),
+        plot.margin = unit(c(0.5, 3, 0.5, 0.5), &quot;cm&quot;),
+        plot.title = element_text(family = &quot;Averia Serif Libre&quot;, hjust = 0.5, size = 64, margin = margin(b = 10)),
+        plot.background = element_rect(colour = &quot;gray95&quot;, fill = &quot;gray95&quot;),
+        panel.background = element_rect(colour = &quot;gray95&quot;, fill = &quot;gray95&quot;),
+        plot.caption = element_text(family = &quot;Averia Serif Libre&quot;, hjust = 1, size = 20),
+        axis.text = element_text(family = &quot;Averia Serif Libre&quot;, colour = &quot;black&quot;, size = 32),
+        axis.title = element_blank(),
+        axis.ticks = element_blank(),
+        panel.grid = element_blank())
 </code></pre>
 <!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuI1Bsb3QgRmVlZGVyIExvY2F0aW9uc1xuZmVlZGVyTG9jIDwtIHN0X2FzX3NmKGRhdGFDb3VudCwgY29vcmRzID0gYyhcImxvbmdpdHVkZVwiLCBcImxhdGl0dWRlXCIpKSAlPiVcbiAgc3Rfc2V0X2Nycyg0MjY5KVxuXG5jYU1hcCA8LSBjb3VudGllcyhzdGF0ZSA9IDA2KSAlPiVcbiAgc3RfYXNfc2YoKVxuYGBgIn0= -->
-<pre class="r"><code>#Plot Feeder Locations
-feederLoc &lt;- st_as_sf(dataCount, coords = c(&quot;longitude&quot;, &quot;latitude&quot;)) %&gt;%
-  st_set_crs(4269)
-
-caMap &lt;- counties(state = 06) %&gt;%
-  st_as_sf()</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiUmV0cmlldmluZyBkYXRhIGZvciB0aGUgeWVhciAyMDIxXG4ifQ== -->
-<pre><code>Retrieving data for the year 2021</code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuZmVlZGVyTWFwIDwtIGdncGxvdCgpICtcbiAgZ2VvbV9zZihkYXRhID0gY2FNYXAsIGFlcyhjb2xvdXIgPSBcImdyYXk5NFwiKSkgK1xuICBnZW9tX3NmKGRhdGEgPSBmZWVkZXJMb2MsIGFlcyhncm91cCA9IGxvY19pZCwgY29sb3VyID0gbG9jX2lkKSkgK1xuICB0aGVtZV9taW5pbWFsKCkgK1xuICBsYWJzKHRpdGxlID0gXCJBY29ybiBXb29kcGVja2VyIE9ic2VydmF0aW9ucyBhdCBGZWVkZXIgV2F0Y2ggTG9jYXRpb25zXCIsXG4gICAgICAgY2FwdGlvbiA9IFwiaHR0cHM6Ly9mZWVkZXJ3YXRjaC5vcmcvIHwgVGlkeSBUdWVzZGF5XCIpICtcbiAgdGhlbWUobGVnZW5kLnBvc2l0aW9uID0gXCJub25lXCIpXG5gYGAifQ== -->
-<pre class="r"><code>feederMap &lt;- ggplot() +
-  geom_sf(data = caMap, aes(colour = &quot;gray94&quot;)) +
-  geom_sf(data = feederLoc, aes(group = loc_id, colour = loc_id)) +
-  theme_minimal() +
-  labs(title = &quot;Acorn Woodpecker Observations at Feeder Watch Locations&quot;,
-       caption = &quot;https://feederwatch.org/ | Tidy Tuesday&quot;) +
-  theme(legend.position = &quot;none&quot;)</code></pre>
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuZ2dzYXZlKHBsb3QgPSBwbG90RmluYWwsIGZpbGVuYW1lID0gXCIyMDIzLTAxLTEwX1RULnBuZ1wiLCB3aWR0aCA9IDExLCBoZWlnaHQgPSA4LCB1bml0ID0gXCJpblwiKVxuXG5gYGAifQ== -->
+<pre class="r"><code>ggsave(plot = plotFinal, filename = &quot;2023-01-10_TT.png&quot;, width = 11, height = 8, unit = &quot;in&quot;)
+</code></pre>
 <!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<!-- rnb-text-end -->
 
-<div id="rmd-source-code">DQotLS0NCnRpdGxlOiAiVGlkeSBUdWVzZGF5IC0gSmFudWFyeSAxMCwgMjAyMyINCm91dHB1dDogaHRtbF9ub3RlYm9vaw0KLS0tDQpgYGB7cn0NCmxpYnJhcnkodGlkeXZlcnNlKQ0KbGlicmFyeShsdWJyaWRhdGUpDQpsaWJyYXJ5KHNob3d0ZXh0KQ0KbGlicmFyeSh0aWdyaXMpDQpsaWJyYXJ5KHNmKQ0KDQojZm9udHMNCmZvbnRfYWRkX2dvb2dsZSgiUm9ib3RvIikNCnNob3d0ZXh0X2F1dG8oKQ0KDQojUmVhZCBpbiBkYXRhDQp0dWVzZGF0YSA8LSB0aWR5dHVlc2RheVI6OnR0X2xvYWQoMjAyMywgd2VlayA9IDIpDQpgYGANCmBgYHtyfQ0KI0RhdGEgRXhwbG9yYXRpb24NCmRhdGEgPC0gdHVlc2RhdGEkUEZXXzIwMjFfcHVibGljICU+JQ0KICBmaWx0ZXIoZ3JlcGwoIlVTLUNBIiwgc3VibmF0aW9uYWwxX2NvZGUpKQ0KDQpsb2NDQSA8LSBkYXRhJGxvY19pZA0KDQpkYXRhQ291bnQgPC0gdHVlc2RhdGEkUEZXX2NvdW50X3NpdGVfZGF0YV9wdWJsaWNfMjAyMSAlPiUNCiAgZmlsdGVyKGxvY19pZCAlaW4lIGxvY0NBKSAlPiUNCiAgaW5uZXJfam9pbihkYXRhLCBkYXRhQ291bnQsIGJ5ID0gImxvY19pZCIpICU+JQ0KICBmaWx0ZXIoc3BlY2llc19jb2RlID09ICJhY293b28iKQ0KDQpjYURhdGEgPC0gZGF0YUNvdW50ICU+JQ0KICBncm91cF9ieSgpDQoNCmBgYA0KDQpgYGB7cn0NCiNQbG90IEZlZWRlciBMb2NhdGlvbnMNCiMgZmVlZGVyTG9jIDwtIHN0X2FzX3NmKGRhdGFDb3VudCwgY29vcmRzID0gYygibG9uZ2l0dWRlIiwgImxhdGl0dWRlIikpICU+JQ0KIyAgIHN0X3NldF9jcnMoNDI2OSkNCiMgDQojIGNhTWFwIDwtIGNvdW50aWVzKHN0YXRlID0gMDYpICU+JQ0KIyAgIHN0X2FzX3NmKCkNCg0KZmVlZGVyTWFwIDwtIGdncGxvdCgpICsNCiAgZ2VvbV9zZihkYXRhID0gY2FNYXAsIGZpbGwgPSBOQSkgKw0KICBnZW9tX3NmKGRhdGEgPSBmZWVkZXJMb2MsIGFlcyhncm91cCA9IGxvY19pZCwgY29sb3VyID0gbG9jX2lkKSkgKw0KICB0aGVtZV9taW5pbWFsKCkgKw0KICBsYWJzKHRpdGxlID0gIkFjb3JuIFdvb2RwZWNrZXIgT2JzZXJ2YXRpb25zIGF0IEZlZWRlciBXYXRjaCBMb2NhdGlvbnMiLA0KICAgICAgIGNhcHRpb24gPSAiaHR0cHM6Ly9mZWVkZXJ3YXRjaC5vcmcvIHwgVGlkeSBUdWVzZGF5IikgKw0KICB0aGVtZShsZWdlbmQucG9zaXRpb24gPSAibm9uZSIpDQpgYGANCg==</div>
+<div id="rmd-source-code">DQotLS0NCnRpdGxlOiAiVGlkeSBUdWVzZGF5IC0gSmFudWFyeSAxMCwgMjAyMyINCm91dHB1dDogaHRtbF9ub3RlYm9vaw0KLS0tDQpgYGB7ciBMaWJyYXJpZXMsIEZvbnRzLCBEYXRhfQ0KbGlicmFyeSh0aWR5dmVyc2UpDQpsaWJyYXJ5KGx1YnJpZGF0ZSkNCmxpYnJhcnkoc2hvd3RleHQpDQpsaWJyYXJ5KHNmKQ0KbGlicmFyeShjb3dwbG90KQ0KDQojZm9udHMNCmZvbnRfYWRkX2dvb2dsZSgiQXZlcmlhIFNlcmlmIExpYnJlIikNCnNob3d0ZXh0X2F1dG8oKQ0KDQojUmVhZCBpbiBkYXRhDQp0dWVzZGF0YSA8LSB0aWR5dHVlc2RheVI6OnR0X2xvYWQoMjAyMywgd2VlayA9IDIpDQpgYGANCg0KYGBge3IgRGF0YSBFeHBsb3JhdGlvbn0NCmRhdGEgPC0gdHVlc2RhdGEkUEZXXzIwMjFfcHVibGljICU+JQ0KICBzZWxlY3QoYyhsb2NfaWQsIGxhdGl0dWRlLCBsb25naXR1ZGUsIHN1Ym5hdGlvbmFsMV9jb2RlLCANCiAgICAgICAgICAgTW9udGgsIERheSwgWWVhciwgUFJPSl9QRVJJT0RfSUQsIHNwZWNpZXNfY29kZSwgaG93X21hbnkpKSAlPiUNCiAgbXV0YXRlKERhdGUgPSBtYWtlX2RhdGUoeWVhciA9IFllYXIsIG1vbnRoID0gTW9udGgsIGRheSA9IERheSkpICU+JQ0KICBmaWx0ZXIoZ3JlcGwoIlVTLUNBIiwgc3VibmF0aW9uYWwxX2NvZGUpKSAlPiUNCiAgYXJyYW5nZSh5bWQoRGF0ZSkpDQoNCmxvY0NBIDwtIGRhdGEkbG9jX2lkDQoNCmRhdGFDb3VudCA8LSB0dWVzZGF0YSRQRldfY291bnRfc2l0ZV9kYXRhX3B1YmxpY18yMDIxICU+JQ0KICBmaWx0ZXIobG9jX2lkICVpbiUgbG9jQ0EpICU+JQ0KICBpbm5lcl9qb2luKGRhdGEsIGRhdGFDb3VudCwgYnkgPSAibG9jX2lkIikgJT4lDQogIG11dGF0ZSh5YXJkVHlwZSA9IGlmZWxzZSh5YXJkX3R5cGVfcGF2ZW1lbnQgPT0gMSwgIlBhdmVtZW50IiwNCiAgICAgICAgICAgICAgICAgICAgICAgICAgIGlmZWxzZSh5YXJkX3R5cGVfZ2FyZGVuID09IDEsICJHYXJkZW4iLA0KICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGlmZWxzZSh5YXJkX3R5cGVfbGFuZHNjYSA9PSAxLCAiTGFuZHNjYXBlIiwNCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgaWZlbHNlKHlhcmRfdHlwZV93b29kcyA9PSAxLCAiV29vZHMiLA0KICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgaWZlbHNlKHlhcmRfdHlwZV9kZXNlcnQgPT0gMSwgIkRlc2VydCIsIE5BKSkpKSkpICU+JQ0KICBkcm9wX25hKHlhcmRUeXBlKSAlPiUNCiAgc2VsZWN0KGMobG9jX2lkLCBsYXRpdHVkZSwgbG9uZ2l0dWRlLCBEYXRlLCB5YXJkVHlwZSwgc3BlY2llc19jb2RlKSkgJT4lDQogIGZpbHRlcihzcGVjaWVzX2NvZGUgPT0gImFjb3dvbyIpIA0KYGBgDQoNCmBgYHtyIEZlZWRlciBMb2NhdGlvbnN9DQpmZWVkZXJMb2MgPC0gc3RfYXNfc2YoZGF0YUNvdW50LCBjb29yZHMgPSBjKCJsb25naXR1ZGUiLCAibGF0aXR1ZGUiKSkgJT4lDQogIHN0X3NldF9jcnMoNDI2OSkNCg0KY2FNYXAgPC0gdGlncmlzOjpjb3VudGllcyhzdGF0ZSA9IDA2KSAlPiUNCiAgc3RfYXNfc2YoKQ0KDQpmZWVkZXJNYXAgPC0gZ2dwbG90KCkgKw0KICBnZW9tX3NmKGRhdGEgPSBjYU1hcCwgZmlsbCA9IE5BKSArDQogIGdlb21fc2YoZGF0YSA9IGZlZWRlckxvYywgYWVzKGdyb3VwID0gbG9jX2lkLCBjb2xvdXIgPSB5YXJkVHlwZSksIHNpemUgPSAyKSArDQogIHNjYWxlX2NvbG91cl9tYW51YWwodmFsdWVzID0gYygiTGFuZHNjYXBlIiA9ICIjYjViOTkxIiwNCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICJXb29kcyIgPSAiI2VkYmI4YSIsDQogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAiUGF2ZW1lbnQiID0gIiNjYTU2MmMiLA0KICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIkdhcmRlbiIgPSAiIzNkNTk0MSIpKSArDQogIHRoZW1lX3ZvaWQoKSArDQogIHRoZW1lKGxlZ2VuZC5wb3NpdGlvbiA9ICJub25lIikNCmBgYA0KDQpgYGB7ciBZYXJkIFR5cGV9DQp5YXJkVHlwZURhdGEgPC0gZGF0YUNvdW50ICU+JQ0KICBtdXRhdGUoeWFyZFR5cGUgPSBhc19mYWN0b3IoeWFyZFR5cGUpKSAlPiUNCiAgY291bnQoeWFyZFR5cGUpDQoNCg0KcGxvdFlhcmRUeXBlIDwtIGdncGxvdCh5YXJkVHlwZURhdGEsIGFlcyhuLCByZW9yZGVyKHlhcmRUeXBlLCBuKSwgZmlsbCA9IHlhcmRUeXBlKSkgKw0KICBnZW9tX2NvbCgpICsNCiAgZ2VvbV90ZXh0KGFlcyhsYWJlbCA9IG4pLCBoanVzdCA9IDEsIGZhbWlseSA9ICJBdmVyaWEgU2VyaWYgTGlicmUiLCBzaXplID0gMTIpICsNCiAgbGFicyh4ID0gIiMgb2YgQWNvcm4gV29vZHBlY2tlcnMiLA0KICAgICAgIHkgPSAiIiwNCiAgICAgICB0aXRsZSA9ICJOdW1iZXIgb2YgQWNvcm4gV29vZHBlY2tlcnMgYnkgWWFyZCBUeXBlIiwNCiAgICAgICBjYXB0aW9uID0gIlNvdXJjZTogRmVlZGVyV2F0Y2ggfCBUaWR5IFR1ZXNkYXkiKSArDQogIHJjYXJ0b2NvbG9yOjpzY2FsZV9maWxsX2NhcnRvX2QocGFsZXR0ZSA9ICJGYWxsIikgKw0KICB0aGVtZShsZWdlbmQucG9zaXRpb24gPSAibm9uZSIpIA0KYGBgDQoNCmBgYHtyfQ0KI0ZpbmFsIFBsb3QNCnBsb3RGaW5hbCA8LSBwbG90WWFyZFR5cGUgKw0KICBhbm5vdGF0aW9uX2N1c3RvbShnZ3Bsb3RHcm9iKGZlZWRlck1hcCksIHhtaW4gPSAxNTAsIHltYXggPSAzLjc1KSArDQogIGd1aWRlcyhmaWxsID0gZ3VpZGVfbGVnZW5kKHJldmVyc2UgPSBUUlVFKSkgKw0KICBhbm5vdGF0ZSgidGV4dCIsIHggPSA4OCwgeSA9IDIuNSwgbGFiZWwgPSBzdHJfd3JhcCgiRmVlZGVyV2F0Y2ggZGF0YSBmb3IgdGhlIDIwMjAtMjAyMSBvYnNlcnZhdGlvbiBzZWFzb24sIHdoZXJlIGNpdGl6ZW4gc2NpZW50aXN0cyByZXBvcnQgb2JzZXJ2YXRpb25zIG9mIGJpcmRzIHZpc2l0aW5nIGZlZWRlcnMuIE9mIHRoZSAzNyBtb25pdG9yaW5nIGxvY2F0aW9ucyB3aXRoIEFjb3JuIFdvb2RwZWNrZXJzIG9ic2VydmVkLCBsYW5kc2NhcGVkIHlhcmRzIG1vc3QgY29tbW9ubHkgb2JzZXJ2ZWQgdGhlIEFjb3JuIFdvb2RwZWNrZXIgYXQgZmVlZGVycy4iLCB3aWR0aCA9IDUwKSwgbGluZWhlaWdodCA9IDAuNSwgZmFtaWx5ID0gIkF2ZXJpYSBTZXJpZiBMaWJyZSIsIHNpemUgPSAxNCkgKw0KICB0aGVtZShsZWdlbmQudGl0bGUgPSBlbGVtZW50X2JsYW5rKCksDQogICAgICAgIHBsb3QubWFyZ2luID0gdW5pdChjKDAuNSwgMywgMC41LCAwLjUpLCAiY20iKSwNCiAgICAgICAgcGxvdC50aXRsZSA9IGVsZW1lbnRfdGV4dChmYW1pbHkgPSAiQXZlcmlhIFNlcmlmIExpYnJlIiwgaGp1c3QgPSAwLjUsIHNpemUgPSA2NCwgbWFyZ2luID0gbWFyZ2luKGIgPSAxMCkpLA0KICAgICAgICBwbG90LmJhY2tncm91bmQgPSBlbGVtZW50X3JlY3QoY29sb3VyID0gImdyYXk5NSIsIGZpbGwgPSAiZ3JheTk1IiksDQogICAgICAgIHBhbmVsLmJhY2tncm91bmQgPSBlbGVtZW50X3JlY3QoY29sb3VyID0gImdyYXk5NSIsIGZpbGwgPSAiZ3JheTk1IiksDQogICAgICAgIHBsb3QuY2FwdGlvbiA9IGVsZW1lbnRfdGV4dChmYW1pbHkgPSAiQXZlcmlhIFNlcmlmIExpYnJlIiwgaGp1c3QgPSAxLCBzaXplID0gMjApLA0KICAgICAgICBheGlzLnRleHQgPSBlbGVtZW50X3RleHQoZmFtaWx5ID0gIkF2ZXJpYSBTZXJpZiBMaWJyZSIsIGNvbG91ciA9ICJibGFjayIsIHNpemUgPSAzMiksDQogICAgICAgIGF4aXMudGl0bGUgPSBlbGVtZW50X2JsYW5rKCksDQogICAgICAgIGF4aXMudGlja3MgPSBlbGVtZW50X2JsYW5rKCksDQogICAgICAgIHBhbmVsLmdyaWQgPSBlbGVtZW50X2JsYW5rKCkpDQoNCmBgYA0KDQpgYGB7cn0NCmdnc2F2ZShwbG90ID0gcGxvdEZpbmFsLCBmaWxlbmFtZSA9ICIyMDIzLTAxLTEwX1RULnBuZyIsIHdpZHRoID0gMTEsIGhlaWdodCA9IDgsIHVuaXQgPSAiaW4iKQ0KYGBgDQoNCg==</div>
 
 
 
