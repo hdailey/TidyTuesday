@@ -4,11 +4,8 @@ output: html_notebook
 ---
 ```{r Libraries, Fonts, Data}
 library(tidyverse)
-library(lubridate)
 library(showtext)
-library(sf)
 library(cowplot)
-library(geofacet)
 library(treemapify)
 
 #fonts
@@ -20,35 +17,56 @@ tuesdata <- tidytuesdayR::tt_load(2023, week = 3)
 
 ```{r data}
 artists <- tuesdata$artists %>%
-  #filter(artist_nationality == "American") %>%
-  group_by(artist_name, artist_gender, artist_race, artist_ethnicity) %>%
+  filter(artist_nationality == "American") %>%
+  group_by(artist_name, artist_gender, artist_race, artist_ethnicity, book) %>%
   summarise(total_count = n()) %>%
-  mutate(artist_gender = as_factor(artist_gender)) %>%
-  filter(total_count >= 5)
+  mutate(artist_gender = as_factor(artist_gender))
 ```
 
-```{r}
-plotGender <- artists %>%
+```{r Gender by Book}
+plotGenderTM_Gardner <- artists %>%
+  filter(book == "Gardner") %>%
   ggplot(aes(area = total_count, fill = artist_gender, 
-             label = paste(artist_name, total_count, sep = "\n"),
+             label = paste(artist_name),
              subgroup = artist_gender)) +
   geom_treemap(layout = "fixed") +
   geom_treemap_subgroup_border(layout = "fixed") +
-  geom_treemap_text(colour = "black", family = "Playfair Display", 
+  geom_treemap_text(colour = "white", family = "Playfair Display", 
                     place = "centre", grow = TRUE, layout = "fixed") +
   scale_fill_manual(values = c("cadetblue", "darksalmon", "gray")) +
   theme_minimal() +
   theme(legend.position = "none")
 
-plotWaffleGender <- artists %>%
-  ggplot(aes(fill = artist_gender, values = total_count)) +
-  waffle::geom(n_rows = 8, size = 0.33) + 
-  coord_equal() + 
-  theme_minimal()
+plotGenderTM_Janson <- artists %>%
+  filter(book == "Janson") %>%
+  ggplot(aes(area = total_count, fill = artist_gender, 
+             label = paste(artist_name),
+             subgroup = artist_gender)) +
+  geom_treemap(layout = "fixed") +
+  geom_treemap_subgroup_border(layout = "fixed") +
+  geom_treemap_text(colour = "white", family = "Playfair Display", 
+                    place = "centre", grow = TRUE, layout = "fixed") +
+  scale_fill_manual(values = c("cadetblue", "darksalmon", "gray")) +
+  theme_minimal() +
+  theme(legend.position = "none")
 ```
 
-```{r Race}
-plotRace <- artists %>%
+```{r Race by Book}
+plotRaceTM_Gardner <- artists %>%
+  filter(book == "Gardner") %>%
+  ggplot(aes(area = total_count, fill = artist_race, 
+             label = artist_race,
+             subgroup = artist_race)) +
+  geom_treemap() +
+  geom_treemap_subgroup_border() +
+  #geom_treemap_subgroup_text(place = "centre", grow = TRUE, colour = "black", 
+                    #family = "Playfair Display") +
+  #scale_fill_manual(values = c("cadetblue", "darksalmon", "gray")) +
+  theme_minimal() +
+  theme(legend.position = "none")
+
+plotRaceTM_Janson <- artists %>%
+  filter(book == "Janson") %>%
   ggplot(aes(area = total_count, fill = artist_race, 
              label = artist_race,
              subgroup = artist_race)) +

@@ -1754,13 +1754,10 @@ display: none;
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGlicmFyeSh0aWR5dmVyc2UpXG5saWJyYXJ5KGx1YnJpZGF0ZSlcbmxpYnJhcnkoc2hvd3RleHQpXG5saWJyYXJ5KHNmKVxubGlicmFyeShjb3dwbG90KVxubGlicmFyeShnZW9mYWNldClcbmxpYnJhcnkodHJlZW1hcGlmeSlcblxuI2ZvbnRzXG5mb250X2FkZF9nb29nbGUoXCJQbGF5ZmFpciBEaXNwbGF5XCIpXG5zaG93dGV4dF9hdXRvKClcbiNSZWFkIGluIGRhdGFcbnR1ZXNkYXRhIDwtIHRpZHl0dWVzZGF5Ujo6dHRfbG9hZCgyMDIzLCB3ZWVrID0gMylcbmBgYCJ9 -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGlicmFyeSh0aWR5dmVyc2UpXG5saWJyYXJ5KHNob3d0ZXh0KVxubGlicmFyeShjb3dwbG90KVxubGlicmFyeSh0cmVlbWFwaWZ5KVxuXG4jZm9udHNcbmZvbnRfYWRkX2dvb2dsZShcIlBsYXlmYWlyIERpc3BsYXlcIilcbnNob3d0ZXh0X2F1dG8oKVxuI1JlYWQgaW4gZGF0YVxudHVlc2RhdGEgPC0gdGlkeXR1ZXNkYXlSOjp0dF9sb2FkKDIwMjMsIHdlZWsgPSAzKVxuYGBgIn0= -->
 <pre class="r"><code>library(tidyverse)
-library(lubridate)
 library(showtext)
-library(sf)
 library(cowplot)
-library(geofacet)
 library(treemapify)
 
 #fonts
@@ -1773,39 +1770,67 @@ tuesdata &lt;- tidytuesdayR::tt_load(2023, week = 3)</code></pre>
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYXJ0aXN0cyA8LSB0dWVzZGF0YSRhcnRpc3RzICU+JVxuICAjZmlsdGVyKGFydGlzdF9uYXRpb25hbGl0eSA9PSBcIkFtZXJpY2FuXCIpICU+JVxuICBncm91cF9ieShhcnRpc3RfbmFtZSwgYXJ0aXN0X2dlbmRlciwgYXJ0aXN0X3JhY2UsIGFydGlzdF9ldGhuaWNpdHkpICU+JVxuICBzdW1tYXJpc2UodG90YWxfY291bnQgPSBuKCkpICU+JVxuICBtdXRhdGUoYXJ0aXN0X2dlbmRlciA9IGFzX2ZhY3RvcihhcnRpc3RfZ2VuZGVyKSkgJT4lXG4gIGZpbHRlcih0b3RhbF9jb3VudCA+PSA1KVxuYGBgIn0= -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYXJ0aXN0cyA8LSB0dWVzZGF0YSRhcnRpc3RzICU+JVxuICBmaWx0ZXIoYXJ0aXN0X25hdGlvbmFsaXR5ID09IFwiQW1lcmljYW5cIikgJT4lXG4gIGdyb3VwX2J5KGFydGlzdF9uYW1lLCBhcnRpc3RfZ2VuZGVyLCBhcnRpc3RfcmFjZSwgYXJ0aXN0X2V0aG5pY2l0eSwgYm9vaykgJT4lXG4gIHN1bW1hcmlzZSh0b3RhbF9jb3VudCA9IG4oKSkgJT4lXG4gIG11dGF0ZShhcnRpc3RfZ2VuZGVyID0gYXNfZmFjdG9yKGFydGlzdF9nZW5kZXIpKVxuYGBgIn0= -->
 <pre class="r"><code>artists &lt;- tuesdata$artists %&gt;%
-  #filter(artist_nationality == &quot;American&quot;) %&gt;%
-  group_by(artist_name, artist_gender, artist_race, artist_ethnicity) %&gt;%
+  filter(artist_nationality == &quot;American&quot;) %&gt;%
+  group_by(artist_name, artist_gender, artist_race, artist_ethnicity, book) %&gt;%
   summarise(total_count = n()) %&gt;%
-  mutate(artist_gender = as_factor(artist_gender)) %&gt;%
-  filter(total_count &gt;= 5)</code></pre>
+  mutate(artist_gender = as_factor(artist_gender))</code></pre>
 <!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiYHN1bW1hcmlzZSgpYCBoYXMgZ3JvdXBlZCBvdXRwdXQgYnkgJ2FydGlzdF9uYW1lJywgJ2FydGlzdF9nZW5kZXInLCAnYXJ0aXN0X3JhY2UnLiBZb3UgY2FuIG92ZXJyaWRlIHVzaW5nIHRoZSBgLmdyb3Vwc2AgYXJndW1lbnQuXG4ifQ== -->
-<pre><code>`summarise()` has grouped output by &#39;artist_name&#39;, &#39;artist_gender&#39;, &#39;artist_race&#39;. You can override using the `.groups` argument.</code></pre>
+<!-- rnb-output-begin eyJkYXRhIjoiYHN1bW1hcmlzZSgpYCBoYXMgZ3JvdXBlZCBvdXRwdXQgYnkgJ2FydGlzdF9uYW1lJywgJ2FydGlzdF9nZW5kZXInLCAnYXJ0aXN0X3JhY2UnLCAnYXJ0aXN0X2V0aG5pY2l0eScuIFlvdSBjYW4gb3ZlcnJpZGUgdXNpbmcgdGhlIGAuZ3JvdXBzYCBhcmd1bWVudC5cbiJ9 -->
+<pre><code>`summarise()` has grouped output by &#39;artist_name&#39;, &#39;artist_gender&#39;, &#39;artist_race&#39;, &#39;artist_ethnicity&#39;. You can override using the `.groups` argument.</code></pre>
 <!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxucGxvdFdhZmZsZUdlbmRlciA8LSBhcnRpc3RzICU+JVxuICBnZ3Bsb3QoYWVzKGZpbGwgPSBhcnRpc3RfZ2VuZGVyLCB2YWx1ZXMgPSB0b3RhbF9jb3VudCkpICtcbiAgZ2VvbV93YWZmbGUobl9yb3dzID0gOCwgc2l6ZSA9IDAuMzMpICsgXG4gIGNvb3JkX2VxdWFsKCkgKyBcbiAgdGhlbWVfbWluaW1hbCgpXG5cbmBgYCJ9 -->
-<pre class="r"><code>plotWaffleGender &lt;- artists %&gt;%
-  ggplot(aes(fill = artist_gender, values = total_count)) +
-  geom_waffle(n_rows = 8, size = 0.33) + 
-  coord_equal() + 
-  theme_minimal()
-</code></pre>
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxucGxvdEdlbmRlclRNX0dhcmRuZXIgPC0gYXJ0aXN0cyAlPiVcbiAgZmlsdGVyKGJvb2sgPT0gXCJHYXJkbmVyXCIpICU+JVxuICBnZ3Bsb3QoYWVzKGFyZWEgPSB0b3RhbF9jb3VudCwgZmlsbCA9IGFydGlzdF9nZW5kZXIsIFxuICAgICAgICAgICAgIGxhYmVsID0gcGFzdGUoYXJ0aXN0X25hbWUpLFxuICAgICAgICAgICAgIHN1Ymdyb3VwID0gYXJ0aXN0X2dlbmRlcikpICtcbiAgZ2VvbV90cmVlbWFwKGxheW91dCA9IFwiZml4ZWRcIikgK1xuICBnZW9tX3RyZWVtYXBfc3ViZ3JvdXBfYm9yZGVyKGxheW91dCA9IFwiZml4ZWRcIikgK1xuICBnZW9tX3RyZWVtYXBfdGV4dChjb2xvdXIgPSBcIndoaXRlXCIsIGZhbWlseSA9IFwiUGxheWZhaXIgRGlzcGxheVwiLCBcbiAgICAgICAgICAgICAgICAgICAgcGxhY2UgPSBcImNlbnRyZVwiLCBncm93ID0gVFJVRSwgbGF5b3V0ID0gXCJmaXhlZFwiKSArXG4gIHNjYWxlX2ZpbGxfbWFudWFsKHZhbHVlcyA9IGMoXCJjYWRldGJsdWVcIiwgXCJkYXJrc2FsbW9uXCIsIFwiZ3JheVwiKSkgK1xuICB0aGVtZV9taW5pbWFsKCkgK1xuICB0aGVtZShsZWdlbmQucG9zaXRpb24gPSBcIm5vbmVcIilcblxucGxvdEdlbmRlclRNX0phbnNvbiA8LSBhcnRpc3RzICU+JVxuICBmaWx0ZXIoYm9vayA9PSBcIkphbnNvblwiKSAlPiVcbiAgZ2dwbG90KGFlcyhhcmVhID0gdG90YWxfY291bnQsIGZpbGwgPSBhcnRpc3RfZ2VuZGVyLCBcbiAgICAgICAgICAgICBsYWJlbCA9IHBhc3RlKGFydGlzdF9uYW1lKSxcbiAgICAgICAgICAgICBzdWJncm91cCA9IGFydGlzdF9nZW5kZXIpKSArXG4gIGdlb21fdHJlZW1hcChsYXlvdXQgPSBcImZpeGVkXCIpICtcbiAgZ2VvbV90cmVlbWFwX3N1Ymdyb3VwX2JvcmRlcihsYXlvdXQgPSBcImZpeGVkXCIpICtcbiAgZ2VvbV90cmVlbWFwX3RleHQoY29sb3VyID0gXCJ3aGl0ZVwiLCBmYW1pbHkgPSBcIlBsYXlmYWlyIERpc3BsYXlcIiwgXG4gICAgICAgICAgICAgICAgICAgIHBsYWNlID0gXCJjZW50cmVcIiwgZ3JvdyA9IFRSVUUsIGxheW91dCA9IFwiZml4ZWRcIikgK1xuICBzY2FsZV9maWxsX21hbnVhbCh2YWx1ZXMgPSBjKFwiY2FkZXRibHVlXCIsIFwiZGFya3NhbG1vblwiLCBcImdyYXlcIikpICtcbiAgdGhlbWVfbWluaW1hbCgpICtcbiAgdGhlbWUobGVnZW5kLnBvc2l0aW9uID0gXCJub25lXCIpXG5gYGAifQ== -->
+<pre class="r"><code>plotGenderTM_Gardner &lt;- artists %&gt;%
+  filter(book == &quot;Gardner&quot;) %&gt;%
+  ggplot(aes(area = total_count, fill = artist_gender, 
+             label = paste(artist_name),
+             subgroup = artist_gender)) +
+  geom_treemap(layout = &quot;fixed&quot;) +
+  geom_treemap_subgroup_border(layout = &quot;fixed&quot;) +
+  geom_treemap_text(colour = &quot;white&quot;, family = &quot;Playfair Display&quot;, 
+                    place = &quot;centre&quot;, grow = TRUE, layout = &quot;fixed&quot;) +
+  scale_fill_manual(values = c(&quot;cadetblue&quot;, &quot;darksalmon&quot;, &quot;gray&quot;)) +
+  theme_minimal() +
+  theme(legend.position = &quot;none&quot;)
+
+plotGenderTM_Janson &lt;- artists %&gt;%
+  filter(book == &quot;Janson&quot;) %&gt;%
+  ggplot(aes(area = total_count, fill = artist_gender, 
+             label = paste(artist_name),
+             subgroup = artist_gender)) +
+  geom_treemap(layout = &quot;fixed&quot;) +
+  geom_treemap_subgroup_border(layout = &quot;fixed&quot;) +
+  geom_treemap_text(colour = &quot;white&quot;, family = &quot;Playfair Display&quot;, 
+                    place = &quot;centre&quot;, grow = TRUE, layout = &quot;fixed&quot;) +
+  scale_fill_manual(values = c(&quot;cadetblue&quot;, &quot;darksalmon&quot;, &quot;gray&quot;)) +
+  theme_minimal() +
+  theme(legend.position = &quot;none&quot;)</code></pre>
 <!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiRXJyb3IgaW4gZ2VvbV93YWZmbGUobl9yb3dzID0gOCwgc2l6ZSA9IDAuMzMpIDogXG4gIGNvdWxkIG5vdCBmaW5kIGZ1bmN0aW9uIFwiZ2VvbV93YWZmbGVcIlxuIn0= -->
-<pre><code>Error in geom_waffle(n_rows = 8, size = 0.33) : 
-  could not find function &quot;geom_waffle&quot;</code></pre>
-<!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxucGxvdFJhY2UgPC0gYXJ0aXN0cyAlPiVcbiAgZ2dwbG90KGFlcyhhcmVhID0gdG90YWxfY291bnQsIGZpbGwgPSBhcnRpc3RfcmFjZSwgXG4gICAgICAgICAgICAgbGFiZWwgPSBhcnRpc3RfcmFjZSxcbiAgICAgICAgICAgICBzdWJncm91cCA9IGFydGlzdF9yYWNlKSkgK1xuICBnZW9tX3RyZWVtYXAoKSArXG4gIGdlb21fdHJlZW1hcF9zdWJncm91cF9ib3JkZXIoKSArXG4gICNnZW9tX3RyZWVtYXBfc3ViZ3JvdXBfdGV4dChwbGFjZSA9IFwiY2VudHJlXCIsIGdyb3cgPSBUUlVFLCBjb2xvdXIgPSBcImJsYWNrXCIsIFxuICAgICAgICAgICAgICAgICAgICAjZmFtaWx5ID0gXCJQbGF5ZmFpciBEaXNwbGF5XCIpICtcbiAgI3NjYWxlX2ZpbGxfbWFudWFsKHZhbHVlcyA9IGMoXCJjYWRldGJsdWVcIiwgXCJkYXJrc2FsbW9uXCIsIFwiZ3JheVwiKSkgK1xuICB0aGVtZV9taW5pbWFsKCkgK1xuICB0aGVtZShsZWdlbmQucG9zaXRpb24gPSBcIm5vbmVcIilcbmBgYCJ9 -->
-<pre class="r"><code>plotRace &lt;- artists %&gt;%
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxucGxvdFJhY2VUTV9HYXJkbmVyIDwtIGFydGlzdHMgJT4lXG4gIGZpbHRlcihib29rID09IFwiR2FyZG5lclwiKSAlPiVcbiAgZ2dwbG90KGFlcyhhcmVhID0gdG90YWxfY291bnQsIGZpbGwgPSBhcnRpc3RfcmFjZSwgXG4gICAgICAgICAgICAgbGFiZWwgPSBhcnRpc3RfcmFjZSxcbiAgICAgICAgICAgICBzdWJncm91cCA9IGFydGlzdF9yYWNlKSkgK1xuICBnZW9tX3RyZWVtYXAoKSArXG4gIGdlb21fdHJlZW1hcF9zdWJncm91cF9ib3JkZXIoKSArXG4gICNnZW9tX3RyZWVtYXBfc3ViZ3JvdXBfdGV4dChwbGFjZSA9IFwiY2VudHJlXCIsIGdyb3cgPSBUUlVFLCBjb2xvdXIgPSBcImJsYWNrXCIsIFxuICAgICAgICAgICAgICAgICAgICAjZmFtaWx5ID0gXCJQbGF5ZmFpciBEaXNwbGF5XCIpICtcbiAgI3NjYWxlX2ZpbGxfbWFudWFsKHZhbHVlcyA9IGMoXCJjYWRldGJsdWVcIiwgXCJkYXJrc2FsbW9uXCIsIFwiZ3JheVwiKSkgK1xuICB0aGVtZV9taW5pbWFsKCkgK1xuICB0aGVtZShsZWdlbmQucG9zaXRpb24gPSBcIm5vbmVcIilcblxucGxvdFJhY2VUTV9KYW5zb24gPC0gYXJ0aXN0cyAlPiVcbiAgZmlsdGVyKGJvb2sgPT0gXCJKYW5zb25cIikgJT4lXG4gIGdncGxvdChhZXMoYXJlYSA9IHRvdGFsX2NvdW50LCBmaWxsID0gYXJ0aXN0X3JhY2UsIFxuICAgICAgICAgICAgIGxhYmVsID0gYXJ0aXN0X3JhY2UsXG4gICAgICAgICAgICAgc3ViZ3JvdXAgPSBhcnRpc3RfcmFjZSkpICtcbiAgZ2VvbV90cmVlbWFwKCkgK1xuICBnZW9tX3RyZWVtYXBfc3ViZ3JvdXBfYm9yZGVyKCkgK1xuICAjZ2VvbV90cmVlbWFwX3N1Ymdyb3VwX3RleHQocGxhY2UgPSBcImNlbnRyZVwiLCBncm93ID0gVFJVRSwgY29sb3VyID0gXCJibGFja1wiLCBcbiAgICAgICAgICAgICAgICAgICAgI2ZhbWlseSA9IFwiUGxheWZhaXIgRGlzcGxheVwiKSArXG4gICNzY2FsZV9maWxsX21hbnVhbCh2YWx1ZXMgPSBjKFwiY2FkZXRibHVlXCIsIFwiZGFya3NhbG1vblwiLCBcImdyYXlcIikpICtcbiAgdGhlbWVfbWluaW1hbCgpICtcbiAgdGhlbWUobGVnZW5kLnBvc2l0aW9uID0gXCJub25lXCIpXG5gYGAifQ== -->
+<pre class="r"><code>plotRaceTM_Gardner &lt;- artists %&gt;%
+  filter(book == &quot;Gardner&quot;) %&gt;%
+  ggplot(aes(area = total_count, fill = artist_race, 
+             label = artist_race,
+             subgroup = artist_race)) +
+  geom_treemap() +
+  geom_treemap_subgroup_border() +
+  #geom_treemap_subgroup_text(place = &quot;centre&quot;, grow = TRUE, colour = &quot;black&quot;, 
+                    #family = &quot;Playfair Display&quot;) +
+  #scale_fill_manual(values = c(&quot;cadetblue&quot;, &quot;darksalmon&quot;, &quot;gray&quot;)) +
+  theme_minimal() +
+  theme(legend.position = &quot;none&quot;)
+
+plotRaceTM_Janson &lt;- artists %&gt;%
+  filter(book == &quot;Janson&quot;) %&gt;%
   ggplot(aes(area = total_count, fill = artist_race, 
              label = artist_race,
              subgroup = artist_race)) +
@@ -1819,7 +1844,7 @@ tuesdata &lt;- tidytuesdayR::tt_load(2023, week = 3)</code></pre>
 <!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 
-<div id="rmd-source-code">LS0tDQp0aXRsZTogIlRpZHkgVHVlc2RheSAtIEphbnVhcnkgMTcsIDIwMjMiDQpvdXRwdXQ6IGh0bWxfbm90ZWJvb2sNCi0tLQ0KYGBge3IgTGlicmFyaWVzLCBGb250cywgRGF0YX0NCmxpYnJhcnkodGlkeXZlcnNlKQ0KbGlicmFyeShsdWJyaWRhdGUpDQpsaWJyYXJ5KHNob3d0ZXh0KQ0KbGlicmFyeShzZikNCmxpYnJhcnkoY293cGxvdCkNCmxpYnJhcnkoZ2VvZmFjZXQpDQpsaWJyYXJ5KHRyZWVtYXBpZnkpDQoNCiNmb250cw0KZm9udF9hZGRfZ29vZ2xlKCJQbGF5ZmFpciBEaXNwbGF5IikNCnNob3d0ZXh0X2F1dG8oKQ0KI1JlYWQgaW4gZGF0YQ0KdHVlc2RhdGEgPC0gdGlkeXR1ZXNkYXlSOjp0dF9sb2FkKDIwMjMsIHdlZWsgPSAzKQ0KYGBgDQoNCmBgYHtyIGRhdGF9DQphcnRpc3RzIDwtIHR1ZXNkYXRhJGFydGlzdHMgJT4lDQogICNmaWx0ZXIoYXJ0aXN0X25hdGlvbmFsaXR5ID09ICJBbWVyaWNhbiIpICU+JQ0KICBncm91cF9ieShhcnRpc3RfbmFtZSwgYXJ0aXN0X2dlbmRlciwgYXJ0aXN0X3JhY2UsIGFydGlzdF9ldGhuaWNpdHkpICU+JQ0KICBzdW1tYXJpc2UodG90YWxfY291bnQgPSBuKCkpICU+JQ0KICBtdXRhdGUoYXJ0aXN0X2dlbmRlciA9IGFzX2ZhY3RvcihhcnRpc3RfZ2VuZGVyKSkgJT4lDQogIGZpbHRlcih0b3RhbF9jb3VudCA+PSA1KQ0KYGBgDQoNCmBgYHtyfQ0KcGxvdEdlbmRlciA8LSBhcnRpc3RzICU+JQ0KICBnZ3Bsb3QoYWVzKGFyZWEgPSB0b3RhbF9jb3VudCwgZmlsbCA9IGFydGlzdF9nZW5kZXIsIA0KICAgICAgICAgICAgIGxhYmVsID0gcGFzdGUoYXJ0aXN0X25hbWUsIHRvdGFsX2NvdW50LCBzZXAgPSAiXG4iKSwNCiAgICAgICAgICAgICBzdWJncm91cCA9IGFydGlzdF9nZW5kZXIpKSArDQogIGdlb21fdHJlZW1hcChsYXlvdXQgPSAiZml4ZWQiKSArDQogIGdlb21fdHJlZW1hcF9zdWJncm91cF9ib3JkZXIobGF5b3V0ID0gImZpeGVkIikgKw0KICBnZW9tX3RyZWVtYXBfdGV4dChjb2xvdXIgPSAiYmxhY2siLCBmYW1pbHkgPSAiUGxheWZhaXIgRGlzcGxheSIsIA0KICAgICAgICAgICAgICAgICAgICBwbGFjZSA9ICJjZW50cmUiLCBncm93ID0gVFJVRSwgbGF5b3V0ID0gImZpeGVkIikgKw0KICBzY2FsZV9maWxsX21hbnVhbCh2YWx1ZXMgPSBjKCJjYWRldGJsdWUiLCAiZGFya3NhbG1vbiIsICJncmF5IikpICsNCiAgdGhlbWVfbWluaW1hbCgpICsNCiAgdGhlbWUobGVnZW5kLnBvc2l0aW9uID0gIm5vbmUiKQ0KDQpwbG90V2FmZmxlR2VuZGVyIDwtIGFydGlzdHMgJT4lDQogIGdncGxvdChhZXMoZmlsbCA9IGFydGlzdF9nZW5kZXIsIHZhbHVlcyA9IHRvdGFsX2NvdW50KSkgKw0KICB3YWZmbGU6Omdlb20obl9yb3dzID0gOCwgc2l6ZSA9IDAuMzMpICsgDQogIGNvb3JkX2VxdWFsKCkgKyANCiAgdGhlbWVfbWluaW1hbCgpDQpgYGANCg0KYGBge3IgUmFjZX0NCnBsb3RSYWNlIDwtIGFydGlzdHMgJT4lDQogIGdncGxvdChhZXMoYXJlYSA9IHRvdGFsX2NvdW50LCBmaWxsID0gYXJ0aXN0X3JhY2UsIA0KICAgICAgICAgICAgIGxhYmVsID0gYXJ0aXN0X3JhY2UsDQogICAgICAgICAgICAgc3ViZ3JvdXAgPSBhcnRpc3RfcmFjZSkpICsNCiAgZ2VvbV90cmVlbWFwKCkgKw0KICBnZW9tX3RyZWVtYXBfc3ViZ3JvdXBfYm9yZGVyKCkgKw0KICAjZ2VvbV90cmVlbWFwX3N1Ymdyb3VwX3RleHQocGxhY2UgPSAiY2VudHJlIiwgZ3JvdyA9IFRSVUUsIGNvbG91ciA9ICJibGFjayIsIA0KICAgICAgICAgICAgICAgICAgICAjZmFtaWx5ID0gIlBsYXlmYWlyIERpc3BsYXkiKSArDQogICNzY2FsZV9maWxsX21hbnVhbCh2YWx1ZXMgPSBjKCJjYWRldGJsdWUiLCAiZGFya3NhbG1vbiIsICJncmF5IikpICsNCiAgdGhlbWVfbWluaW1hbCgpICsNCiAgdGhlbWUobGVnZW5kLnBvc2l0aW9uID0gIm5vbmUiKQ0KYGBg</div>
+<div id="rmd-source-code">LS0tDQp0aXRsZTogIlRpZHkgVHVlc2RheSAtIEphbnVhcnkgMTcsIDIwMjMiDQpvdXRwdXQ6IGh0bWxfbm90ZWJvb2sNCi0tLQ0KYGBge3IgTGlicmFyaWVzLCBGb250cywgRGF0YX0NCmxpYnJhcnkodGlkeXZlcnNlKQ0KbGlicmFyeShzaG93dGV4dCkNCmxpYnJhcnkoY293cGxvdCkNCmxpYnJhcnkodHJlZW1hcGlmeSkNCg0KI2ZvbnRzDQpmb250X2FkZF9nb29nbGUoIlBsYXlmYWlyIERpc3BsYXkiKQ0Kc2hvd3RleHRfYXV0bygpDQojUmVhZCBpbiBkYXRhDQp0dWVzZGF0YSA8LSB0aWR5dHVlc2RheVI6OnR0X2xvYWQoMjAyMywgd2VlayA9IDMpDQpgYGANCg0KYGBge3IgZGF0YX0NCmFydGlzdHMgPC0gdHVlc2RhdGEkYXJ0aXN0cyAlPiUNCiAgZmlsdGVyKGFydGlzdF9uYXRpb25hbGl0eSA9PSAiQW1lcmljYW4iKSAlPiUNCiAgZ3JvdXBfYnkoYXJ0aXN0X25hbWUsIGFydGlzdF9nZW5kZXIsIGFydGlzdF9yYWNlLCBhcnRpc3RfZXRobmljaXR5LCBib29rKSAlPiUNCiAgc3VtbWFyaXNlKHRvdGFsX2NvdW50ID0gbigpKSAlPiUNCiAgbXV0YXRlKGFydGlzdF9nZW5kZXIgPSBhc19mYWN0b3IoYXJ0aXN0X2dlbmRlcikpDQpgYGANCg0KYGBge3IgR2VuZGVyIGJ5IEJvb2t9DQpwbG90R2VuZGVyVE1fR2FyZG5lciA8LSBhcnRpc3RzICU+JQ0KICBmaWx0ZXIoYm9vayA9PSAiR2FyZG5lciIpICU+JQ0KICBnZ3Bsb3QoYWVzKGFyZWEgPSB0b3RhbF9jb3VudCwgZmlsbCA9IGFydGlzdF9nZW5kZXIsIA0KICAgICAgICAgICAgIGxhYmVsID0gcGFzdGUoYXJ0aXN0X25hbWUpLA0KICAgICAgICAgICAgIHN1Ymdyb3VwID0gYXJ0aXN0X2dlbmRlcikpICsNCiAgZ2VvbV90cmVlbWFwKGxheW91dCA9ICJmaXhlZCIpICsNCiAgZ2VvbV90cmVlbWFwX3N1Ymdyb3VwX2JvcmRlcihsYXlvdXQgPSAiZml4ZWQiKSArDQogIGdlb21fdHJlZW1hcF90ZXh0KGNvbG91ciA9ICJ3aGl0ZSIsIGZhbWlseSA9ICJQbGF5ZmFpciBEaXNwbGF5IiwgDQogICAgICAgICAgICAgICAgICAgIHBsYWNlID0gImNlbnRyZSIsIGdyb3cgPSBUUlVFLCBsYXlvdXQgPSAiZml4ZWQiKSArDQogIHNjYWxlX2ZpbGxfbWFudWFsKHZhbHVlcyA9IGMoImNhZGV0Ymx1ZSIsICJkYXJrc2FsbW9uIiwgImdyYXkiKSkgKw0KICB0aGVtZV9taW5pbWFsKCkgKw0KICB0aGVtZShsZWdlbmQucG9zaXRpb24gPSAibm9uZSIpDQoNCnBsb3RHZW5kZXJUTV9KYW5zb24gPC0gYXJ0aXN0cyAlPiUNCiAgZmlsdGVyKGJvb2sgPT0gIkphbnNvbiIpICU+JQ0KICBnZ3Bsb3QoYWVzKGFyZWEgPSB0b3RhbF9jb3VudCwgZmlsbCA9IGFydGlzdF9nZW5kZXIsIA0KICAgICAgICAgICAgIGxhYmVsID0gcGFzdGUoYXJ0aXN0X25hbWUpLA0KICAgICAgICAgICAgIHN1Ymdyb3VwID0gYXJ0aXN0X2dlbmRlcikpICsNCiAgZ2VvbV90cmVlbWFwKGxheW91dCA9ICJmaXhlZCIpICsNCiAgZ2VvbV90cmVlbWFwX3N1Ymdyb3VwX2JvcmRlcihsYXlvdXQgPSAiZml4ZWQiKSArDQogIGdlb21fdHJlZW1hcF90ZXh0KGNvbG91ciA9ICJ3aGl0ZSIsIGZhbWlseSA9ICJQbGF5ZmFpciBEaXNwbGF5IiwgDQogICAgICAgICAgICAgICAgICAgIHBsYWNlID0gImNlbnRyZSIsIGdyb3cgPSBUUlVFLCBsYXlvdXQgPSAiZml4ZWQiKSArDQogIHNjYWxlX2ZpbGxfbWFudWFsKHZhbHVlcyA9IGMoImNhZGV0Ymx1ZSIsICJkYXJrc2FsbW9uIiwgImdyYXkiKSkgKw0KICB0aGVtZV9taW5pbWFsKCkgKw0KICB0aGVtZShsZWdlbmQucG9zaXRpb24gPSAibm9uZSIpDQpgYGANCg0KYGBge3IgUmFjZSBieSBCb29rfQ0KcGxvdFJhY2VUTV9HYXJkbmVyIDwtIGFydGlzdHMgJT4lDQogIGZpbHRlcihib29rID09ICJHYXJkbmVyIikgJT4lDQogIGdncGxvdChhZXMoYXJlYSA9IHRvdGFsX2NvdW50LCBmaWxsID0gYXJ0aXN0X3JhY2UsIA0KICAgICAgICAgICAgIGxhYmVsID0gYXJ0aXN0X3JhY2UsDQogICAgICAgICAgICAgc3ViZ3JvdXAgPSBhcnRpc3RfcmFjZSkpICsNCiAgZ2VvbV90cmVlbWFwKCkgKw0KICBnZW9tX3RyZWVtYXBfc3ViZ3JvdXBfYm9yZGVyKCkgKw0KICAjZ2VvbV90cmVlbWFwX3N1Ymdyb3VwX3RleHQocGxhY2UgPSAiY2VudHJlIiwgZ3JvdyA9IFRSVUUsIGNvbG91ciA9ICJibGFjayIsIA0KICAgICAgICAgICAgICAgICAgICAjZmFtaWx5ID0gIlBsYXlmYWlyIERpc3BsYXkiKSArDQogICNzY2FsZV9maWxsX21hbnVhbCh2YWx1ZXMgPSBjKCJjYWRldGJsdWUiLCAiZGFya3NhbG1vbiIsICJncmF5IikpICsNCiAgdGhlbWVfbWluaW1hbCgpICsNCiAgdGhlbWUobGVnZW5kLnBvc2l0aW9uID0gIm5vbmUiKQ0KDQpwbG90UmFjZVRNX0phbnNvbiA8LSBhcnRpc3RzICU+JQ0KICBmaWx0ZXIoYm9vayA9PSAiSmFuc29uIikgJT4lDQogIGdncGxvdChhZXMoYXJlYSA9IHRvdGFsX2NvdW50LCBmaWxsID0gYXJ0aXN0X3JhY2UsIA0KICAgICAgICAgICAgIGxhYmVsID0gYXJ0aXN0X3JhY2UsDQogICAgICAgICAgICAgc3ViZ3JvdXAgPSBhcnRpc3RfcmFjZSkpICsNCiAgZ2VvbV90cmVlbWFwKCkgKw0KICBnZW9tX3RyZWVtYXBfc3ViZ3JvdXBfYm9yZGVyKCkgKw0KICAjZ2VvbV90cmVlbWFwX3N1Ymdyb3VwX3RleHQocGxhY2UgPSAiY2VudHJlIiwgZ3JvdyA9IFRSVUUsIGNvbG91ciA9ICJibGFjayIsIA0KICAgICAgICAgICAgICAgICAgICAjZmFtaWx5ID0gIlBsYXlmYWlyIERpc3BsYXkiKSArDQogICNzY2FsZV9maWxsX21hbnVhbCh2YWx1ZXMgPSBjKCJjYWRldGJsdWUiLCAiZGFya3NhbG1vbiIsICJncmF5IikpICsNCiAgdGhlbWVfbWluaW1hbCgpICsNCiAgdGhlbWUobGVnZW5kLnBvc2l0aW9uID0gIm5vbmUiKQ0KYGBg</div>
 
 
 
