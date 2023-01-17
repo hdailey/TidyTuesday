@@ -9,10 +9,54 @@ library(showtext)
 library(sf)
 library(cowplot)
 library(geofacet)
+library(treemapify)
 
 #fonts
-font_add_google("")
+font_add_google("Playfair Display")
 showtext_auto()
 #Read in data
 tuesdata <- tidytuesdayR::tt_load(2023, week = 3)
+```
+
+```{r data}
+artists <- tuesdata$artists %>%
+  #filter(artist_nationality == "American") %>%
+  group_by(artist_name, artist_gender, artist_race, artist_ethnicity) %>%
+  summarise(total_count = n()) %>%
+  mutate(artist_gender = as_factor(artist_gender)) %>%
+  filter(total_count >= 5)
+```
+
+```{r}
+plotGender <- artists %>%
+  ggplot(aes(area = total_count, fill = artist_gender, 
+             label = paste(artist_name, total_count, sep = "\n"),
+             subgroup = artist_gender)) +
+  geom_treemap(layout = "fixed") +
+  geom_treemap_subgroup_border(layout = "fixed") +
+  geom_treemap_text(colour = "black", family = "Playfair Display", 
+                    place = "centre", grow = TRUE, layout = "fixed") +
+  scale_fill_manual(values = c("cadetblue", "darksalmon", "gray")) +
+  theme_minimal() +
+  theme(legend.position = "none")
+
+plotWaffleGender <- artists %>%
+  ggplot(aes(fill = artist_gender, values = total_count)) +
+  waffle::geom(n_rows = 8, size = 0.33) + 
+  coord_equal() + 
+  theme_minimal()
+```
+
+```{r Race}
+plotRace <- artists %>%
+  ggplot(aes(area = total_count, fill = artist_race, 
+             label = artist_race,
+             subgroup = artist_race)) +
+  geom_treemap() +
+  geom_treemap_subgroup_border() +
+  #geom_treemap_subgroup_text(place = "centre", grow = TRUE, colour = "black", 
+                    #family = "Playfair Display") +
+  #scale_fill_manual(values = c("cadetblue", "darksalmon", "gray")) +
+  theme_minimal() +
+  theme(legend.position = "none")
 ```
