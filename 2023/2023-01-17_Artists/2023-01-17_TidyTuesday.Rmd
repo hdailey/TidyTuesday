@@ -1,0 +1,18 @@
+---
+title: "Tidy Tuesday - January 17, 2023"
+output: html_notebook
+---
+```{r Libraries, Fonts, Data}
+library(tidyverse)
+library(lubridate)
+library(showtext)
+library(sf)
+library(cowplot)
+library(geofacet)
+
+#fonts
+font_add_google("")
+showtext_auto()
+#Read in data
+tuesdata <- tidytuesdayR::tt_load(2023, week = 3)
+```
