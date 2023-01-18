@@ -5,25 +5,28 @@ output: html_notebook
 ```{r Libraries, Fonts, Data}
 library(tidyverse)
 library(showtext)
-library(cowplot)
+library(patchwork)
 library(treemapify)
 
 #fonts
-font_add_google("Playfair Display")
+font_add_google("Courier Prime")
 showtext_auto()
-#Read in data
+
 tuesdata <- tidytuesdayR::tt_load(2023, week = 3)
 ```
 
 ```{r data}
 artists <- tuesdata$artists %>%
   filter(artist_nationality == "American") %>%
+  mutate(artist_gender = na_if(artist_gender, "N/A")) %>%
+  na.omit() %>%
   group_by(artist_name, artist_gender, artist_race, artist_ethnicity, book) %>%
   summarise(total_count = n()) %>%
-  mutate(artist_gender = as_factor(artist_gender))
+  mutate(artist_gender = as_factor(artist_gender)) %>%
+  filter(total_count >= 5)
 ```
 
-```{r Gender by Book}
+```{r Gender by Book Treemap}
 plotGenderTM_Gardner <- artists %>%
   filter(book == "Gardner") %>%
   ggplot(aes(area = total_count, fill = artist_gender, 
@@ -31,50 +34,118 @@ plotGenderTM_Gardner <- artists %>%
              subgroup = artist_gender)) +
   geom_treemap(layout = "fixed") +
   geom_treemap_subgroup_border(layout = "fixed") +
-  geom_treemap_text(colour = "white", family = "Playfair Display", 
+  geom_treemap_text(colour = "black", family = "Courier Prime", 
                     place = "centre", grow = TRUE, layout = "fixed") +
   scale_fill_manual(values = c("cadetblue", "darksalmon", "gray")) +
   theme_minimal() +
-  theme(legend.position = "none")
+  labs(title = "Gardner's Art Through the Ages") +
+  theme(legend.position = "none",
+        plot.title = element_text(colour = "#022666", family = "Courier Prime", size = 28),
+        plot.margin = unit(c(1, 3, 0, 1), "lines"))
 
 plotGenderTM_Janson <- artists %>%
   filter(book == "Janson") %>%
+  na.omit() %>%
   ggplot(aes(area = total_count, fill = artist_gender, 
              label = paste(artist_name),
              subgroup = artist_gender)) +
   geom_treemap(layout = "fixed") +
   geom_treemap_subgroup_border(layout = "fixed") +
-  geom_treemap_text(colour = "white", family = "Playfair Display", 
+  geom_treemap_text(colour = "black", family = "Courier Prime", 
                     place = "centre", grow = TRUE, layout = "fixed") +
   scale_fill_manual(values = c("cadetblue", "darksalmon", "gray")) +
   theme_minimal() +
-  theme(legend.position = "none")
+  labs(title = "Janson's History of Art") +
+  theme(legend.position = "none",
+        plot.title = element_text(colour = "#022666", family = "Courier Prime", size = 28),
+        plot.margin = unit(c(0, 3, -3, 1), "lines"))
 ```
 
-```{r Race by Book}
-plotRaceTM_Gardner <- artists %>%
-  filter(book == "Gardner") %>%
-  ggplot(aes(area = total_count, fill = artist_race, 
-             label = artist_race,
-             subgroup = artist_race)) +
-  geom_treemap() +
-  geom_treemap_subgroup_border() +
-  #geom_treemap_subgroup_text(place = "centre", grow = TRUE, colour = "black", 
-                    #family = "Playfair Display") +
-  #scale_fill_manual(values = c("cadetblue", "darksalmon", "gray")) +
-  theme_minimal() +
-  theme(legend.position = "none")
+```{r Gender and Race by Book Boxplots}
+artistsTmp <- tuesdata$artists %>%
+  filter(artist_nationality == "American") %>%
+  group_by(artist_name, artist_gender, artist_race, book) %>%
+  summarise(total_count = n(), space_ratio_per_page_total) %>%
+  mutate(artist_gender = as_factor(artist_gender)) %>%
+  filter(total_count >= 5) %>%
+  mutate(artist_gender = na_if(artist_gender, "N/A")) %>%
+  na.omit()
 
-plotRaceTM_Janson <- artists %>%
-  filter(book == "Janson") %>%
-  ggplot(aes(area = total_count, fill = artist_race, 
-             label = artist_race,
-             subgroup = artist_race)) +
-  geom_treemap() +
-  geom_treemap_subgroup_border() +
-  #geom_treemap_subgroup_text(place = "centre", grow = TRUE, colour = "black", 
-                    #family = "Playfair Display") +
-  #scale_fill_manual(values = c("cadetblue", "darksalmon", "gray")) +
+plotGenderBP_Gardner <- artistsTmp %>%
+  filter(book == "Gardner") %>%
+  ggplot(aes(space_ratio_per_page_total, artist_race, fill = artist_gender)) +
+  geom_boxplot() +
+  scale_fill_manual(values = c("cadetblue", "darksalmon")) +
+  scale_y_discrete(labels = function(y) str_wrap(y, width = 5)) +
+  xlim(0, 1.6) +
+  labs(x = "",
+       y = "", 
+       fill = "") +
   theme_minimal() +
-  theme(legend.position = "none")
+  theme(axis.text.y = element_text(hjust = 0.5, color = "#022666", lineheight = 0.3),
+        axis.text.x = element_blank(),
+        text = element_text(colour = "black", family = "Courier Prime", size = 30),
+        legend.position = "none",
+        plot.margin = unit(c(1,1,0,1), "lines"))
+  
+plotGenderBP_Janson <- artistsTmp %>%
+  filter(book == "Janson") %>%
+  ggplot(aes(space_ratio_per_page_total, artist_race, fill = artist_gender)) +
+  geom_boxplot() +
+  scale_fill_manual(values = c("cadetblue", "darksalmon")) +
+  scale_y_discrete(labels = function(y) str_wrap(y, width = 5)) +
+  xlim(0, 1.6) +
+  labs(x = "Space Ratio per Page",
+       y = "", 
+       fill = "") +
+  theme_minimal() +
+  theme(axis.text.y = element_text(hjust = 0.5, color = "#022666", lineheight = 0.3),
+        axis.text.x = element_text(color = "#022666", family = "Courier Prime", size = 28),
+        text = element_text(colour = "#022666", family = "Courier Prime", size = 30),
+        legend.position = "none",
+        plot.margin = unit(c(0,1,-3,1), "lines"))
+```
+
+```{r final plot assembly}
+design <- "
+12
+34
+55
+"
+
+plotFinal <- plotGenderTM_Gardner + plotGenderBP_Gardner + 
+  (plotGenderTM_Janson + theme(legend.position = "bottom", 
+                               legend.title = element_blank(),
+                               legend.margin = margin(0, 0, 0, 0),
+                               legend.text = element_text(family = "Courier Prime",
+                                                          size = 30,
+                                                          color = "#022666"),
+                               legend.key.height = unit(1, "lines"),
+                               legend.key.width = unit(3, "lines"))) +
+  plotGenderBP_Janson + guide_area() + 
+  plot_layout(design = design, heights = c(4, 4, 1), guides = "collect") +
+  plot_annotation(title = "Gender and Race of American Artists Shown in Gardner's and Janson's Textbooks", 
+                  subtitle = str_wrap("The gender and race of American artists in every edition of Gardner's Art Through the Ages as compared to Janson's History of Art."),
+                  caption = "Source: {arthistory} | Tidy Tuesday",
+                  theme = theme(plot.title = element_text(hjust = 0.5, 
+                                                          family = "Courier Prime", 
+                                                          size = 50,
+                                                          color = "#022666",
+                                                          margin = margin(b = 10, 
+                                                                          unit = "pt")),
+                                plot.subtitle = element_text(hjust = 0.5,
+                                                             family = "Courier Prime",
+                                                             size = 40,
+                                                             color = "#888888",
+                                                             lineheight = 0.5),
+                                plot.caption = element_text(family = "Courier Prime",
+                                                            size = 20, 
+                                                            color = "#888888"),
+                                plot.caption.position = "panel",
+                                plot.background = element_rect(color = "#DDDDDD"))
+  )
+```
+
+```{r output plot and save}
+ggsave(plot = plotFinal, filename = "2023-01-17_TT.png", width = 11, height = 8, unit = "in")
 ```

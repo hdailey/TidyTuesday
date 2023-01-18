@@ -1754,37 +1754,37 @@ display: none;
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGlicmFyeSh0aWR5dmVyc2UpXG5saWJyYXJ5KHNob3d0ZXh0KVxubGlicmFyeShjb3dwbG90KVxubGlicmFyeSh0cmVlbWFwaWZ5KVxuXG4jZm9udHNcbmZvbnRfYWRkX2dvb2dsZShcIlBsYXlmYWlyIERpc3BsYXlcIilcbnNob3d0ZXh0X2F1dG8oKVxuI1JlYWQgaW4gZGF0YVxudHVlc2RhdGEgPC0gdGlkeXR1ZXNkYXlSOjp0dF9sb2FkKDIwMjMsIHdlZWsgPSAzKVxuYGBgIn0= -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGlicmFyeSh0aWR5dmVyc2UpXG5saWJyYXJ5KHNob3d0ZXh0KVxubGlicmFyeShwYXRjaHdvcmspXG5saWJyYXJ5KHRyZWVtYXBpZnkpXG5cbiNmb250c1xuZm9udF9hZGRfZ29vZ2xlKFwiQ291cmllciBQcmltZVwiKVxuc2hvd3RleHRfYXV0bygpXG5cbnR1ZXNkYXRhIDwtIHRpZHl0dWVzZGF5Ujo6dHRfbG9hZCgyMDIzLCB3ZWVrID0gMylcbmBgYCJ9 -->
 <pre class="r"><code>library(tidyverse)
 library(showtext)
-library(cowplot)
+library(patchwork)
 library(treemapify)
 
 #fonts
-font_add_google(&quot;Playfair Display&quot;)
+font_add_google(&quot;Courier Prime&quot;)
 showtext_auto()
-#Read in data
+
 tuesdata &lt;- tidytuesdayR::tt_load(2023, week = 3)</code></pre>
 <!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYXJ0aXN0cyA8LSB0dWVzZGF0YSRhcnRpc3RzICU+JVxuICBmaWx0ZXIoYXJ0aXN0X25hdGlvbmFsaXR5ID09IFwiQW1lcmljYW5cIikgJT4lXG4gIGdyb3VwX2J5KGFydGlzdF9uYW1lLCBhcnRpc3RfZ2VuZGVyLCBhcnRpc3RfcmFjZSwgYXJ0aXN0X2V0aG5pY2l0eSwgYm9vaykgJT4lXG4gIHN1bW1hcmlzZSh0b3RhbF9jb3VudCA9IG4oKSkgJT4lXG4gIG11dGF0ZShhcnRpc3RfZ2VuZGVyID0gYXNfZmFjdG9yKGFydGlzdF9nZW5kZXIpKVxuYGBgIn0= -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYXJ0aXN0cyA8LSB0dWVzZGF0YSRhcnRpc3RzICU+JVxuICBmaWx0ZXIoYXJ0aXN0X25hdGlvbmFsaXR5ID09IFwiQW1lcmljYW5cIikgJT4lXG4gIG11dGF0ZShhcnRpc3RfZ2VuZGVyID0gbmFfaWYoYXJ0aXN0X2dlbmRlciwgXCJOL0FcIikpICU+JVxuICBuYS5vbWl0KCkgJT4lXG4gIGdyb3VwX2J5KGFydGlzdF9uYW1lLCBhcnRpc3RfZ2VuZGVyLCBhcnRpc3RfcmFjZSwgYXJ0aXN0X2V0aG5pY2l0eSwgYm9vaykgJT4lXG4gIHN1bW1hcmlzZSh0b3RhbF9jb3VudCA9IG4oKSkgJT4lXG4gIG11dGF0ZShhcnRpc3RfZ2VuZGVyID0gYXNfZmFjdG9yKGFydGlzdF9nZW5kZXIpKSAlPiVcbiAgZmlsdGVyKHRvdGFsX2NvdW50ID49IDUpXG5gYGAifQ== -->
 <pre class="r"><code>artists &lt;- tuesdata$artists %&gt;%
   filter(artist_nationality == &quot;American&quot;) %&gt;%
+  mutate(artist_gender = na_if(artist_gender, &quot;N/A&quot;)) %&gt;%
+  na.omit() %&gt;%
   group_by(artist_name, artist_gender, artist_race, artist_ethnicity, book) %&gt;%
   summarise(total_count = n()) %&gt;%
-  mutate(artist_gender = as_factor(artist_gender))</code></pre>
+  mutate(artist_gender = as_factor(artist_gender)) %&gt;%
+  filter(total_count &gt;= 5)</code></pre>
 <!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiYHN1bW1hcmlzZSgpYCBoYXMgZ3JvdXBlZCBvdXRwdXQgYnkgJ2FydGlzdF9uYW1lJywgJ2FydGlzdF9nZW5kZXInLCAnYXJ0aXN0X3JhY2UnLCAnYXJ0aXN0X2V0aG5pY2l0eScuIFlvdSBjYW4gb3ZlcnJpZGUgdXNpbmcgdGhlIGAuZ3JvdXBzYCBhcmd1bWVudC5cbiJ9 -->
-<pre><code>`summarise()` has grouped output by &#39;artist_name&#39;, &#39;artist_gender&#39;, &#39;artist_race&#39;, &#39;artist_ethnicity&#39;. You can override using the `.groups` argument.</code></pre>
-<!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxucGxvdEdlbmRlclRNX0dhcmRuZXIgPC0gYXJ0aXN0cyAlPiVcbiAgZmlsdGVyKGJvb2sgPT0gXCJHYXJkbmVyXCIpICU+JVxuICBnZ3Bsb3QoYWVzKGFyZWEgPSB0b3RhbF9jb3VudCwgZmlsbCA9IGFydGlzdF9nZW5kZXIsIFxuICAgICAgICAgICAgIGxhYmVsID0gcGFzdGUoYXJ0aXN0X25hbWUpLFxuICAgICAgICAgICAgIHN1Ymdyb3VwID0gYXJ0aXN0X2dlbmRlcikpICtcbiAgZ2VvbV90cmVlbWFwKGxheW91dCA9IFwiZml4ZWRcIikgK1xuICBnZW9tX3RyZWVtYXBfc3ViZ3JvdXBfYm9yZGVyKGxheW91dCA9IFwiZml4ZWRcIikgK1xuICBnZW9tX3RyZWVtYXBfdGV4dChjb2xvdXIgPSBcIndoaXRlXCIsIGZhbWlseSA9IFwiUGxheWZhaXIgRGlzcGxheVwiLCBcbiAgICAgICAgICAgICAgICAgICAgcGxhY2UgPSBcImNlbnRyZVwiLCBncm93ID0gVFJVRSwgbGF5b3V0ID0gXCJmaXhlZFwiKSArXG4gIHNjYWxlX2ZpbGxfbWFudWFsKHZhbHVlcyA9IGMoXCJjYWRldGJsdWVcIiwgXCJkYXJrc2FsbW9uXCIsIFwiZ3JheVwiKSkgK1xuICB0aGVtZV9taW5pbWFsKCkgK1xuICB0aGVtZShsZWdlbmQucG9zaXRpb24gPSBcIm5vbmVcIilcblxucGxvdEdlbmRlclRNX0phbnNvbiA8LSBhcnRpc3RzICU+JVxuICBmaWx0ZXIoYm9vayA9PSBcIkphbnNvblwiKSAlPiVcbiAgZ2dwbG90KGFlcyhhcmVhID0gdG90YWxfY291bnQsIGZpbGwgPSBhcnRpc3RfZ2VuZGVyLCBcbiAgICAgICAgICAgICBsYWJlbCA9IHBhc3RlKGFydGlzdF9uYW1lKSxcbiAgICAgICAgICAgICBzdWJncm91cCA9IGFydGlzdF9nZW5kZXIpKSArXG4gIGdlb21fdHJlZW1hcChsYXlvdXQgPSBcImZpeGVkXCIpICtcbiAgZ2VvbV90cmVlbWFwX3N1Ymdyb3VwX2JvcmRlcihsYXlvdXQgPSBcImZpeGVkXCIpICtcbiAgZ2VvbV90cmVlbWFwX3RleHQoY29sb3VyID0gXCJ3aGl0ZVwiLCBmYW1pbHkgPSBcIlBsYXlmYWlyIERpc3BsYXlcIiwgXG4gICAgICAgICAgICAgICAgICAgIHBsYWNlID0gXCJjZW50cmVcIiwgZ3JvdyA9IFRSVUUsIGxheW91dCA9IFwiZml4ZWRcIikgK1xuICBzY2FsZV9maWxsX21hbnVhbCh2YWx1ZXMgPSBjKFwiY2FkZXRibHVlXCIsIFwiZGFya3NhbG1vblwiLCBcImdyYXlcIikpICtcbiAgdGhlbWVfbWluaW1hbCgpICtcbiAgdGhlbWUobGVnZW5kLnBvc2l0aW9uID0gXCJub25lXCIpXG5gYGAifQ== -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxucGxvdEdlbmRlclRNX0dhcmRuZXIgPC0gYXJ0aXN0cyAlPiVcbiAgZmlsdGVyKGJvb2sgPT0gXCJHYXJkbmVyXCIpICU+JVxuICBnZ3Bsb3QoYWVzKGFyZWEgPSB0b3RhbF9jb3VudCwgZmlsbCA9IGFydGlzdF9nZW5kZXIsIFxuICAgICAgICAgICAgIGxhYmVsID0gcGFzdGUoYXJ0aXN0X25hbWUpLFxuICAgICAgICAgICAgIHN1Ymdyb3VwID0gYXJ0aXN0X2dlbmRlcikpICtcbiAgZ2VvbV90cmVlbWFwKGxheW91dCA9IFwiZml4ZWRcIikgK1xuICBnZW9tX3RyZWVtYXBfc3ViZ3JvdXBfYm9yZGVyKGxheW91dCA9IFwiZml4ZWRcIikgK1xuICBnZW9tX3RyZWVtYXBfdGV4dChjb2xvdXIgPSBcImJsYWNrXCIsIGZhbWlseSA9IFwiQ291cmllciBQcmltZVwiLCBcbiAgICAgICAgICAgICAgICAgICAgcGxhY2UgPSBcImNlbnRyZVwiLCBncm93ID0gVFJVRSwgbGF5b3V0ID0gXCJmaXhlZFwiKSArXG4gIHNjYWxlX2ZpbGxfbWFudWFsKHZhbHVlcyA9IGMoXCJjYWRldGJsdWVcIiwgXCJkYXJrc2FsbW9uXCIsIFwiZ3JheVwiKSkgK1xuICB0aGVtZV9taW5pbWFsKCkgK1xuICBsYWJzKHRpdGxlID0gXCJHYXJkbmVyJ3MgQXJ0IFRocm91Z2ggdGhlIEFnZXNcIikgK1xuICB0aGVtZShsZWdlbmQucG9zaXRpb24gPSBcIm5vbmVcIixcbiAgICAgICAgcGxvdC50aXRsZSA9IGVsZW1lbnRfdGV4dChjb2xvdXIgPSBcIiMwMjI2NjZcIiwgZmFtaWx5ID0gXCJDb3VyaWVyIFByaW1lXCIsIHNpemUgPSAyOCksXG4gICAgICAgIHBsb3QubWFyZ2luID0gdW5pdChjKDEsIDMsIDAsIDEpLCBcImxpbmVzXCIpKVxuXG5wbG90R2VuZGVyVE1fSmFuc29uIDwtIGFydGlzdHMgJT4lXG4gIGZpbHRlcihib29rID09IFwiSmFuc29uXCIpICU+JVxuICBuYS5vbWl0KCkgJT4lXG4gIGdncGxvdChhZXMoYXJlYSA9IHRvdGFsX2NvdW50LCBmaWxsID0gYXJ0aXN0X2dlbmRlciwgXG4gICAgICAgICAgICAgbGFiZWwgPSBwYXN0ZShhcnRpc3RfbmFtZSksXG4gICAgICAgICAgICAgc3ViZ3JvdXAgPSBhcnRpc3RfZ2VuZGVyKSkgK1xuICBnZW9tX3RyZWVtYXAobGF5b3V0ID0gXCJmaXhlZFwiKSArXG4gIGdlb21fdHJlZW1hcF9zdWJncm91cF9ib3JkZXIobGF5b3V0ID0gXCJmaXhlZFwiKSArXG4gIGdlb21fdHJlZW1hcF90ZXh0KGNvbG91ciA9IFwiYmxhY2tcIiwgZmFtaWx5ID0gXCJDb3VyaWVyIFByaW1lXCIsIFxuICAgICAgICAgICAgICAgICAgICBwbGFjZSA9IFwiY2VudHJlXCIsIGdyb3cgPSBUUlVFLCBsYXlvdXQgPSBcImZpeGVkXCIpICtcbiAgc2NhbGVfZmlsbF9tYW51YWwodmFsdWVzID0gYyhcImNhZGV0Ymx1ZVwiLCBcImRhcmtzYWxtb25cIiwgXCJncmF5XCIpKSArXG4gIHRoZW1lX21pbmltYWwoKSArXG4gIGxhYnModGl0bGUgPSBcIkphbnNvbidzIEhpc3Rvcnkgb2YgQXJ0XCIpICtcbiAgdGhlbWUobGVnZW5kLnBvc2l0aW9uID0gXCJub25lXCIsXG4gICAgICAgIHBsb3QudGl0bGUgPSBlbGVtZW50X3RleHQoY29sb3VyID0gXCIjMDIyNjY2XCIsIGZhbWlseSA9IFwiQ291cmllciBQcmltZVwiLCBzaXplID0gMjgpLFxuICAgICAgICBwbG90Lm1hcmdpbiA9IHVuaXQoYygwLCAzLCAtMywgMSksIFwibGluZXNcIikpXG5gYGAifQ== -->
 <pre class="r"><code>plotGenderTM_Gardner &lt;- artists %&gt;%
   filter(book == &quot;Gardner&quot;) %&gt;%
   ggplot(aes(area = total_count, fill = artist_gender, 
@@ -1792,59 +1792,137 @@ tuesdata &lt;- tidytuesdayR::tt_load(2023, week = 3)</code></pre>
              subgroup = artist_gender)) +
   geom_treemap(layout = &quot;fixed&quot;) +
   geom_treemap_subgroup_border(layout = &quot;fixed&quot;) +
-  geom_treemap_text(colour = &quot;white&quot;, family = &quot;Playfair Display&quot;, 
+  geom_treemap_text(colour = &quot;black&quot;, family = &quot;Courier Prime&quot;, 
                     place = &quot;centre&quot;, grow = TRUE, layout = &quot;fixed&quot;) +
   scale_fill_manual(values = c(&quot;cadetblue&quot;, &quot;darksalmon&quot;, &quot;gray&quot;)) +
   theme_minimal() +
-  theme(legend.position = &quot;none&quot;)
+  labs(title = &quot;Gardner&#39;s Art Through the Ages&quot;) +
+  theme(legend.position = &quot;none&quot;,
+        plot.title = element_text(colour = &quot;#022666&quot;, family = &quot;Courier Prime&quot;, size = 28),
+        plot.margin = unit(c(1, 3, 0, 1), &quot;lines&quot;))
 
 plotGenderTM_Janson &lt;- artists %&gt;%
   filter(book == &quot;Janson&quot;) %&gt;%
+  na.omit() %&gt;%
   ggplot(aes(area = total_count, fill = artist_gender, 
              label = paste(artist_name),
              subgroup = artist_gender)) +
   geom_treemap(layout = &quot;fixed&quot;) +
   geom_treemap_subgroup_border(layout = &quot;fixed&quot;) +
-  geom_treemap_text(colour = &quot;white&quot;, family = &quot;Playfair Display&quot;, 
+  geom_treemap_text(colour = &quot;black&quot;, family = &quot;Courier Prime&quot;, 
                     place = &quot;centre&quot;, grow = TRUE, layout = &quot;fixed&quot;) +
   scale_fill_manual(values = c(&quot;cadetblue&quot;, &quot;darksalmon&quot;, &quot;gray&quot;)) +
   theme_minimal() +
-  theme(legend.position = &quot;none&quot;)</code></pre>
+  labs(title = &quot;Janson&#39;s History of Art&quot;) +
+  theme(legend.position = &quot;none&quot;,
+        plot.title = element_text(colour = &quot;#022666&quot;, family = &quot;Courier Prime&quot;, size = 28),
+        plot.margin = unit(c(0, 3, -3, 1), &quot;lines&quot;))</code></pre>
 <!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxucGxvdFJhY2VUTV9HYXJkbmVyIDwtIGFydGlzdHMgJT4lXG4gIGZpbHRlcihib29rID09IFwiR2FyZG5lclwiKSAlPiVcbiAgZ2dwbG90KGFlcyhhcmVhID0gdG90YWxfY291bnQsIGZpbGwgPSBhcnRpc3RfcmFjZSwgXG4gICAgICAgICAgICAgbGFiZWwgPSBhcnRpc3RfcmFjZSxcbiAgICAgICAgICAgICBzdWJncm91cCA9IGFydGlzdF9yYWNlKSkgK1xuICBnZW9tX3RyZWVtYXAoKSArXG4gIGdlb21fdHJlZW1hcF9zdWJncm91cF9ib3JkZXIoKSArXG4gICNnZW9tX3RyZWVtYXBfc3ViZ3JvdXBfdGV4dChwbGFjZSA9IFwiY2VudHJlXCIsIGdyb3cgPSBUUlVFLCBjb2xvdXIgPSBcImJsYWNrXCIsIFxuICAgICAgICAgICAgICAgICAgICAjZmFtaWx5ID0gXCJQbGF5ZmFpciBEaXNwbGF5XCIpICtcbiAgI3NjYWxlX2ZpbGxfbWFudWFsKHZhbHVlcyA9IGMoXCJjYWRldGJsdWVcIiwgXCJkYXJrc2FsbW9uXCIsIFwiZ3JheVwiKSkgK1xuICB0aGVtZV9taW5pbWFsKCkgK1xuICB0aGVtZShsZWdlbmQucG9zaXRpb24gPSBcIm5vbmVcIilcblxucGxvdFJhY2VUTV9KYW5zb24gPC0gYXJ0aXN0cyAlPiVcbiAgZmlsdGVyKGJvb2sgPT0gXCJKYW5zb25cIikgJT4lXG4gIGdncGxvdChhZXMoYXJlYSA9IHRvdGFsX2NvdW50LCBmaWxsID0gYXJ0aXN0X3JhY2UsIFxuICAgICAgICAgICAgIGxhYmVsID0gYXJ0aXN0X3JhY2UsXG4gICAgICAgICAgICAgc3ViZ3JvdXAgPSBhcnRpc3RfcmFjZSkpICtcbiAgZ2VvbV90cmVlbWFwKCkgK1xuICBnZW9tX3RyZWVtYXBfc3ViZ3JvdXBfYm9yZGVyKCkgK1xuICAjZ2VvbV90cmVlbWFwX3N1Ymdyb3VwX3RleHQocGxhY2UgPSBcImNlbnRyZVwiLCBncm93ID0gVFJVRSwgY29sb3VyID0gXCJibGFja1wiLCBcbiAgICAgICAgICAgICAgICAgICAgI2ZhbWlseSA9IFwiUGxheWZhaXIgRGlzcGxheVwiKSArXG4gICNzY2FsZV9maWxsX21hbnVhbCh2YWx1ZXMgPSBjKFwiY2FkZXRibHVlXCIsIFwiZGFya3NhbG1vblwiLCBcImdyYXlcIikpICtcbiAgdGhlbWVfbWluaW1hbCgpICtcbiAgdGhlbWUobGVnZW5kLnBvc2l0aW9uID0gXCJub25lXCIpXG5gYGAifQ== -->
-<pre class="r"><code>plotRaceTM_Gardner &lt;- artists %&gt;%
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYXJ0aXN0c1RtcCA8LSB0dWVzZGF0YSRhcnRpc3RzICU+JVxuICBmaWx0ZXIoYXJ0aXN0X25hdGlvbmFsaXR5ID09IFwiQW1lcmljYW5cIikgJT4lXG4gIGdyb3VwX2J5KGFydGlzdF9uYW1lLCBhcnRpc3RfZ2VuZGVyLCBhcnRpc3RfcmFjZSwgYm9vaykgJT4lXG4gIHN1bW1hcmlzZSh0b3RhbF9jb3VudCA9IG4oKSwgc3BhY2VfcmF0aW9fcGVyX3BhZ2VfdG90YWwpICU+JVxuICBtdXRhdGUoYXJ0aXN0X2dlbmRlciA9IGFzX2ZhY3RvcihhcnRpc3RfZ2VuZGVyKSkgJT4lXG4gIGZpbHRlcih0b3RhbF9jb3VudCA+PSA1KSAlPiVcbiAgbXV0YXRlKGFydGlzdF9nZW5kZXIgPSBuYV9pZihhcnRpc3RfZ2VuZGVyLCBcIk4vQVwiKSkgJT4lXG4gIG5hLm9taXQoKVxuYGBgIn0= -->
+<pre class="r"><code>artistsTmp &lt;- tuesdata$artists %&gt;%
+  filter(artist_nationality == &quot;American&quot;) %&gt;%
+  group_by(artist_name, artist_gender, artist_race, book) %&gt;%
+  summarise(total_count = n(), space_ratio_per_page_total) %&gt;%
+  mutate(artist_gender = as_factor(artist_gender)) %&gt;%
+  filter(total_count &gt;= 5) %&gt;%
+  mutate(artist_gender = na_if(artist_gender, &quot;N/A&quot;)) %&gt;%
+  na.omit()</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiYHN1bW1hcmlzZSgpYCBoYXMgZ3JvdXBlZCBvdXRwdXQgYnkgJ2FydGlzdF9uYW1lJywgJ2FydGlzdF9nZW5kZXInLCAnYXJ0aXN0X3JhY2UnLCAnYm9vaycuIFlvdSBjYW4gb3ZlcnJpZGUgdXNpbmcgdGhlIGAuZ3JvdXBzYCBhcmd1bWVudC5cbiJ9 -->
+<pre><code>`summarise()` has grouped output by &#39;artist_name&#39;, &#39;artist_gender&#39;, &#39;artist_race&#39;, &#39;book&#39;. You can override using the `.groups` argument.</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxucGxvdEdlbmRlckJQX0dhcmRuZXIgPC0gYXJ0aXN0c1RtcCAlPiVcbiAgZmlsdGVyKGJvb2sgPT0gXCJHYXJkbmVyXCIpICU+JVxuICBnZ3Bsb3QoYWVzKHNwYWNlX3JhdGlvX3Blcl9wYWdlX3RvdGFsLCBhcnRpc3RfcmFjZSwgZmlsbCA9IGFydGlzdF9nZW5kZXIpKSArXG4gIGdlb21fYm94cGxvdCgpICtcbiAgc2NhbGVfZmlsbF9tYW51YWwodmFsdWVzID0gYyhcImNhZGV0Ymx1ZVwiLCBcImRhcmtzYWxtb25cIikpICtcbiAgc2NhbGVfeV9kaXNjcmV0ZShsYWJlbHMgPSBmdW5jdGlvbih5KSBzdHJfd3JhcCh5LCB3aWR0aCA9IDUpKSArXG4gIHhsaW0oMCwgMS42KSArXG4gIGxhYnMoeCA9IFwiXCIsXG4gICAgICAgeSA9IFwiXCIsIFxuICAgICAgIGZpbGwgPSBcIlwiKSArXG4gIHRoZW1lX21pbmltYWwoKSArXG4gIHRoZW1lKGF4aXMudGV4dC55ID0gZWxlbWVudF90ZXh0KGhqdXN0ID0gMC41LCBjb2xvciA9IFwiIzAyMjY2NlwiLCBsaW5laGVpZ2h0ID0gMC4zKSxcbiAgICAgICAgYXhpcy50ZXh0LnggPSBlbGVtZW50X2JsYW5rKCksXG4gICAgICAgIHRleHQgPSBlbGVtZW50X3RleHQoY29sb3VyID0gXCJibGFja1wiLCBmYW1pbHkgPSBcIkNvdXJpZXIgUHJpbWVcIiwgc2l6ZSA9IDMwKSxcbiAgICAgICAgbGVnZW5kLnBvc2l0aW9uID0gXCJub25lXCIsXG4gICAgICAgIHBsb3QubWFyZ2luID0gdW5pdChjKDEsMSwwLDEpLCBcImxpbmVzXCIpKVxuICBcbnBsb3RHZW5kZXJCUF9KYW5zb24gPC0gYXJ0aXN0c1RtcCAlPiVcbiAgZmlsdGVyKGJvb2sgPT0gXCJKYW5zb25cIikgJT4lXG4gIGdncGxvdChhZXMoc3BhY2VfcmF0aW9fcGVyX3BhZ2VfdG90YWwsIGFydGlzdF9yYWNlLCBmaWxsID0gYXJ0aXN0X2dlbmRlcikpICtcbiAgZ2VvbV9ib3hwbG90KCkgK1xuICBzY2FsZV9maWxsX21hbnVhbCh2YWx1ZXMgPSBjKFwiY2FkZXRibHVlXCIsIFwiZGFya3NhbG1vblwiKSkgK1xuICBzY2FsZV95X2Rpc2NyZXRlKGxhYmVscyA9IGZ1bmN0aW9uKHkpIHN0cl93cmFwKHksIHdpZHRoID0gNSkpICtcbiAgeGxpbSgwLCAxLjYpICtcbiAgbGFicyh4ID0gXCJTcGFjZSBSYXRpbyBwZXIgUGFnZVwiLFxuICAgICAgIHkgPSBcIlwiLCBcbiAgICAgICBmaWxsID0gXCJcIikgK1xuICB0aGVtZV9taW5pbWFsKCkgK1xuICB0aGVtZShheGlzLnRleHQueSA9IGVsZW1lbnRfdGV4dChoanVzdCA9IDAuNSwgY29sb3IgPSBcIiMwMjI2NjZcIiwgbGluZWhlaWdodCA9IDAuMyksXG4gICAgICAgIGF4aXMudGV4dC54ID0gZWxlbWVudF90ZXh0KGNvbG9yID0gXCIjMDIyNjY2XCIsIGZhbWlseSA9IFwiQ291cmllciBQcmltZVwiLCBzaXplID0gMjgpLFxuICAgICAgICB0ZXh0ID0gZWxlbWVudF90ZXh0KGNvbG91ciA9IFwiIzAyMjY2NlwiLCBmYW1pbHkgPSBcIkNvdXJpZXIgUHJpbWVcIiwgc2l6ZSA9IDMwKSxcbiAgICAgICAgbGVnZW5kLnBvc2l0aW9uID0gXCJub25lXCIsXG4gICAgICAgIHBsb3QubWFyZ2luID0gdW5pdChjKDAsMSwtMywxKSwgXCJsaW5lc1wiKSlcbmBgYCJ9 -->
+<pre class="r"><code>plotGenderBP_Gardner &lt;- artistsTmp %&gt;%
   filter(book == &quot;Gardner&quot;) %&gt;%
-  ggplot(aes(area = total_count, fill = artist_race, 
-             label = artist_race,
-             subgroup = artist_race)) +
-  geom_treemap() +
-  geom_treemap_subgroup_border() +
-  #geom_treemap_subgroup_text(place = &quot;centre&quot;, grow = TRUE, colour = &quot;black&quot;, 
-                    #family = &quot;Playfair Display&quot;) +
-  #scale_fill_manual(values = c(&quot;cadetblue&quot;, &quot;darksalmon&quot;, &quot;gray&quot;)) +
+  ggplot(aes(space_ratio_per_page_total, artist_race, fill = artist_gender)) +
+  geom_boxplot() +
+  scale_fill_manual(values = c(&quot;cadetblue&quot;, &quot;darksalmon&quot;)) +
+  scale_y_discrete(labels = function(y) str_wrap(y, width = 5)) +
+  xlim(0, 1.6) +
+  labs(x = &quot;&quot;,
+       y = &quot;&quot;, 
+       fill = &quot;&quot;) +
   theme_minimal() +
-  theme(legend.position = &quot;none&quot;)
-
-plotRaceTM_Janson &lt;- artists %&gt;%
+  theme(axis.text.y = element_text(hjust = 0.5, color = &quot;#022666&quot;, lineheight = 0.3),
+        axis.text.x = element_blank(),
+        text = element_text(colour = &quot;black&quot;, family = &quot;Courier Prime&quot;, size = 30),
+        legend.position = &quot;none&quot;,
+        plot.margin = unit(c(1,1,0,1), &quot;lines&quot;))
+  
+plotGenderBP_Janson &lt;- artistsTmp %&gt;%
   filter(book == &quot;Janson&quot;) %&gt;%
-  ggplot(aes(area = total_count, fill = artist_race, 
-             label = artist_race,
-             subgroup = artist_race)) +
-  geom_treemap() +
-  geom_treemap_subgroup_border() +
-  #geom_treemap_subgroup_text(place = &quot;centre&quot;, grow = TRUE, colour = &quot;black&quot;, 
-                    #family = &quot;Playfair Display&quot;) +
-  #scale_fill_manual(values = c(&quot;cadetblue&quot;, &quot;darksalmon&quot;, &quot;gray&quot;)) +
+  ggplot(aes(space_ratio_per_page_total, artist_race, fill = artist_gender)) +
+  geom_boxplot() +
+  scale_fill_manual(values = c(&quot;cadetblue&quot;, &quot;darksalmon&quot;)) +
+  scale_y_discrete(labels = function(y) str_wrap(y, width = 5)) +
+  xlim(0, 1.6) +
+  labs(x = &quot;Space Ratio per Page&quot;,
+       y = &quot;&quot;, 
+       fill = &quot;&quot;) +
   theme_minimal() +
-  theme(legend.position = &quot;none&quot;)</code></pre>
+  theme(axis.text.y = element_text(hjust = 0.5, color = &quot;#022666&quot;, lineheight = 0.3),
+        axis.text.x = element_text(color = &quot;#022666&quot;, family = &quot;Courier Prime&quot;, size = 28),
+        text = element_text(colour = &quot;#022666&quot;, family = &quot;Courier Prime&quot;, size = 30),
+        legend.position = &quot;none&quot;,
+        plot.margin = unit(c(0,1,-3,1), &quot;lines&quot;))</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuZGVzaWduIDwtIFwiXG4xMlxuMzRcbjU1XG5cIlxuXG5wbG90RmluYWwgPC0gcGxvdEdlbmRlclRNX0dhcmRuZXIgKyBwbG90R2VuZGVyQlBfR2FyZG5lciArIFxuICAocGxvdEdlbmRlclRNX0phbnNvbiArIHRoZW1lKGxlZ2VuZC5wb3NpdGlvbiA9IFwiYm90dG9tXCIsIFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGxlZ2VuZC50aXRsZSA9IGVsZW1lbnRfYmxhbmsoKSxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBsZWdlbmQubWFyZ2luID0gbWFyZ2luKDAsIDAsIDAsIDApLFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGxlZ2VuZC50ZXh0ID0gZWxlbWVudF90ZXh0KGZhbWlseSA9IFwiQ291cmllciBQcmltZVwiLFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHNpemUgPSAzMCxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBjb2xvciA9IFwiIzAyMjY2NlwiKSxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBsZWdlbmQua2V5LmhlaWdodCA9IHVuaXQoMSwgXCJsaW5lc1wiKSxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBsZWdlbmQua2V5LndpZHRoID0gdW5pdCgzLCBcImxpbmVzXCIpKSkgK1xuICBwbG90R2VuZGVyQlBfSmFuc29uICsgZ3VpZGVfYXJlYSgpICsgXG4gIHBsb3RfbGF5b3V0KGRlc2lnbiA9IGRlc2lnbiwgaGVpZ2h0cyA9IGMoNCwgNCwgMSksIGd1aWRlcyA9IFwiY29sbGVjdFwiKSArXG4gIHBsb3RfYW5ub3RhdGlvbih0aXRsZSA9IFwiR2VuZGVyIGFuZCBSYWNlIG9mIEFtZXJpY2FuIEFydGlzdHMgU2hvd24gaW4gR2FyZG5lcidzIGFuZCBKYW5zb24ncyBUZXh0Ym9va3NcIiwgXG4gICAgICAgICAgICAgICAgICBzdWJ0aXRsZSA9IHN0cl93cmFwKFwiVGhlIGdlbmRlciBhbmQgcmFjZSBvZiBBbWVyaWNhbiBhcnRpc3RzIGluIGV2ZXJ5IGVkaXRpb24gb2YgR2FyZG5lcidzIEFydCBUaHJvdWdoIHRoZSBBZ2VzIGFzIGNvbXBhcmVkIHRvIEphbnNvbidzIEhpc3Rvcnkgb2YgQXJ0LlwiKSxcbiAgICAgICAgICAgICAgICAgIGNhcHRpb24gPSBcIlNvdXJjZToge2FydGhpc3Rvcnl9IHwgVGlkeSBUdWVzZGF5XCIsXG4gICAgICAgICAgICAgICAgICB0aGVtZSA9IHRoZW1lKHBsb3QudGl0bGUgPSBlbGVtZW50X3RleHQoaGp1c3QgPSAwLjUsIFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGZhbWlseSA9IFwiQ291cmllciBQcmltZVwiLCBcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBzaXplID0gNTAsXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgY29sb3IgPSBcIiMwMjI2NjZcIixcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBtYXJnaW4gPSBtYXJnaW4oYiA9IDEwLCBcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgdW5pdCA9IFwicHRcIikpLFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBwbG90LnN1YnRpdGxlID0gZWxlbWVudF90ZXh0KGhqdXN0ID0gMC41LFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGZhbWlseSA9IFwiQ291cmllciBQcmltZVwiLFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHNpemUgPSA0MCxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBjb2xvciA9IFwiIzg4ODg4OFwiLFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGxpbmVoZWlnaHQgPSAwLjUpLFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBwbG90LmNhcHRpb24gPSBlbGVtZW50X3RleHQoZmFtaWx5ID0gXCJDb3VyaWVyIFByaW1lXCIsXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBzaXplID0gMjAsIFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgY29sb3IgPSBcIiM4ODg4ODhcIiksXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHBsb3QuY2FwdGlvbi5wb3NpdGlvbiA9IFwicGFuZWxcIixcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcGxvdC5iYWNrZ3JvdW5kID0gZWxlbWVudF9yZWN0KGNvbG9yID0gXCIjREREREREXCIpKVxuICApXG5gYGAifQ== -->
+<pre class="r"><code>design &lt;- &quot;
+12
+34
+55
+&quot;
+
+plotFinal &lt;- plotGenderTM_Gardner + plotGenderBP_Gardner + 
+  (plotGenderTM_Janson + theme(legend.position = &quot;bottom&quot;, 
+                               legend.title = element_blank(),
+                               legend.margin = margin(0, 0, 0, 0),
+                               legend.text = element_text(family = &quot;Courier Prime&quot;,
+                                                          size = 30,
+                                                          color = &quot;#022666&quot;),
+                               legend.key.height = unit(1, &quot;lines&quot;),
+                               legend.key.width = unit(3, &quot;lines&quot;))) +
+  plotGenderBP_Janson + guide_area() + 
+  plot_layout(design = design, heights = c(4, 4, 1), guides = &quot;collect&quot;) +
+  plot_annotation(title = &quot;Gender and Race of American Artists Shown in Gardner&#39;s and Janson&#39;s Textbooks&quot;, 
+                  subtitle = str_wrap(&quot;The gender and race of American artists in every edition of Gardner&#39;s Art Through the Ages as compared to Janson&#39;s History of Art.&quot;),
+                  caption = &quot;Source: {arthistory} | Tidy Tuesday&quot;,
+                  theme = theme(plot.title = element_text(hjust = 0.5, 
+                                                          family = &quot;Courier Prime&quot;, 
+                                                          size = 50,
+                                                          color = &quot;#022666&quot;,
+                                                          margin = margin(b = 10, 
+                                                                          unit = &quot;pt&quot;)),
+                                plot.subtitle = element_text(hjust = 0.5,
+                                                             family = &quot;Courier Prime&quot;,
+                                                             size = 40,
+                                                             color = &quot;#888888&quot;,
+                                                             lineheight = 0.5),
+                                plot.caption = element_text(family = &quot;Courier Prime&quot;,
+                                                            size = 20, 
+                                                            color = &quot;#888888&quot;),
+                                plot.caption.position = &quot;panel&quot;,
+                                plot.background = element_rect(color = &quot;#DDDDDD&quot;))
+  )</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuZ2dzYXZlKHBsb3QgPSBwbG90RmluYWwsIGZpbGVuYW1lID0gXCIyMDIzLTAxLTE3X1RULnBuZ1wiLCB3aWR0aCA9IDExLCBoZWlnaHQgPSA4LCB1bml0ID0gXCJpblwiKVxuYGBgIn0= -->
+<pre class="r"><code>ggsave(plot = plotFinal, filename = &quot;2023-01-17_TT.png&quot;, width = 11, height = 8, unit = &quot;in&quot;)</code></pre>
 <!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 
-<div id="rmd-source-code">LS0tDQp0aXRsZTogIlRpZHkgVHVlc2RheSAtIEphbnVhcnkgMTcsIDIwMjMiDQpvdXRwdXQ6IGh0bWxfbm90ZWJvb2sNCi0tLQ0KYGBge3IgTGlicmFyaWVzLCBGb250cywgRGF0YX0NCmxpYnJhcnkodGlkeXZlcnNlKQ0KbGlicmFyeShzaG93dGV4dCkNCmxpYnJhcnkoY293cGxvdCkNCmxpYnJhcnkodHJlZW1hcGlmeSkNCg0KI2ZvbnRzDQpmb250X2FkZF9nb29nbGUoIlBsYXlmYWlyIERpc3BsYXkiKQ0Kc2hvd3RleHRfYXV0bygpDQojUmVhZCBpbiBkYXRhDQp0dWVzZGF0YSA8LSB0aWR5dHVlc2RheVI6OnR0X2xvYWQoMjAyMywgd2VlayA9IDMpDQpgYGANCg0KYGBge3IgZGF0YX0NCmFydGlzdHMgPC0gdHVlc2RhdGEkYXJ0aXN0cyAlPiUNCiAgZmlsdGVyKGFydGlzdF9uYXRpb25hbGl0eSA9PSAiQW1lcmljYW4iKSAlPiUNCiAgZ3JvdXBfYnkoYXJ0aXN0X25hbWUsIGFydGlzdF9nZW5kZXIsIGFydGlzdF9yYWNlLCBhcnRpc3RfZXRobmljaXR5LCBib29rKSAlPiUNCiAgc3VtbWFyaXNlKHRvdGFsX2NvdW50ID0gbigpKSAlPiUNCiAgbXV0YXRlKGFydGlzdF9nZW5kZXIgPSBhc19mYWN0b3IoYXJ0aXN0X2dlbmRlcikpDQpgYGANCg0KYGBge3IgR2VuZGVyIGJ5IEJvb2t9DQpwbG90R2VuZGVyVE1fR2FyZG5lciA8LSBhcnRpc3RzICU+JQ0KICBmaWx0ZXIoYm9vayA9PSAiR2FyZG5lciIpICU+JQ0KICBnZ3Bsb3QoYWVzKGFyZWEgPSB0b3RhbF9jb3VudCwgZmlsbCA9IGFydGlzdF9nZW5kZXIsIA0KICAgICAgICAgICAgIGxhYmVsID0gcGFzdGUoYXJ0aXN0X25hbWUpLA0KICAgICAgICAgICAgIHN1Ymdyb3VwID0gYXJ0aXN0X2dlbmRlcikpICsNCiAgZ2VvbV90cmVlbWFwKGxheW91dCA9ICJmaXhlZCIpICsNCiAgZ2VvbV90cmVlbWFwX3N1Ymdyb3VwX2JvcmRlcihsYXlvdXQgPSAiZml4ZWQiKSArDQogIGdlb21fdHJlZW1hcF90ZXh0KGNvbG91ciA9ICJ3aGl0ZSIsIGZhbWlseSA9ICJQbGF5ZmFpciBEaXNwbGF5IiwgDQogICAgICAgICAgICAgICAgICAgIHBsYWNlID0gImNlbnRyZSIsIGdyb3cgPSBUUlVFLCBsYXlvdXQgPSAiZml4ZWQiKSArDQogIHNjYWxlX2ZpbGxfbWFudWFsKHZhbHVlcyA9IGMoImNhZGV0Ymx1ZSIsICJkYXJrc2FsbW9uIiwgImdyYXkiKSkgKw0KICB0aGVtZV9taW5pbWFsKCkgKw0KICB0aGVtZShsZWdlbmQucG9zaXRpb24gPSAibm9uZSIpDQoNCnBsb3RHZW5kZXJUTV9KYW5zb24gPC0gYXJ0aXN0cyAlPiUNCiAgZmlsdGVyKGJvb2sgPT0gIkphbnNvbiIpICU+JQ0KICBnZ3Bsb3QoYWVzKGFyZWEgPSB0b3RhbF9jb3VudCwgZmlsbCA9IGFydGlzdF9nZW5kZXIsIA0KICAgICAgICAgICAgIGxhYmVsID0gcGFzdGUoYXJ0aXN0X25hbWUpLA0KICAgICAgICAgICAgIHN1Ymdyb3VwID0gYXJ0aXN0X2dlbmRlcikpICsNCiAgZ2VvbV90cmVlbWFwKGxheW91dCA9ICJmaXhlZCIpICsNCiAgZ2VvbV90cmVlbWFwX3N1Ymdyb3VwX2JvcmRlcihsYXlvdXQgPSAiZml4ZWQiKSArDQogIGdlb21fdHJlZW1hcF90ZXh0KGNvbG91ciA9ICJ3aGl0ZSIsIGZhbWlseSA9ICJQbGF5ZmFpciBEaXNwbGF5IiwgDQogICAgICAgICAgICAgICAgICAgIHBsYWNlID0gImNlbnRyZSIsIGdyb3cgPSBUUlVFLCBsYXlvdXQgPSAiZml4ZWQiKSArDQogIHNjYWxlX2ZpbGxfbWFudWFsKHZhbHVlcyA9IGMoImNhZGV0Ymx1ZSIsICJkYXJrc2FsbW9uIiwgImdyYXkiKSkgKw0KICB0aGVtZV9taW5pbWFsKCkgKw0KICB0aGVtZShsZWdlbmQucG9zaXRpb24gPSAibm9uZSIpDQpgYGANCg0KYGBge3IgUmFjZSBieSBCb29rfQ0KcGxvdFJhY2VUTV9HYXJkbmVyIDwtIGFydGlzdHMgJT4lDQogIGZpbHRlcihib29rID09ICJHYXJkbmVyIikgJT4lDQogIGdncGxvdChhZXMoYXJlYSA9IHRvdGFsX2NvdW50LCBmaWxsID0gYXJ0aXN0X3JhY2UsIA0KICAgICAgICAgICAgIGxhYmVsID0gYXJ0aXN0X3JhY2UsDQogICAgICAgICAgICAgc3ViZ3JvdXAgPSBhcnRpc3RfcmFjZSkpICsNCiAgZ2VvbV90cmVlbWFwKCkgKw0KICBnZW9tX3RyZWVtYXBfc3ViZ3JvdXBfYm9yZGVyKCkgKw0KICAjZ2VvbV90cmVlbWFwX3N1Ymdyb3VwX3RleHQocGxhY2UgPSAiY2VudHJlIiwgZ3JvdyA9IFRSVUUsIGNvbG91ciA9ICJibGFjayIsIA0KICAgICAgICAgICAgICAgICAgICAjZmFtaWx5ID0gIlBsYXlmYWlyIERpc3BsYXkiKSArDQogICNzY2FsZV9maWxsX21hbnVhbCh2YWx1ZXMgPSBjKCJjYWRldGJsdWUiLCAiZGFya3NhbG1vbiIsICJncmF5IikpICsNCiAgdGhlbWVfbWluaW1hbCgpICsNCiAgdGhlbWUobGVnZW5kLnBvc2l0aW9uID0gIm5vbmUiKQ0KDQpwbG90UmFjZVRNX0phbnNvbiA8LSBhcnRpc3RzICU+JQ0KICBmaWx0ZXIoYm9vayA9PSAiSmFuc29uIikgJT4lDQogIGdncGxvdChhZXMoYXJlYSA9IHRvdGFsX2NvdW50LCBmaWxsID0gYXJ0aXN0X3JhY2UsIA0KICAgICAgICAgICAgIGxhYmVsID0gYXJ0aXN0X3JhY2UsDQogICAgICAgICAgICAgc3ViZ3JvdXAgPSBhcnRpc3RfcmFjZSkpICsNCiAgZ2VvbV90cmVlbWFwKCkgKw0KICBnZW9tX3RyZWVtYXBfc3ViZ3JvdXBfYm9yZGVyKCkgKw0KICAjZ2VvbV90cmVlbWFwX3N1Ymdyb3VwX3RleHQocGxhY2UgPSAiY2VudHJlIiwgZ3JvdyA9IFRSVUUsIGNvbG91ciA9ICJibGFjayIsIA0KICAgICAgICAgICAgICAgICAgICAjZmFtaWx5ID0gIlBsYXlmYWlyIERpc3BsYXkiKSArDQogICNzY2FsZV9maWxsX21hbnVhbCh2YWx1ZXMgPSBjKCJjYWRldGJsdWUiLCAiZGFya3NhbG1vbiIsICJncmF5IikpICsNCiAgdGhlbWVfbWluaW1hbCgpICsNCiAgdGhlbWUobGVnZW5kLnBvc2l0aW9uID0gIm5vbmUiKQ0KYGBg</div>
+<div id="rmd-source-code">LS0tDQp0aXRsZTogIlRpZHkgVHVlc2RheSAtIEphbnVhcnkgMTcsIDIwMjMiDQpvdXRwdXQ6IGh0bWxfbm90ZWJvb2sNCi0tLQ0KYGBge3IgTGlicmFyaWVzLCBGb250cywgRGF0YX0NCmxpYnJhcnkodGlkeXZlcnNlKQ0KbGlicmFyeShzaG93dGV4dCkNCmxpYnJhcnkocGF0Y2h3b3JrKQ0KbGlicmFyeSh0cmVlbWFwaWZ5KQ0KDQojZm9udHMNCmZvbnRfYWRkX2dvb2dsZSgiQ291cmllciBQcmltZSIpDQpzaG93dGV4dF9hdXRvKCkNCg0KdHVlc2RhdGEgPC0gdGlkeXR1ZXNkYXlSOjp0dF9sb2FkKDIwMjMsIHdlZWsgPSAzKQ0KYGBgDQoNCmBgYHtyIGRhdGF9DQphcnRpc3RzIDwtIHR1ZXNkYXRhJGFydGlzdHMgJT4lDQogIGZpbHRlcihhcnRpc3RfbmF0aW9uYWxpdHkgPT0gIkFtZXJpY2FuIikgJT4lDQogIG11dGF0ZShhcnRpc3RfZ2VuZGVyID0gbmFfaWYoYXJ0aXN0X2dlbmRlciwgIk4vQSIpKSAlPiUNCiAgbmEub21pdCgpICU+JQ0KICBncm91cF9ieShhcnRpc3RfbmFtZSwgYXJ0aXN0X2dlbmRlciwgYXJ0aXN0X3JhY2UsIGFydGlzdF9ldGhuaWNpdHksIGJvb2spICU+JQ0KICBzdW1tYXJpc2UodG90YWxfY291bnQgPSBuKCkpICU+JQ0KICBtdXRhdGUoYXJ0aXN0X2dlbmRlciA9IGFzX2ZhY3RvcihhcnRpc3RfZ2VuZGVyKSkgJT4lDQogIGZpbHRlcih0b3RhbF9jb3VudCA+PSA1KQ0KYGBgDQoNCmBgYHtyIEdlbmRlciBieSBCb29rIFRyZWVtYXB9DQpwbG90R2VuZGVyVE1fR2FyZG5lciA8LSBhcnRpc3RzICU+JQ0KICBmaWx0ZXIoYm9vayA9PSAiR2FyZG5lciIpICU+JQ0KICBnZ3Bsb3QoYWVzKGFyZWEgPSB0b3RhbF9jb3VudCwgZmlsbCA9IGFydGlzdF9nZW5kZXIsIA0KICAgICAgICAgICAgIGxhYmVsID0gcGFzdGUoYXJ0aXN0X25hbWUpLA0KICAgICAgICAgICAgIHN1Ymdyb3VwID0gYXJ0aXN0X2dlbmRlcikpICsNCiAgZ2VvbV90cmVlbWFwKGxheW91dCA9ICJmaXhlZCIpICsNCiAgZ2VvbV90cmVlbWFwX3N1Ymdyb3VwX2JvcmRlcihsYXlvdXQgPSAiZml4ZWQiKSArDQogIGdlb21fdHJlZW1hcF90ZXh0KGNvbG91ciA9ICJibGFjayIsIGZhbWlseSA9ICJDb3VyaWVyIFByaW1lIiwgDQogICAgICAgICAgICAgICAgICAgIHBsYWNlID0gImNlbnRyZSIsIGdyb3cgPSBUUlVFLCBsYXlvdXQgPSAiZml4ZWQiKSArDQogIHNjYWxlX2ZpbGxfbWFudWFsKHZhbHVlcyA9IGMoImNhZGV0Ymx1ZSIsICJkYXJrc2FsbW9uIiwgImdyYXkiKSkgKw0KICB0aGVtZV9taW5pbWFsKCkgKw0KICBsYWJzKHRpdGxlID0gIkdhcmRuZXIncyBBcnQgVGhyb3VnaCB0aGUgQWdlcyIpICsNCiAgdGhlbWUobGVnZW5kLnBvc2l0aW9uID0gIm5vbmUiLA0KICAgICAgICBwbG90LnRpdGxlID0gZWxlbWVudF90ZXh0KGNvbG91ciA9ICIjMDIyNjY2IiwgZmFtaWx5ID0gIkNvdXJpZXIgUHJpbWUiLCBzaXplID0gMjgpLA0KICAgICAgICBwbG90Lm1hcmdpbiA9IHVuaXQoYygxLCAzLCAwLCAxKSwgImxpbmVzIikpDQoNCnBsb3RHZW5kZXJUTV9KYW5zb24gPC0gYXJ0aXN0cyAlPiUNCiAgZmlsdGVyKGJvb2sgPT0gIkphbnNvbiIpICU+JQ0KICBuYS5vbWl0KCkgJT4lDQogIGdncGxvdChhZXMoYXJlYSA9IHRvdGFsX2NvdW50LCBmaWxsID0gYXJ0aXN0X2dlbmRlciwgDQogICAgICAgICAgICAgbGFiZWwgPSBwYXN0ZShhcnRpc3RfbmFtZSksDQogICAgICAgICAgICAgc3ViZ3JvdXAgPSBhcnRpc3RfZ2VuZGVyKSkgKw0KICBnZW9tX3RyZWVtYXAobGF5b3V0ID0gImZpeGVkIikgKw0KICBnZW9tX3RyZWVtYXBfc3ViZ3JvdXBfYm9yZGVyKGxheW91dCA9ICJmaXhlZCIpICsNCiAgZ2VvbV90cmVlbWFwX3RleHQoY29sb3VyID0gImJsYWNrIiwgZmFtaWx5ID0gIkNvdXJpZXIgUHJpbWUiLCANCiAgICAgICAgICAgICAgICAgICAgcGxhY2UgPSAiY2VudHJlIiwgZ3JvdyA9IFRSVUUsIGxheW91dCA9ICJmaXhlZCIpICsNCiAgc2NhbGVfZmlsbF9tYW51YWwodmFsdWVzID0gYygiY2FkZXRibHVlIiwgImRhcmtzYWxtb24iLCAiZ3JheSIpKSArDQogIHRoZW1lX21pbmltYWwoKSArDQogIGxhYnModGl0bGUgPSAiSmFuc29uJ3MgSGlzdG9yeSBvZiBBcnQiKSArDQogIHRoZW1lKGxlZ2VuZC5wb3NpdGlvbiA9ICJub25lIiwNCiAgICAgICAgcGxvdC50aXRsZSA9IGVsZW1lbnRfdGV4dChjb2xvdXIgPSAiIzAyMjY2NiIsIGZhbWlseSA9ICJDb3VyaWVyIFByaW1lIiwgc2l6ZSA9IDI4KSwNCiAgICAgICAgcGxvdC5tYXJnaW4gPSB1bml0KGMoMCwgMywgLTMsIDEpLCAibGluZXMiKSkNCmBgYA0KDQpgYGB7ciBHZW5kZXIgYW5kIFJhY2UgYnkgQm9vayBCb3hwbG90c30NCmFydGlzdHNUbXAgPC0gdHVlc2RhdGEkYXJ0aXN0cyAlPiUNCiAgZmlsdGVyKGFydGlzdF9uYXRpb25hbGl0eSA9PSAiQW1lcmljYW4iKSAlPiUNCiAgZ3JvdXBfYnkoYXJ0aXN0X25hbWUsIGFydGlzdF9nZW5kZXIsIGFydGlzdF9yYWNlLCBib29rKSAlPiUNCiAgc3VtbWFyaXNlKHRvdGFsX2NvdW50ID0gbigpLCBzcGFjZV9yYXRpb19wZXJfcGFnZV90b3RhbCkgJT4lDQogIG11dGF0ZShhcnRpc3RfZ2VuZGVyID0gYXNfZmFjdG9yKGFydGlzdF9nZW5kZXIpKSAlPiUNCiAgZmlsdGVyKHRvdGFsX2NvdW50ID49IDUpICU+JQ0KICBtdXRhdGUoYXJ0aXN0X2dlbmRlciA9IG5hX2lmKGFydGlzdF9nZW5kZXIsICJOL0EiKSkgJT4lDQogIG5hLm9taXQoKQ0KDQpwbG90R2VuZGVyQlBfR2FyZG5lciA8LSBhcnRpc3RzVG1wICU+JQ0KICBmaWx0ZXIoYm9vayA9PSAiR2FyZG5lciIpICU+JQ0KICBnZ3Bsb3QoYWVzKHNwYWNlX3JhdGlvX3Blcl9wYWdlX3RvdGFsLCBhcnRpc3RfcmFjZSwgZmlsbCA9IGFydGlzdF9nZW5kZXIpKSArDQogIGdlb21fYm94cGxvdCgpICsNCiAgc2NhbGVfZmlsbF9tYW51YWwodmFsdWVzID0gYygiY2FkZXRibHVlIiwgImRhcmtzYWxtb24iKSkgKw0KICBzY2FsZV95X2Rpc2NyZXRlKGxhYmVscyA9IGZ1bmN0aW9uKHkpIHN0cl93cmFwKHksIHdpZHRoID0gNSkpICsNCiAgeGxpbSgwLCAxLjYpICsNCiAgbGFicyh4ID0gIiIsDQogICAgICAgeSA9ICIiLCANCiAgICAgICBmaWxsID0gIiIpICsNCiAgdGhlbWVfbWluaW1hbCgpICsNCiAgdGhlbWUoYXhpcy50ZXh0LnkgPSBlbGVtZW50X3RleHQoaGp1c3QgPSAwLjUsIGNvbG9yID0gIiMwMjI2NjYiLCBsaW5laGVpZ2h0ID0gMC4zKSwNCiAgICAgICAgYXhpcy50ZXh0LnggPSBlbGVtZW50X2JsYW5rKCksDQogICAgICAgIHRleHQgPSBlbGVtZW50X3RleHQoY29sb3VyID0gImJsYWNrIiwgZmFtaWx5ID0gIkNvdXJpZXIgUHJpbWUiLCBzaXplID0gMzApLA0KICAgICAgICBsZWdlbmQucG9zaXRpb24gPSAibm9uZSIsDQogICAgICAgIHBsb3QubWFyZ2luID0gdW5pdChjKDEsMSwwLDEpLCAibGluZXMiKSkNCiAgDQpwbG90R2VuZGVyQlBfSmFuc29uIDwtIGFydGlzdHNUbXAgJT4lDQogIGZpbHRlcihib29rID09ICJKYW5zb24iKSAlPiUNCiAgZ2dwbG90KGFlcyhzcGFjZV9yYXRpb19wZXJfcGFnZV90b3RhbCwgYXJ0aXN0X3JhY2UsIGZpbGwgPSBhcnRpc3RfZ2VuZGVyKSkgKw0KICBnZW9tX2JveHBsb3QoKSArDQogIHNjYWxlX2ZpbGxfbWFudWFsKHZhbHVlcyA9IGMoImNhZGV0Ymx1ZSIsICJkYXJrc2FsbW9uIikpICsNCiAgc2NhbGVfeV9kaXNjcmV0ZShsYWJlbHMgPSBmdW5jdGlvbih5KSBzdHJfd3JhcCh5LCB3aWR0aCA9IDUpKSArDQogIHhsaW0oMCwgMS42KSArDQogIGxhYnMoeCA9ICJTcGFjZSBSYXRpbyBwZXIgUGFnZSIsDQogICAgICAgeSA9ICIiLCANCiAgICAgICBmaWxsID0gIiIpICsNCiAgdGhlbWVfbWluaW1hbCgpICsNCiAgdGhlbWUoYXhpcy50ZXh0LnkgPSBlbGVtZW50X3RleHQoaGp1c3QgPSAwLjUsIGNvbG9yID0gIiMwMjI2NjYiLCBsaW5laGVpZ2h0ID0gMC4zKSwNCiAgICAgICAgYXhpcy50ZXh0LnggPSBlbGVtZW50X3RleHQoY29sb3IgPSAiIzAyMjY2NiIsIGZhbWlseSA9ICJDb3VyaWVyIFByaW1lIiwgc2l6ZSA9IDI4KSwNCiAgICAgICAgdGV4dCA9IGVsZW1lbnRfdGV4dChjb2xvdXIgPSAiIzAyMjY2NiIsIGZhbWlseSA9ICJDb3VyaWVyIFByaW1lIiwgc2l6ZSA9IDMwKSwNCiAgICAgICAgbGVnZW5kLnBvc2l0aW9uID0gIm5vbmUiLA0KICAgICAgICBwbG90Lm1hcmdpbiA9IHVuaXQoYygwLDEsLTMsMSksICJsaW5lcyIpKQ0KYGBgDQoNCmBgYHtyIGZpbmFsIHBsb3QgYXNzZW1ibHl9DQpkZXNpZ24gPC0gIg0KMTINCjM0DQo1NQ0KIg0KDQpwbG90RmluYWwgPC0gcGxvdEdlbmRlclRNX0dhcmRuZXIgKyBwbG90R2VuZGVyQlBfR2FyZG5lciArIA0KICAocGxvdEdlbmRlclRNX0phbnNvbiArIHRoZW1lKGxlZ2VuZC5wb3NpdGlvbiA9ICJib3R0b20iLCANCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBsZWdlbmQudGl0bGUgPSBlbGVtZW50X2JsYW5rKCksDQogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgbGVnZW5kLm1hcmdpbiA9IG1hcmdpbigwLCAwLCAwLCAwKSwNCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBsZWdlbmQudGV4dCA9IGVsZW1lbnRfdGV4dChmYW1pbHkgPSAiQ291cmllciBQcmltZSIsDQogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgc2l6ZSA9IDMwLA0KICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGNvbG9yID0gIiMwMjI2NjYiKSwNCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBsZWdlbmQua2V5LmhlaWdodCA9IHVuaXQoMSwgImxpbmVzIiksDQogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgbGVnZW5kLmtleS53aWR0aCA9IHVuaXQoMywgImxpbmVzIikpKSArDQogIHBsb3RHZW5kZXJCUF9KYW5zb24gKyBndWlkZV9hcmVhKCkgKyANCiAgcGxvdF9sYXlvdXQoZGVzaWduID0gZGVzaWduLCBoZWlnaHRzID0gYyg0LCA0LCAxKSwgZ3VpZGVzID0gImNvbGxlY3QiKSArDQogIHBsb3RfYW5ub3RhdGlvbih0aXRsZSA9ICJHZW5kZXIgYW5kIFJhY2Ugb2YgQW1lcmljYW4gQXJ0aXN0cyBTaG93biBpbiBHYXJkbmVyJ3MgYW5kIEphbnNvbidzIFRleHRib29rcyIsIA0KICAgICAgICAgICAgICAgICAgc3VidGl0bGUgPSBzdHJfd3JhcCgiVGhlIGdlbmRlciBhbmQgcmFjZSBvZiBBbWVyaWNhbiBhcnRpc3RzIGluIGV2ZXJ5IGVkaXRpb24gb2YgR2FyZG5lcidzIEFydCBUaHJvdWdoIHRoZSBBZ2VzIGFzIGNvbXBhcmVkIHRvIEphbnNvbidzIEhpc3Rvcnkgb2YgQXJ0LiIpLA0KICAgICAgICAgICAgICAgICAgY2FwdGlvbiA9ICJTb3VyY2U6IHthcnRoaXN0b3J5fSB8IFRpZHkgVHVlc2RheSIsDQogICAgICAgICAgICAgICAgICB0aGVtZSA9IHRoZW1lKHBsb3QudGl0bGUgPSBlbGVtZW50X3RleHQoaGp1c3QgPSAwLjUsIA0KICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGZhbWlseSA9ICJDb3VyaWVyIFByaW1lIiwgDQogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgc2l6ZSA9IDUwLA0KICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGNvbG9yID0gIiMwMjI2NjYiLA0KICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIG1hcmdpbiA9IG1hcmdpbihiID0gMTAsIA0KICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB1bml0ID0gInB0IikpLA0KICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBwbG90LnN1YnRpdGxlID0gZWxlbWVudF90ZXh0KGhqdXN0ID0gMC41LA0KICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGZhbWlseSA9ICJDb3VyaWVyIFByaW1lIiwNCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBzaXplID0gNDAsDQogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgY29sb3IgPSAiIzg4ODg4OCIsDQogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgbGluZWhlaWdodCA9IDAuNSksDQogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHBsb3QuY2FwdGlvbiA9IGVsZW1lbnRfdGV4dChmYW1pbHkgPSAiQ291cmllciBQcmltZSIsDQogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBzaXplID0gMjAsIA0KICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgY29sb3IgPSAiIzg4ODg4OCIpLA0KICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBwbG90LmNhcHRpb24ucG9zaXRpb24gPSAicGFuZWwiLA0KICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBwbG90LmJhY2tncm91bmQgPSBlbGVtZW50X3JlY3QoY29sb3IgPSAiI0RERERERCIpKQ0KICApDQpgYGANCg0KYGBge3Igb3V0cHV0IHBsb3QgYW5kIHNhdmV9DQpnZ3NhdmUocGxvdCA9IHBsb3RGaW5hbCwgZmlsZW5hbWUgPSAiMjAyMy0wMS0xN19UVC5wbmciLCB3aWR0aCA9IDExLCBoZWlnaHQgPSA4LCB1bml0ID0gImluIikNCmBgYA0K</div>
 
 
 
