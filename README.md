@@ -3,6 +3,9 @@ Tidy Tuesday Data Analysis
 
 **2023**
 
+January 17, 2023 - Artists
+![image](https://user-images.githubusercontent.com/91282117/213287513-98dfdc16-44a6-408e-ab12-8916bb56382c.png)
+
 January 10, 2023 - FeederWatch
 ![image](https://user-images.githubusercontent.com/91282117/212170837-1657688f-c6be-4671-b359-2df36af75f96.png)
 
