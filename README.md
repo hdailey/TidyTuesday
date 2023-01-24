@@ -3,6 +3,9 @@ Tidy Tuesday Data Analysis
 
 **2023**
 
+January 24, 2023 - Along (TV Series)
+![image](https://user-images.githubusercontent.com/91282117/214368368-046a076e-8fa5-4357-82ce-2ab4e02ed037.png)
+
 January 17, 2023 - Artists
 ![image](https://user-images.githubusercontent.com/91282117/213287513-98dfdc16-44a6-408e-ab12-8916bb56382c.png)
 
