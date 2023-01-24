@@ -73,6 +73,7 @@ plotFinal <- finalItems %>%
         axis.title.x = element_text(family = "Barlow Condensed", 
                                     colour = "white", size = 38),
         panel.grid.major.y = element_blank(),
+        panel.grid.minor.x = element_blank(),
         legend.position = "bottom",
         legend.text = element_text(family = "Barlow Condensed", colour = "white",
                                    size = 36),
