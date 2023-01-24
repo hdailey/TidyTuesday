@@ -50,6 +50,7 @@ plotFinal <- finalItems %>%
   geom_point(aes(size = Popularity, colour = Average), stat = "identity") +
   geom_errorbar(aes(ymin = (Average - SD), ymax = (Average + SD), 
                     color = Average)) +
+  geom_text(aes(label = Popularity, size = Popularity), hjust = 0.5, family = "Barlow Condensed", colour = "white", show.legend = FALSE) +
   coord_flip() +
   scale_color_carto_c(palette = "Emrld") +
   labs(x = "",
