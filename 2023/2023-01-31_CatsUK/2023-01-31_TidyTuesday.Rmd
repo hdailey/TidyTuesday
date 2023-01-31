@@ -6,12 +6,154 @@ output: html_notebook
 #Libraries
 library(tidyverse)
 library(showtext)
-library(rcartocolor)
+library(lubridate)
 
 #Fonts
-font_add_google("Barlow Condensed")
+font_add_google("Archivo")
 showtext_auto()
 
 #Data
 tuesdata <- tidytuesdayR::tt_load(2023, week = 5)
+```
+
+```{r data wrangling hunting}
+catsUKRef <- tuesdata$cats_uk_reference
+catsUK <- tuesdata$cats_uk
+
+catsUKHunt <- catsUK %>%
+  inner_join(catsUKRef, catsUK, by = "tag_id") %>%
+  filter(visible == "TRUE") %>%
+  select(-c(animal_taxon, algorithm_marked_outlier, manually_marked_outlier,
+            study_name, ground_speed, study_site, animal_id)) %>%
+  mutate(month = month(timestamp, label = TRUE),
+         animal_sex = factor(animal_sex,
+                             labels = c("Female", "Male"))) %>%
+  group_by(tag_id, month, animal_sex) %>%
+  summarise(prey_count = max(prey_p_month))
+```
+
+```{r plot hunting}
+catsHunt <- catsUKHunt %>%
+  ggplot(aes(prey_count, month, fill = animal_sex)) +
+  ggridges::stat_density_ridges(alpha = 0.5) +
+  cowplot::theme_minimal_grid() +
+  labs(x = "Number of Prey Caught per Month",
+       y = "",
+       title = "Pet Cats on the Move (UK)",
+       subtitle = str_wrap("Total approximate number of prey per month per total cats for 101 pet cats surveyed in the UK between June 2017 and November 2017."),
+       caption = "Source: Movebank for Animal Tracking Data | https://www.datarepository.movebank.org/ | Tidy Tuesday ") +
+  theme(text = element_text(family = "Archivo"),
+        plot.margin = margin(0.5, 0.5, 0.5, 0.5, unit = "cm"),
+        plot.title = element_text(size = 24),
+        plot.title.position = "plot",
+        plot.subtitle = element_text(size = 18, lineheight = 1, margin = margin(b = 10), color = "grey20"),
+        plot.caption = element_text(size = 10, hjust = 1, color = "grey45"),
+        plot.caption.position = "plot",
+        axis.text = element_text(size = 12),
+        legend.position = "top",
+        legend.justification = "right",
+        legend.title = element_blank(),
+        legend.text = element_text(size = 12),
+        plot.background = element_rect(fill = "#fafafa", colour = "#fafafa"),
+        panel.background = element_rect(fill = "#fafafa", colour = "#fafafa")) +
+  guides(fill = guide_legend(label.position = "top"))
+```
+
+```{r data wrangle traveling}
+#Distance Traveled
+catsUKDist <- catsUK %>%
+  filter(visible == TRUE) %>%
+  mutate(date = ymd(as.Date(timestamp))) %>%
+  group_by(tag_id, date) %>%
+  arrange(timestamp, .by_group = TRUE) %>%
+  mutate(day_id = row_number(),
+         long = lag(location_long),
+         lat = lag(location_lat)) %>%
+  select(c(date, timestamp, location_long, location_lat, long, lat, day_id,)) %>%
+  ungroup() %>%
+  filter(day_id != 1) %>%
+  mutate(dist = geosphere::distGeo(cbind(long, lat), cbind(location_long, location_lat)))
+
+catsUKDist_selected <- catsUKDist %>%
+  group_by(tag_id) %>%
+  summarise(ndays = n_distinct(date)) %>%
+  arrange(ndays) %>%
+  filter(ndays == 1) %>%
+  pull(tag_id)
+
+catsUKDist_stat = catsUKDist %>%
+  filter(!tag_id %in% catsUKDist_selected) %>%
+  group_by(tag_id, date) %>%
+  summarise(dist_d = sum(dist)) %>%
+  ungroup() %>%
+  group_by(tag_id) %>%
+  mutate(mean = mean(dist_d, na.rm = TRUE),
+         med = median(dist_d, na.rm = TRUE),
+         min = min(dist_d, na.rm = TRUE),
+         max = max(dist_d, na.rm = TRUE))
+
+catsUK_final = catsUKDist_stat %>%
+  select(tag_id, mean) %>%
+  distinct() %>%
+  left_join(catsUKRef, by = "tag_id") %>%
+  filter(!is.na(age_years)) %>%
+  mutate(animal_reproductive_condition = replace_na(animal_reproductive_condition, "Unknown")) %>%
+  ungroup() %>%
+  mutate(grp = case_when(age_years == 0 ~ "Kitten\n(up to 1 year)",
+                       between(age_years, 1, 6) ~ "Young adult\n(1 - 6 years)",
+                       between(age_years, 7, 10)~"Mature adult\n(7 - 10 years)",
+                       age_years > 10 ~ "Senior\n(>10 years)"),
+         grp = factor(grp, levels = c("Kitten\n(up to 1 year)","Young adult\n(1 - 6 years)",
+                                      "Mature adult\n(7 - 10 years)","Senior\n(>10 years)")),
+         animal_reproductive_condition = case_when(animal_reproductive_condition == 
+                                                     "Spayed"~"Spayed (Female)",
+                                                   animal_reproductive_condition ==
+                                                     "Neutered"~"Neutered (Male)",
+                                                   animal_reproductive_condition ==
+                                                     "Not fixed" & animal_sex == "m" ~ "Unaltered (Male)",
+                                                   animal_reproductive_condition == 
+                                                     "Not fixed" & animal_sex == "f" ~ "Unaltered (Female)",
+                                                   animal_reproductive_condition == "Unknown" ~ "Unknown"),
+         ncatlong = case_when(n_cats == 1 ~ "**1** cat",
+                         n_cats > 1 ~ paste0("**",{n_cats},"**"," ","cats")))
+```
+
+```{r plot traveling}
+plotFinal <- catsUK_final %>%
+  ggplot(aes(mean, fct_rev(ncatlong),
+             shape = animal_reproductive_condition, fill = grp, order = grp)) +
+  ggdist::geom_dots(group = NA, color="grey50") +
+  scale_shape_manual(values = c(21, 22, 23, 24, 25)) +
+  scale_fill_manual(values = wesanderson::wes_palette("Darjeeling1", 4, type = "discrete")) +
+  labs(x = "Average distance travelled per day (meters)", 
+       y = "Number of cats in the house",
+       fill = "Age group:", color="Age group:", shape="Reproductive condition:",
+       title = "Pet Cats on the Move (UK)",
+       subtitle = str_wrap("Estimates of the average (minimum) distance travelled per day by 98 pet cats surveyed in the UK between June 2017 and November 2017. The distance in meters is an estimate of the shortest distance between two sensor measurement locations."),
+       caption = "Source: Movebank for Animal Tracking | doi:10.5441/001/1.pf315732 | Tidy Tuesday") +
+  cowplot::theme_minimal_grid() +
+  theme(text = element_text(size = 24, family = "Archivo"),
+        plot.margin = margin(0.5, 0.5, 0.5,.5, unit="cm"),
+        plot.caption.position = "plot",
+        plot.caption = element_text(hjust = 1, size = 18, color="grey45"),
+        plot.title.position = "plot",
+        plot.title = element_text(size = 48),
+        plot.subtitle = element_text(lineheight = 0.5, size = 32, color="grey20"),
+        axis.text.y = ggtext::element_markdown(hjust = 0, size = 26, margin = margin(l = 3)),
+        axis.title = element_text(size = 26),
+        axis.text.x = element_text(size = 26),
+        legend.title=element_text(face = "bold"),
+        legend.position = c(0.44, 1.1),
+        legend.direction = "horizontal",
+        legend.box = 'vertical', 
+        legend.box.just = 'left',
+        legend.spacing.y = unit(0.3, "lines"),
+        legend.text = element_text(lineheight = 0.5),
+        plot.background = element_rect(color = "#fafafa", fill = "#fafafa"),
+        panel.background = element_rect(color = "#fafafa", fill = "#fafafa"))
+
+```
+
+```{r}
+ggsave("2023-01-31_TT.png", plotFinal, width = 14, height = 10, unit = "in")
 ```
