@@ -154,6 +154,6 @@ plotFinal <- catsUK_final %>%
 
 ```
 
-```{r}
+```{r save}
 ggsave("2023-01-31_TT.png", plotFinal, width = 14, height = 10, unit = "in")
 ```
