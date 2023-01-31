@@ -2,6 +2,8 @@
 Tidy Tuesday Data Analysis
 
 **2023**
+January 31, 2023 - Pet Cats in the UK
+![image](https://user-images.githubusercontent.com/91282117/215854441-9a6c4269-bf75-4c9e-9da0-afd65266c3a7.png)
 
 January 24, 2023 - Alone (TV Series)
 ![image](https://user-images.githubusercontent.com/91282117/214370615-6b6e6b79-07cd-4665-a24d-9bbe47dd13a8.png)
