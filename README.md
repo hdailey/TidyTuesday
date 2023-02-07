@@ -3,6 +3,9 @@ Tidy Tuesday Data Analysis
 
 **2023**
 
+February 7, 2023 - Big Tech Stock Prices
+![image](https://user-images.githubusercontent.com/91282117/217352323-c537639f-861b-47ba-a11d-35c61aa7559b.png)
+
 January 31, 2023 - Pet Cats in the UK
 ![image](https://user-images.githubusercontent.com/91282117/215854441-9a6c4269-bf75-4c9e-9da0-afd65266c3a7.png)
 
