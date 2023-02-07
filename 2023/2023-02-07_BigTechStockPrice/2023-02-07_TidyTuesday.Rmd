@@ -3,15 +3,84 @@ title: "Tidy Tuesday - February 7, 2023"
 output: html_notebook
 ---
 ```{r Libraries, Fonts, Data}
-#Libraries
+# Libraries
 library(tidyverse)
 library(showtext)
 
 
-#Fonts
-font_add_google("")
+# Fonts
+font_add_google("Roboto Condensed")
+font_add_google("Rajdhani")
+font_add_google("PT Sans Narrow")
 showtext_auto()
 
-#Data
-tuesdata <- tidytuesdayR::tt_load(2023, week = 6)
+# Data
+# tuesdata <- tidytuesdayR::tt_load(2023, week = 6)
+big_tech_stock_prices <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2023/2023-02-07/big_tech_stock_prices.csv')
+big_tech_companies <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2023/2023-02-07/big_tech_companies.csv')
+```
+
+```{r data wrangling}
+big_tech <- big_tech_stock_prices %>%
+  left_join(big_tech_companies, by = "stock_symbol", suffix = c("", ".y")) %>%
+  select(-tidyselect::ends_with((".x")), -tidyselect::ends_with((".y"))) %>%
+  mutate(company = company %>%
+           str_remove(", Inc.") %>%
+           str_remove(" Inc.| Corporation") %>%
+           str_remove(".com"),
+         company = ifelse(company == "International Business Machines", "IBM",
+                          ifelse(company == "Meta Platforms", "Meta", 
+                                 ifelse(company == "Cisco Systems", "Cisco", company))
+                          ),
+         year = lubridate::year(date)) %>%
+  group_by(stock_symbol, company, year) %>%
+  summarise(annual_yield = (adj_close[which.max(date)] - adj_close[which.min(date)]) /
+              adj_close[which.min(date)],
+            .groups = "drop") %>%
+  mutate(positive = annual_yield > 0) %>%
+  ungroup() %>%
+  mutate(label_text = str_glue("Stock: {stock_symbol}
+                               Company: {company}")) %>%
+  group_by(label_text) %>%
+  summarise(mean = mean(annual_yield), sd = sd(annual_yield))
+
+rm(big_tech_companies, big_tech_stock_prices)
+```
+
+```{r data visualization}
+plotFinal <- big_tech %>%
+  ggplot(aes(sd, mean)) +
+  geom_smooth(method = "lm") +
+  geom_point(aes(color = label_text)) +
+  ggrepel::geom_label_repel(aes(label = label_text, color = label_text), size = 10, 
+                            lineheight = 0.5) +
+  scale_x_log10(labels = scales::percent) +
+  scale_y_log10(labels = scales::percent) +
+  scale_color_manual(values = MetBrewer::met.brewer("Lakota", n = 14)) +
+  labs(x = "log(Standard Deviation)",
+       y = "log(Mean)",
+       title = "Big Tech Annual Yields",
+       subtitle = "Annual Yields from 2010 to 2022",
+       caption = "Source: Yahoo Finance via Kaggle | Tidy Tuesday")+ 
+  theme(legend.position = "none",
+        text = element_text(family = "Roboto Condensed", colour = "gray10"),
+        plot.margin = margin(10, 20, 10, 20),
+        plot.title.position = "plot",
+        plot.title = element_text(family = "Roboto Condensed", face = "bold",
+                                  size = 64),
+        plot.subtitle = element_text(family = "Rajdhani", face = "bold",
+                                     size = 48),
+        plot.caption = element_text(family = "PT Sans Narrow", size = 28,
+                                    hjust = 1),
+        axis.text = element_text(size = 32),
+        axis.title = element_text(size = 32),
+        panel.background = element_rect(fill = "#F9F9F9", color = "#F9F9F9"),
+        plot.background = element_rect(fill = "#F9F9F9", color = "#F9F9F9"),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.border = element_rect(color = "black", fill = NA))
+```
+
+```{r save}
+ggsave("2023-02-07_TT.png", plotFinal, width = 11, height = 8, unit = "in")
 ```
