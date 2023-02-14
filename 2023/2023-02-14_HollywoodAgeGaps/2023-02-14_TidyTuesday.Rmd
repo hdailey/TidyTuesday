@@ -5,9 +5,11 @@ output: html_notebook
 ```{r Libraries, Fonts, Data}
 library(tidyverse)
 library(showtext)
+library(RColorBrewer)
 
 #fonts
-font_add_google("Roboto")
+font_add_google("Space Mono")
+font_add_google("Limelight")
 showtext_auto()
 
 #Read in data
@@ -15,12 +17,77 @@ tuesdata <- tidytuesdayR::tt_load(2023, week = 7)
 ```
 
 ```{r Data Exploration}
+age_gaps <- tuesdata$age_gaps %>% 
+  group_by(release_year) %>%
+  summarise(median_age_difference = median(age_difference), n = n()) %>%
+  # splits year into individual characters
+  mutate(char = strsplit(as.character(release_year), split = ""),
+         char_n = list(c(0:3))) %>%
+  ungroup() %>%
+  unnest(c(char, char_n)) %>%
+  mutate(grouped_median = cut(median_age_difference, breaks = c(0, 8, 16, 23, 30)))
+
+levels(age_gaps$grouped_median) <- c("0", "1", "2", "3") 
+
+age_gaps <- age_gaps %>%
+  mutate(fam = paste0("Limelight", " ", ifelse(char_n == floor(as.numeric(grouped_median)) |
+                                                       char_n == ceiling(as.numeric(grouped_median)), 
+                                                     "Regular", "ExtraBold")),
+         decade = (release_year - 1) %/% 10 * 10,
+         x = release_year - decade,
+         margin_x = ifelse(lag(str_detect(fam, "ExtraBold"), default = FALSE), 0.04, 0)) %>%
+  group_by(release_year) %>%
+  mutate(margin_x = cumsum(margin_x)) %>%
+  ungroup() 
 ```
 
 ```{r Plotting}
-plotFinal <- ggplot() 
+plotFinal <- age_gaps %>%
+  ggplot() +
+  geom_text(aes(x = x + (char_n/10), y = decade,
+                label = char,
+                family = fam,
+                size = ifelse(str_detect(fam, "ExtraBold"), 14, 15),
+                color = ifelse(str_detect(fam, "Regular"), n, NA)),
+            stat = "unique", hjust = 0) +
+  scale_y_reverse() +
+  scale_size_identity() +
+  scale_color_distiller(palette = "YlOrRd", direction = 1, na.value = "grey20",
+                        guide = guide_colorbar(title = "Color indicates total number of films for the year", title.position = "top", title.vjust = 1, title.hjust = 0.5 )) +
+  annotate("text", x = c(1.5, 1.7, 1.9, 2.1), y = 1915, label = c("1", "9", "9", "4"), 
+           size = c(16, 16, 20, 16), 
+           family = c("Space Mono", "Space Mono", "Space Mono ExtraBold", "Space Mono"), 
+           color = c("grey20", "grey20", 2, "grey20")) +
+  
+  annotate("text", x = c(1.5, 1.9), y = 1923, label = c("0-7", "16-22"), size = 8, family = "Space Mono", color = "grey20", lineheight = 2) +
+  annotate("text", x = c(1.7, 2.1), y = 1927, label = c("8-15", "23+"), size = 8, family = "Space Mono", color = "grey20", lineheight = 2) +
+  annotate("text", x = 4.17, y = 1920, label = "Bold position indicates the median age difference between movie \nlove interests for the year (two bold numbers mean a median between them)", size = 6, family = "Space Mono", color = "grey10", lineheight = 0.7, hjust = 0.5, vjust = 1) +
+  annotate("segment", x = c(1.5, 1.9), y = 1922,
+            xend = c(1.5, 1.9), yend = 1917,
+            color = "grey20", size = 0.5, arrow = arrow(length = unit(0.01, "npc"))) +
+  annotate("segment", x = c(1.7, 2.1), y = 1926,
+            xend = c(1.7, 2.1), yend = 1917,
+            color = "grey20", size = 0.5, arrow = arrow(length = unit(0.01, "npc"))) +
+# Title
+  annotate("text", x = 10.5, y = 1913, label = "Hollywood Age Gaps", size = 32, family = "Limelight", hjust = 1) +
+  annotate("text", x = 10.5, y = 1919, label = "Median age difference between movie love interests \nby year for 1,159 films released between 1935 and 2022", size = 12, family = "Limelight", hjust = 1, vjust = 1, lineheight = 0.5) +
+# Caption
+  labs(
+  caption = "Source: Data is Plural | TidyTuesday | Inspired by gkaramanis") +
+  theme_void() +
+  theme(legend.position = c(0.35, 0.95),
+        legend.direction = "horizontal",
+        legend.key.height = unit(0.75, "line"),
+        legend.key.width = unit(3, "line"),
+        legend.title = element_text(family = "Space Mono", size = 16, color = "grey10", hjust = 0),
+        legend.text = element_text(family = "Space Mono", size = 16, color = "grey10"),
+        plot.background = element_rect(fill = colorspace::lighten("steelblue", amount = 0.3), color = NA),
+        plot.caption = element_text(family = "Space Mono", hjust = 0.92, size = 16, 
+                                    margin = margin(0, 0, 10, 0)),
+        plot.margin = margin(10, 0, 0, 10)) 
 ```
 
 ```{r Save}
-ggsave(plot = plotFinal, filename = "2023-02-14_TT.png", width = 11, height = 8, unit = "in")
+ggsave(plot = plotFinal, filename = "2023-02-14_TT.png", height = 8, width = 11, unit = "in")
 ```
+
