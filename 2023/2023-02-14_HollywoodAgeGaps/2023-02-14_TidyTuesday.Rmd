@@ -21,21 +21,21 @@ age_gaps <- tuesdata$age_gaps %>%
   group_by(release_year) %>%
   summarise(median_age_difference = median(age_difference), n = n()) %>%
   # splits year into individual characters
-  mutate(char = strsplit(as.character(release_year), split = ""),
-         char_n = list(c(0:3))) %>%
+  mutate(year_char = strsplit(as.character(release_year), split = ""),
+         year_char_n = list(c(0:3))) %>%
   ungroup() %>%
-  unnest(c(char, char_n)) %>%
+  unnest(c(year_char, year_char_n)) %>%
   mutate(grouped_median = cut(median_age_difference, breaks = c(0, 8, 16, 23, 30)))
 
 levels(age_gaps$grouped_median) <- c("0", "1", "2", "3") 
 
 age_gaps <- age_gaps %>%
-  mutate(fam = paste0("Limelight", " ", ifelse(char_n == floor(as.numeric(grouped_median)) |
-                                                       char_n == ceiling(as.numeric(grouped_median)), 
+  mutate(font_family = paste0("Limelight", " ", ifelse(year_char_n == floor(as.numeric(grouped_median)) |
+                                                       year_char_n == ceiling(as.numeric(grouped_median)), 
                                                      "Regular", "ExtraBold")),
          decade = (release_year - 1) %/% 10 * 10,
          x = release_year - decade,
-         margin_x = ifelse(lag(str_detect(fam, "ExtraBold"), default = FALSE), 0.04, 0)) %>%
+         margin_x = ifelse(lag(str_detect(font_family, "ExtraBold"), default = FALSE), 0.04, 0)) %>%
   group_by(release_year) %>%
   mutate(margin_x = cumsum(margin_x)) %>%
   ungroup() 
@@ -44,11 +44,11 @@ age_gaps <- age_gaps %>%
 ```{r Plotting}
 plotFinal <- age_gaps %>%
   ggplot() +
-  geom_text(aes(x = x + (char_n/10), y = decade,
-                label = char,
-                family = fam,
-                size = ifelse(str_detect(fam, "ExtraBold"), 14, 15),
-                color = ifelse(str_detect(fam, "Regular"), n, NA)),
+  geom_text(aes(x = x + (year_char_n/10), y = decade,
+                label = year_char,
+                family = font_family,
+                size = ifelse(str_detect(font_family, "ExtraBold"), 14, 15),
+                color = ifelse(str_detect(font_family, "Regular"), n, NA)),
             stat = "unique", hjust = 0) +
   scale_y_reverse() +
   scale_size_identity() +
@@ -88,6 +88,7 @@ plotFinal <- age_gaps %>%
 ```
 
 ```{r Save}
-ggsave(plot = plotFinal, filename = "2023-02-14_TT.png", height = 8, width = 11, unit = "in")
+ggsave(plot = plotFinal, path = here::here("2023/2023-02-14_HollywoodAgeGaps/"),
+       paste0(format(Sys.Date(), "%Y-%m-%d"), "_TT", ".png"), height = 8, width = 11, unit = "in")
 ```
 
