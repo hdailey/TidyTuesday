@@ -6,6 +6,12 @@ Tidy Tuesday Data Analysis
 <th colspan="4">2023</th>
 <tr>
 <td align="center">
+  <a href="https://github.com/hdailey/TidyTuesday/tree/main/2023/2023-02-14_HollywoodAgeGaps">
+     Week 07 - Hollywood Age Gaps
+  </a>
+<img src="https://github.com/hdailey/TidyTuesday/blob/cb5ae59c79b56d2bb3531b830185cdb2820b465a/2023/2023-02-14_HollywoodAgeGaps/2023-02-14_TT.png"> 
+  </td>
+<td align="center">
     <a href="https://github.com/hdailey/TidyTuesday/tree/main/2023/2023-02-07_BigTechStockPrice">
   Week 06 - Big Tech Stock Prices
   </a>
@@ -23,14 +29,14 @@ Tidy Tuesday Data Analysis
   </a>
 <img src="https://user-images.githubusercontent.com/91282117/214370615-6b6e6b79-07cd-4665-a24d-9bbe47dd13a8.png"> 
   </td>
+</tr>
+<tr>
 <td align="center">
   <a href="https://github.com/hdailey/TidyTuesday/tree/main/2023/2023-01-17_Artists">
   Week 03 - Art History
   </a>
 <img src="https://user-images.githubusercontent.com/91282117/213287513-98dfdc16-44a6-408e-ab12-8916bb56382c.png"> 
   </td>
-</tr>
-<tr>
 <td align="center">
     <a href="https://github.com/hdailey/TidyTuesday/tree/main/2023/2023-01-10_BirdFeederWatch">
   Week 02 - Bird FeederWatch
