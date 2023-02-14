@@ -7,12 +7,12 @@ Tidy Tuesday Data Analysis
 <tr>
 <td align="center">
   <a href="https://github.com/hdailey/TidyTuesday/tree/main/2023/2023-02-14_HollywoodAgeGaps">
-     Week 07 - Hollywood Age Gaps
+  Week 07 - Hollywood Age Gaps
   </a>
 <img src="https://user-images.githubusercontent.com/91282117/218871188-d7b4407e-923f-4161-b95d-2ebe7f6e8d16.png"> 
   </td>
 <td align="center">
-    <a href="https://github.com/hdailey/TidyTuesday/tree/main/2023/2023-02-07_BigTechStockPrice">
+  <a href="https://github.com/hdailey/TidyTuesday/tree/main/2023/2023-02-07_BigTechStockPrice">
   Week 06 - Big Tech Stock Prices
   </a>
 <img src="https://user-images.githubusercontent.com/91282117/217352323-c537639f-861b-47ba-a11d-35c61aa7559b.png"> 
