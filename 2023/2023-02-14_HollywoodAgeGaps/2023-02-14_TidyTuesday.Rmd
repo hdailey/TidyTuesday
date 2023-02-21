@@ -52,28 +52,77 @@ plotFinal <- age_gaps %>%
             stat = "unique", hjust = 0) +
   scale_y_reverse() +
   scale_size_identity() +
-  scale_color_distiller(palette = "YlOrRd", direction = 1, na.value = "grey20",
-                        guide = guide_colorbar(title = "Color indicates total number of films for the year", title.position = "top", title.vjust = 1, title.hjust = 0.5 )) +
-  annotate("text", x = c(1.5, 1.7, 1.9, 2.1), y = 1915, label = c("1", "9", "9", "4"), 
+  scale_color_distiller(palette = "YlOrRd", 
+                        direction = 1, 
+                        na.value = "grey20",
+                        guide = guide_colorbar(title = "Color indicates total number of films for the year", 
+                                               title.position = "top", 
+                                               title.vjust = 1, 
+                                               title.hjust = 0.5 )) +
+  annotate("text", 
+           x = c(1.5, 1.7, 1.9, 2.1), 
+           y = 1915, 
+           label = c("1", "9", "9", "4"), 
            size = c(16, 16, 20, 16), 
            family = c("Space Mono", "Space Mono", "Space Mono ExtraBold", "Space Mono"), 
            color = c("grey20", "grey20", 2, "grey20")) +
   
-  annotate("text", x = c(1.5, 1.9), y = 1923, label = c("0-7", "16-22"), size = 8, family = "Space Mono", color = "grey20", lineheight = 2) +
-  annotate("text", x = c(1.7, 2.1), y = 1927, label = c("8-15", "23+"), size = 8, family = "Space Mono", color = "grey20", lineheight = 2) +
-  annotate("text", x = 4.17, y = 1920, label = "Bold position indicates the median age difference between movie \nlove interests for the year (two bold numbers mean a median between them)", size = 6, family = "Space Mono", color = "grey10", lineheight = 0.7, hjust = 0.5, vjust = 1) +
-  annotate("segment", x = c(1.5, 1.9), y = 1922,
-            xend = c(1.5, 1.9), yend = 1917,
-            color = "grey20", size = 0.5, arrow = arrow(length = unit(0.01, "npc"))) +
+  annotate("text", 
+           x = c(1.5, 1.9), 
+           y = 1923, 
+           label = c("0-7", "16-22"), 
+           size = 8, 
+           family = "Space Mono", 
+           color = "grey20", 
+           lineheight = 2) +
+  annotate("text", 
+           x = c(1.7, 2.1), 
+           y = 1927, 
+           label = c("8-15", "23+"), 
+           size = 8, 
+           family = "Space Mono", 
+           color = "grey20", 
+           lineheight = 2) +
+  annotate("text", 
+           x = 4.17, 
+           y = 1920, 
+           label = "Bold position indicates the median age difference between movie \nlove interests for the year (two bold numbers mean a median between them)", 
+           size = 6, 
+           family = "Space Mono", 
+           color = "grey10", 
+           lineheight = 0.7, 
+           hjust = 0.5, 
+           vjust = 1) +
+  annotate("segment", 
+           x = c(1.5, 1.9), 
+           y = 1922,
+           xend = c(1.5, 1.9), 
+           yend = 1917,
+           color = "grey20",
+           size = 0.5, 
+           arrow = arrow(length = unit(0.01, "npc"))) +
   annotate("segment", x = c(1.7, 2.1), y = 1926,
             xend = c(1.7, 2.1), yend = 1917,
-            color = "grey20", size = 0.5, arrow = arrow(length = unit(0.01, "npc"))) +
-# Title
-  annotate("text", x = 10.5, y = 1913, label = "Hollywood Age Gaps", size = 32, family = "Limelight", hjust = 1) +
-  annotate("text", x = 10.5, y = 1919, label = "Median age difference between movie love interests \nby year for 1,159 films released between 1935 and 2022", size = 12, family = "Limelight", hjust = 1, vjust = 1, lineheight = 0.5) +
-# Caption
-  labs(
-  caption = "Source: Data is Plural | TidyTuesday | Inspired by gkaramanis") +
+            color = "grey20", size = 0.5, arrow = arrow(length = unit(0.01, "snpc"))) +
+# Title Annotation
+  annotate("text", 
+           x = 10.5, 
+           y = 1913, 
+           label = "Hollywood Age Gaps", 
+           size = 32, 
+           family = "Limelight", 
+           hjust = 1) +
+  annotate("text", 
+           x = 10.5, 
+           y = 1919, 
+           label = 
+             "Median age difference between movie love interests \nby year for 1,159 films released between 1935 and 2022", 
+           size = 12, 
+           family = "Limelight", 
+           hjust = 1, 
+           vjust = 1, 
+           lineheight = 0.5) +
+  labs( caption = "Source: Data is Plural | TidyTuesday | Inspired by gkaramanis") +
   theme_void() +
   theme(legend.position = c(0.35, 0.95),
         legend.direction = "horizontal",
@@ -83,8 +132,8 @@ plotFinal <- age_gaps %>%
         legend.text = element_text(family = "Space Mono", size = 16, color = "grey10"),
         plot.background = element_rect(fill = colorspace::lighten("steelblue", amount = 0.3), color = NA),
         plot.caption = element_text(family = "Space Mono", hjust = 0.92, size = 16, 
-                                    margin = margin(0, 0, 10, 0)),
-        plot.margin = margin(10, 0, 0, 10)) 
+                                    margin = margin(0, 0, 0, 0)),
+        plot.margin = margin(0, 0, 0, 0)) 
 ```
 
 ```{r Save}
