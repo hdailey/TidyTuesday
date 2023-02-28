@@ -72,3 +72,4 @@
 </tr>
 
 </thread>
+ </table>
