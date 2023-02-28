@@ -1754,13 +1754,15 @@ display: none;
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGlicmFyeSh0aWR5dmVyc2UpXG5saWJyYXJ5KHNob3d0ZXh0KVxuXG4jZm9udHNcbiMgZm9udF9hZGRfZ29vZ2xlKFwiXCIpXG4jIHNob3d0ZXh0X2F1dG8oKVxuI1JlYWQgaW4gZGF0YVxudHVlc2RhdGEgPC0gdGlkeXR1ZXNkYXlSOjp0dF9sb2FkKDIwMjMsIHdlZWsgPSA5KVxuYGBgIn0= -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGlicmFyeSh0aWR5dmVyc2UpXG5saWJyYXJ5KHNob3d0ZXh0KVxubGlicmFyeShnZ3RleHQpXG5cbiNmb250c1xuZm9udF9hZGRfZ29vZ2xlKFwiRG9zaXNcIilcbnNob3d0ZXh0X2F1dG8oKVxuXG4jUmVhZCBpbiBkYXRhXG50dWVzZGF0YSA8LSB0aWR5dHVlc2RheVI6OnR0X2xvYWQoMjAyMywgd2VlayA9IDkpXG5gYGAifQ== -->
 <pre class="r"><code>library(tidyverse)
 library(showtext)
+library(ggtext)
 
 #fonts
-# font_add_google(&quot;&quot;)
-# showtext_auto()
+font_add_google(&quot;Dosis&quot;)
+showtext_auto()
+
 #Read in data
 tuesdata &lt;- tidytuesdayR::tt_load(2023, week = 9)</code></pre>
 <!-- rnb-source-end -->
@@ -1768,21 +1770,95 @@ tuesdata &lt;- tidytuesdayR::tt_load(2023, week = 9)</code></pre>
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYWZyaVNlbnRpIDwtIHR1ZXNkYXRhJGFmcmlzZW50aVxubGFuZ3MgPC0gdHVlc2RhdGEkbGFuZ3VhZ2VzXG5sYW5nU2NyaXB0IDwtIHR1ZXNkYXRhJGxhbmd1YWdlX3NjcmlwdHNcbmxhbmdDb3VudHJpZXMgPC0gdHVlc2RhdGEkbGFuZ3VhZ2VfY291bnRyaWVzXG5jb3VudHJ5UmVnaW9ucyA8LSB0dWVzZGF0YSRjb3VudHJ5X3JlZ2lvbnNcblxuYWZyaVNlbnRpSm9pbiA8LSBhZnJpU2VudGkgJT4lXG4gIGxlZnRfam9pbihsYW5nQ291bnRyaWVzLCBieSA9IFwibGFuZ3VhZ2VfaXNvX2NvZGVcIiwgbXVsdGlwbGUgPSBcImFsbFwiKSAlPiVcbiAgbGVmdF9qb2luKGxhbmdzLCBieSA9IFwibGFuZ3VhZ2VfaXNvX2NvZGVcIiwgbXVsdGlwbGUgPSBcImFsbFwiKSAlPiVcbiAgbGVmdF9qb2luKGxhbmdTY3JpcHQsIGJ5ID0gXCJsYW5ndWFnZV9pc29fY29kZVwiLCBtdWx0aXBsZSA9IFwiYWxsXCIpICU+JVxuICBsZWZ0X2pvaW4oY291bnRyeVJlZ2lvbnMsIGJ5ID0gXCJjb3VudHJ5XCIsIG11bHRpcGxlID0gXCJhbGxcIikgJT4lXG4gIG11dGF0ZShsYW5ndWFnZSA9IGlmZWxzZShsYW5ndWFnZSA9PSBcIkFsZ2VyaWFuIEFyYWJpYy9EYXJqYVwiLCBcIkRhcmphXCIsIGxhbmd1YWdlKSxcbiAgICAgICAgIGxhbmd1YWdlID0gaWZlbHNlKGxhbmd1YWdlID09IFwiTW9yb2NjYW4gQXJhYmljL0RhcmlqYVwiLCBcIkRhcmlqYVwiLCBsYW5ndWFnZSksXG4gICAgICAgICBsYW5ndWFnZSA9IGlmZWxzZShsYW5ndWFnZSA9PSBcIk5pZ2VyaWFuIFBpZGdpblwiLCBcIlBpZGdpblwiLCBsYW5ndWFnZSksXG4gICAgICAgICBsYW5ndWFnZSA9IGlmZWxzZShsYW5ndWFnZSA9PSBcIk1vemFtYmljYW4gUG9ydHVndWVzZVwiLCBcIk1vemFtYmljYW5cIiwgbGFuZ3VhZ2UpKSAlPiVcbiAgZ3JvdXBfYnkobGFuZ3VhZ2UpICU+JVxuICByZWZyYW1lKHBvc2l0aXZlX3BlcmMgPSBzdW0obGFiZWwgPT0gXCJwb3NpdGl2ZVwiKSAvIG4oKSxcbiAgICAgICAgICAgIG5lZ2F0aXZlX3BlcmMgPSBzdW0obGFiZWwgPT0gXCJuZWdhdGl2ZVwiKSAvIG4oKSxcbiAgICAgICAgICAgIG5ldXRyYWxfcGVyYyA9IHN1bShsYWJlbCA9PSBcIm5ldXRyYWxcIikgLyBuKCksXG4gICAgICAgICAgICBsYWJlbCkgJT4lXG4gIHVuZ3JvdXAoKSAlPiVcbiAgbXV0YXRlKGxhbmd1YWdlID0gZmN0X3JlbGV2ZWwobGFuZ3VhZ2UsIGxldmVscyhsYW5ndWFnZSkpKSAlPiVcbiAgZ3JvdXBfYnkobGFuZ3VhZ2UsIGxhYmVsKSAlPiVcbiAgc3VtbWFyaXNlKG4gPSBuKCkpICU+JVxuICBtdXRhdGUobGFiZWwubiA9IHN1bShuKSxcbiAgICAgICAgIHByb3AgPSBuIC8gc3VtKG4pKSAlPiVcbiAgdW5ncm91cCgpXG5gYGAifQ== -->
+<pre class="r"><code>afriSenti &lt;- tuesdata$afrisenti
+langs &lt;- tuesdata$languages
+langScript &lt;- tuesdata$language_scripts
+langCountries &lt;- tuesdata$language_countries
+countryRegions &lt;- tuesdata$country_regions
+
+afriSentiJoin &lt;- afriSenti %&gt;%
+  left_join(langCountries, by = &quot;language_iso_code&quot;, multiple = &quot;all&quot;) %&gt;%
+  left_join(langs, by = &quot;language_iso_code&quot;, multiple = &quot;all&quot;) %&gt;%
+  left_join(langScript, by = &quot;language_iso_code&quot;, multiple = &quot;all&quot;) %&gt;%
+  left_join(countryRegions, by = &quot;country&quot;, multiple = &quot;all&quot;) %&gt;%
+  mutate(language = ifelse(language == &quot;Algerian Arabic/Darja&quot;, &quot;Darja&quot;, language),
+         language = ifelse(language == &quot;Moroccan Arabic/Darija&quot;, &quot;Darija&quot;, language),
+         language = ifelse(language == &quot;Nigerian Pidgin&quot;, &quot;Pidgin&quot;, language),
+         language = ifelse(language == &quot;Mozambican Portuguese&quot;, &quot;Mozambican&quot;, language)) %&gt;%
+  group_by(language) %&gt;%
+  reframe(positive_perc = sum(label == &quot;positive&quot;) / n(),
+            negative_perc = sum(label == &quot;negative&quot;) / n(),
+            neutral_perc = sum(label == &quot;neutral&quot;) / n(),
+            label) %&gt;%
+  ungroup() %&gt;%
+  mutate(language = fct_relevel(language, levels(language))) %&gt;%
+  group_by(language, label) %&gt;%
+  summarise(n = n()) %&gt;%
+  mutate(label.n = sum(n),
+         prop = n / sum(n)) %&gt;%
+  ungroup()</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiYHN1bW1hcmlzZSgpYCBoYXMgZ3JvdXBlZCBvdXRwdXQgYnkgJ2xhbmd1YWdlJy4gWW91IGNhbiBvdmVycmlkZSB1c2luZyB0aGUgYC5ncm91cHNgIGFyZ3VtZW50LlxuIn0= -->
+<pre><code>`summarise()` has grouped output by &#39;language&#39;. You can override using the `.groups` argument.</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxucm0obGlzdCA9IGMoXCJhZnJpU2VudGlcIiwgXCJsYW5nc1wiLCBcImxhbmdTY3JpcHRcIiwgXCJsYW5nQ291bnRyaWVzXCIsIFwiY291bnRyeVJlZ2lvbnNcIikpXG5cblxuYGBgIn0= -->
+<pre class="r"><code>rm(list = c(&quot;afriSenti&quot;, &quot;langs&quot;, &quot;langScript&quot;, &quot;langCountries&quot;, &quot;countryRegions&quot;))
+</code></pre>
+<!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxucGxvdEZpbmFsIDwtIGFmcmlTZW50aUpvaW4gJT4lXG4gIGdncGxvdChhZXMoeCA9IGxhbmd1YWdlLCB5ID0gcHJvcCwgd2lkdGggPSBsYWJlbC5uLCBmaWxsID0gbGFiZWwpKSArXG4gIGdlb21fY29sKHBvc2l0aW9uID0gXCJmaWxsXCIsIGNvbG9yID0gXCJibGFja1wiKSArXG4gIGdlb21fdGV4dChhZXMoeCA9IDAuMDUsIHkgPSAwLjAyLCBsYWJlbCA9IGxhbmd1YWdlKSwgc3RhdCA9IFwiaWRlbnRpdHlcIixcbiAgICAgICAgICAgIGZvbnRmYWNlID0gXCJib2xkXCIsIGNvbG9yID0gXCJibGFja1wiLCBzaXplID0gNiwgYW5nbGUgPSA5MCwgaGp1c3QgPSAwLFxuICAgICAgICAgICAgY2hlY2tfb3ZlcmxhcCA9IFRSVUUpICtcbiAgZ2d0aXRsZShcIlNlbnRpbWVudCBBbmFseXNpcyBvZiBUd2VldHMgaW4gdGhlIEFmcmljYW4gTGFuZ3VhZ2VzXCIsXG4gICAgICAgICAgc3VidGl0bGUgPSBwYXN0ZTAoXCJQZXJjZW50YWdlcyBvZiB0d2VldHMgaW4gMTQgZGlmZmVyZW50IEFmcmljYW4gbGFuZ3VhZ2VzIGFuZCBwcm9wb3J0aW9ucyBvZiBcIixcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICBcIjxzcGFuIHN0eWxlPSdjb2xvcjpzZWFncmVlbic+XCIsXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgXCIqKnBvc2l0aXZlKio8XC9zcGFuPiwgXCIsIFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgIFwiPHNwYW4gc3R5bGU9J2NvbG9yOm9yYW5nZSc+XCIsXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgXCIqKm5ldXRyYWwqKjxcL3NwYW4+IG9yIFwiLFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgIFwiPHNwYW4gc3R5bGVzPSdjb2xvcjp0b21hdG8nPlwiLFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgIFwiKipuZWdhdGl2ZSoqPFwvc3Bhbj4gXCIsXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgXCJsYWJlbHMgYXNzaWduZWQgYnkgbmF0aXZlIHNwZWFrZXJzLlwiKSkgK1xuICBsYWJzKGNhcHRpb24gPSBcIlNvdXJjZTogKipBZnJpU2VudGkqKiB2aWEgKipAU2htdWhhbW1hZGQqKiB8IFRpZHkgVHVlc2RheVwiKSArXG4gIGZhY2V0X2dyaWQoY29scyA9IHZhcnMobGFuZ3VhZ2UpLCBzY2FsZSA9IFwiZnJlZVwiLCBzcGFjZSA9IFwiZnJlZVwiLCBzaHJpbmsgPSBUUlVFKSArXG4gIHNjYWxlX2ZpbGxfbWFudWFsKHZhbHVlcyA9IGMoXCJwb3NpdGl2ZVwiID0gXCJzZWFncmVlblwiLFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIFwibmV1dHJhbFwiID0gXCJvcmFuZ2VcIixcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBcIm5lZ2F0aXZlXCIgPSBcInRvbWF0b1wiKSkgK1xuICB0aGVtZV92b2lkKCkgK1xuICBzY2FsZV9zaXplKGd1aWRlID0gXCJub25lXCIpICtcbiAgdGhlbWUoc3RyaXAuYmFja2dyb3VuZCA9IGVsZW1lbnRfYmxhbmsoKSxcbiAgICAgICAgc3RyaXAudGV4dC54ID0gZWxlbWVudF9ibGFuaygpLFxuICAgICAgICB0ZXh0ID0gZWxlbWVudF90ZXh0KGZhbWlseSA9IFwiRG9zaXNcIiksXG4gICAgICAgIHBsb3QuYmFja2dyb3VuZCA9IGVsZW1lbnRfcmVjdChmaWxsID0gXCJncmF5MjVcIixcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGNvbG9yID0gXCJncmF5MjVcIiksXG4gICAgICAgIHBhbmVsLnNwYWNpbmcgPSB1bml0KDAsIFwibGluZXNcIiksXG4gICAgICAgIGxlZ2VuZC5wb3NpdGlvbiA9IFwibm9uZVwiLFxuICAgICAgICBwbG90LnRpdGxlID0gZWxlbWVudF9tYXJrZG93bihjb2xvciA9IFwid2hpdGVcIiwgZmFjZSA9IFwiYm9sZFwiLCBzaXplID0gNDIpLFxuICAgICAgICBwbG90LnN1YnRpdGxlID0gZWxlbWVudF9tYXJrZG93bihjb2xvciA9IFwid2hpdGVcIiwgc2l6ZSA9IDIwKSxcbiAgICAgICAgcGxvdC5jYXB0aW9uID0gZWxlbWVudF9tYXJrZG93bihjb2xvciA9IFwid2hpdGVcIiwgc2l6ZSA9IDE0KSxcbiAgICAgICAgcGxvdC5tYXJnaW4gPSBtYXJnaW4oMC41LCAwLjI1LCAwLjUsIDAuMjUsIHVuaXQgPSBcImNtXCIpKVxuICBcblxuXG5gYGAifQ== -->
+<pre class="r"><code>plotFinal &lt;- afriSentiJoin %&gt;%
+  ggplot(aes(x = language, y = prop, width = label.n, fill = label)) +
+  geom_col(position = &quot;fill&quot;, color = &quot;black&quot;) +
+  geom_text(aes(x = 0.05, y = 0.02, label = language), stat = &quot;identity&quot;,
+            fontface = &quot;bold&quot;, color = &quot;black&quot;, size = 6, angle = 90, hjust = 0,
+            check_overlap = TRUE) +
+  ggtitle(&quot;Sentiment Analysis of Tweets in the African Languages&quot;,
+          subtitle = paste0(&quot;Percentages of tweets in 14 different African languages and proportions of &quot;,
+                            &quot;&lt;span style=&#39;color:seagreen&#39;&gt;&quot;,
+                            &quot;**positive**&lt;/span&gt;, &quot;, 
+                            &quot;&lt;span style=&#39;color:orange&#39;&gt;&quot;,
+                            &quot;**neutral**&lt;/span&gt; or &quot;,
+                            &quot;&lt;span styles=&#39;color:tomato&#39;&gt;&quot;,
+                            &quot;**negative**&lt;/span&gt; &quot;,
+                            &quot;labels assigned by native speakers.&quot;)) +
+  labs(caption = &quot;Source: **AfriSenti** via **@Shmuhammadd** | Tidy Tuesday&quot;) +
+  facet_grid(cols = vars(language), scale = &quot;free&quot;, space = &quot;free&quot;, shrink = TRUE) +
+  scale_fill_manual(values = c(&quot;positive&quot; = &quot;seagreen&quot;,
+                               &quot;neutral&quot; = &quot;orange&quot;,
+                               &quot;negative&quot; = &quot;tomato&quot;)) +
+  theme_void() +
+  scale_size(guide = &quot;none&quot;) +
+  theme(strip.background = element_blank(),
+        strip.text.x = element_blank(),
+        text = element_text(family = &quot;Dosis&quot;),
+        plot.background = element_rect(fill = &quot;gray25&quot;,
+                                       color = &quot;gray25&quot;),
+        panel.spacing = unit(0, &quot;lines&quot;),
+        legend.position = &quot;none&quot;,
+        plot.title = element_markdown(color = &quot;white&quot;, face = &quot;bold&quot;, size = 42),
+        plot.subtitle = element_markdown(color = &quot;white&quot;, size = 20),
+        plot.caption = element_markdown(color = &quot;white&quot;, size = 14),
+        plot.margin = margin(0.5, 0.25, 0.5, 0.25, unit = &quot;cm&quot;))
+  
+</code></pre>
+<!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuZ2dzYXZlKHBsb3QgPSBwbG90RmluYWwsIHBhdGggPSBoZXJlOjpoZXJlKFwiMjAyMy8yMDIzLTAyLTI4X051bWJhdHNBVVwiKSxcbiAgICAgICBwYXN0ZTAoZm9ybWF0KFN5cy5EYXRlKCksIFwiJVktJW0tJWRcIiksIFwiX1RUXCIsIFwiLnBuZ1wiKSwgaGVpZ2h0ID0gOCwgd2lkdGggPSAxMSwgdW5pdCA9IFwiaW5cIilcbmBgYCJ9 -->
-<pre class="r"><code>ggsave(plot = plotFinal, path = here::here(&quot;2023/2023-02-28_NumbatsAU&quot;),
-       paste0(format(Sys.Date(), &quot;%Y-%m-%d&quot;), &quot;_TT&quot;, &quot;.png&quot;), height = 8, width = 11, unit = &quot;in&quot;)</code></pre>
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuZ2dzYXZlKHBsb3QgPSBwbG90RmluYWwsIHBhdGggPSBoZXJlOjpoZXJlKFwiMjAyMy8yMDIzLTAyLTI4X0FmcmljYW5MYW5ndWFnZVNlbnRpbWVudFwiKSxcbiAgICAgICBwYXN0ZTAoZm9ybWF0KFN5cy5EYXRlKCksIFwiJVktJW0tJWRcIiksIFwiX1RUXCIsIFwiLnBuZ1wiKSwgc2NhbGUgPSAwLjUsIGRwaSA9IDMwMCxcbiAgICAgICBoZWlnaHQgPSA4LCB3aWR0aCA9IDExLCB1bml0ID0gXCJpblwiKVxuYGBgIn0= -->
+<pre class="r"><code>ggsave(plot = plotFinal, path = here::here(&quot;2023/2023-02-28_AfricanLanguageSentiment&quot;),
+       paste0(format(Sys.Date(), &quot;%Y-%m-%d&quot;), &quot;_TT&quot;, &quot;.png&quot;), scale = 0.5, dpi = 300,
+       height = 8, width = 11, unit = &quot;in&quot;)</code></pre>
 <!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 
-<div id="rmd-source-code">LS0tDQp0aXRsZTogIlRpZHkgVHVlc2RheSAtIEZlYnJ1YXJ5IDI4LCAyMDIzIg0Kb3V0cHV0OiBodG1sX25vdGVib29rDQotLS0NCg0KYGBge3IgTGlicmFyaWVzLCBGb250cywgRGF0YX0NCmxpYnJhcnkodGlkeXZlcnNlKQ0KbGlicmFyeShzaG93dGV4dCkNCg0KI2ZvbnRzDQojIGZvbnRfYWRkX2dvb2dsZSgiIikNCiMgc2hvd3RleHRfYXV0bygpDQojUmVhZCBpbiBkYXRhDQp0dWVzZGF0YSA8LSB0aWR5dHVlc2RheVI6OnR0X2xvYWQoMjAyMywgd2VlayA9IDkpDQpgYGANCg0KYGBge3IgRGF0YSBFeHBsb3JhdGlvbn0NCg0KYGBgDQoNCmBgYHtyIERhdGEgRXhwbG9yYXRpb259DQpgYGANCg0KYGBge3IgU2F2ZX0NCmdnc2F2ZShwbG90ID0gcGxvdEZpbmFsLCBwYXRoID0gaGVyZTo6aGVyZSgiMjAyMy8yMDIzLTAyLTI4X051bWJhdHNBVSIpLA0KICAgICAgIHBhc3RlMChmb3JtYXQoU3lzLkRhdGUoKSwgIiVZLSVtLSVkIiksICJfVFQiLCAiLnBuZyIpLCBoZWlnaHQgPSA4LCB3aWR0aCA9IDExLCB1bml0ID0gImluIikNCmBgYCAgICANCg==</div>
+<div id="rmd-source-code">LS0tDQp0aXRsZTogIlRpZHkgVHVlc2RheSAtIEZlYnJ1YXJ5IDI4LCAyMDIzIg0Kb3V0cHV0OiBodG1sX25vdGVib29rDQotLS0NCg0KYGBge3IgTGlicmFyaWVzLCBGb250cywgRGF0YX0NCmxpYnJhcnkodGlkeXZlcnNlKQ0KbGlicmFyeShzaG93dGV4dCkNCmxpYnJhcnkoZ2d0ZXh0KQ0KDQojZm9udHMNCmZvbnRfYWRkX2dvb2dsZSgiRG9zaXMiKQ0Kc2hvd3RleHRfYXV0bygpDQoNCiNSZWFkIGluIGRhdGENCnR1ZXNkYXRhIDwtIHRpZHl0dWVzZGF5Ujo6dHRfbG9hZCgyMDIzLCB3ZWVrID0gOSkNCmBgYA0KDQpgYGB7ciBEYXRhIEV4cGxvcmF0aW9ufQ0KYWZyaVNlbnRpIDwtIHR1ZXNkYXRhJGFmcmlzZW50aQ0KbGFuZ3MgPC0gdHVlc2RhdGEkbGFuZ3VhZ2VzDQpsYW5nU2NyaXB0IDwtIHR1ZXNkYXRhJGxhbmd1YWdlX3NjcmlwdHMNCmxhbmdDb3VudHJpZXMgPC0gdHVlc2RhdGEkbGFuZ3VhZ2VfY291bnRyaWVzDQpjb3VudHJ5UmVnaW9ucyA8LSB0dWVzZGF0YSRjb3VudHJ5X3JlZ2lvbnMNCg0KYWZyaVNlbnRpSm9pbiA8LSBhZnJpU2VudGkgJT4lDQogIGxlZnRfam9pbihsYW5nQ291bnRyaWVzLCBieSA9ICJsYW5ndWFnZV9pc29fY29kZSIsIG11bHRpcGxlID0gImFsbCIpICU+JQ0KICBsZWZ0X2pvaW4obGFuZ3MsIGJ5ID0gImxhbmd1YWdlX2lzb19jb2RlIiwgbXVsdGlwbGUgPSAiYWxsIikgJT4lDQogIGxlZnRfam9pbihsYW5nU2NyaXB0LCBieSA9ICJsYW5ndWFnZV9pc29fY29kZSIsIG11bHRpcGxlID0gImFsbCIpICU+JQ0KICBsZWZ0X2pvaW4oY291bnRyeVJlZ2lvbnMsIGJ5ID0gImNvdW50cnkiLCBtdWx0aXBsZSA9ICJhbGwiKSAlPiUNCiAgbXV0YXRlKGxhbmd1YWdlID0gaWZlbHNlKGxhbmd1YWdlID09ICJBbGdlcmlhbiBBcmFiaWMvRGFyamEiLCAiRGFyamEiLCBsYW5ndWFnZSksDQogICAgICAgICBsYW5ndWFnZSA9IGlmZWxzZShsYW5ndWFnZSA9PSAiTW9yb2NjYW4gQXJhYmljL0RhcmlqYSIsICJEYXJpamEiLCBsYW5ndWFnZSksDQogICAgICAgICBsYW5ndWFnZSA9IGlmZWxzZShsYW5ndWFnZSA9PSAiTmlnZXJpYW4gUGlkZ2luIiwgIlBpZGdpbiIsIGxhbmd1YWdlKSwNCiAgICAgICAgIGxhbmd1YWdlID0gaWZlbHNlKGxhbmd1YWdlID09ICJNb3phbWJpY2FuIFBvcnR1Z3Vlc2UiLCAiTW96YW1iaWNhbiIsIGxhbmd1YWdlKSkgJT4lDQogIGdyb3VwX2J5KGxhbmd1YWdlKSAlPiUNCiAgcmVmcmFtZShwb3NpdGl2ZV9wZXJjID0gc3VtKGxhYmVsID09ICJwb3NpdGl2ZSIpIC8gbigpLA0KICAgICAgICAgICAgbmVnYXRpdmVfcGVyYyA9IHN1bShsYWJlbCA9PSAibmVnYXRpdmUiKSAvIG4oKSwNCiAgICAgICAgICAgIG5ldXRyYWxfcGVyYyA9IHN1bShsYWJlbCA9PSAibmV1dHJhbCIpIC8gbigpLA0KICAgICAgICAgICAgbGFiZWwpICU+JQ0KICB1bmdyb3VwKCkgJT4lDQogIG11dGF0ZShsYW5ndWFnZSA9IGZjdF9yZWxldmVsKGxhbmd1YWdlLCBsZXZlbHMobGFuZ3VhZ2UpKSkgJT4lDQogIGdyb3VwX2J5KGxhbmd1YWdlLCBsYWJlbCkgJT4lDQogIHN1bW1hcmlzZShuID0gbigpKSAlPiUNCiAgbXV0YXRlKGxhYmVsLm4gPSBzdW0obiksDQogICAgICAgICBwcm9wID0gbiAvIHN1bShuKSkgJT4lDQogIHVuZ3JvdXAoKQ0KDQpybShsaXN0ID0gYygiYWZyaVNlbnRpIiwgImxhbmdzIiwgImxhbmdTY3JpcHQiLCAibGFuZ0NvdW50cmllcyIsICJjb3VudHJ5UmVnaW9ucyIpKQ0KYGBgDQoNCmBgYHtyIERhdGEgVmlzdWFsaXphdGlvbn0NCnBsb3RGaW5hbCA8LSBhZnJpU2VudGlKb2luICU+JQ0KICBnZ3Bsb3QoYWVzKHggPSBsYW5ndWFnZSwgeSA9IHByb3AsIHdpZHRoID0gbGFiZWwubiwgZmlsbCA9IGxhYmVsKSkgKw0KICBnZW9tX2NvbChwb3NpdGlvbiA9ICJmaWxsIiwgY29sb3IgPSAiYmxhY2siKSArDQogIGdlb21fdGV4dChhZXMoeCA9IDAuMDUsIHkgPSAwLjAyLCBsYWJlbCA9IGxhbmd1YWdlKSwgc3RhdCA9ICJpZGVudGl0eSIsDQogICAgICAgICAgICBmb250ZmFjZSA9ICJib2xkIiwgY29sb3IgPSAiYmxhY2siLCBzaXplID0gNiwgYW5nbGUgPSA5MCwgaGp1c3QgPSAwLA0KICAgICAgICAgICAgY2hlY2tfb3ZlcmxhcCA9IFRSVUUpICsNCiAgZ2d0aXRsZSgiU2VudGltZW50IEFuYWx5c2lzIG9mIFR3ZWV0cyBpbiB0aGUgQWZyaWNhbiBMYW5ndWFnZXMiLA0KICAgICAgICAgIHN1YnRpdGxlID0gcGFzdGUwKCJQZXJjZW50YWdlcyBvZiB0d2VldHMgaW4gMTQgZGlmZmVyZW50IEFmcmljYW4gbGFuZ3VhZ2VzIGFuZCBwcm9wb3J0aW9ucyBvZiAiLA0KICAgICAgICAgICAgICAgICAgICAgICAgICAgICI8c3BhbiBzdHlsZT0nY29sb3I6c2VhZ3JlZW4nPiIsDQogICAgICAgICAgICAgICAgICAgICAgICAgICAgIioqcG9zaXRpdmUqKjwvc3Bhbj4sICIsIA0KICAgICAgICAgICAgICAgICAgICAgICAgICAgICI8c3BhbiBzdHlsZT0nY29sb3I6b3JhbmdlJz4iLA0KICAgICAgICAgICAgICAgICAgICAgICAgICAgICIqKm5ldXRyYWwqKjwvc3Bhbj4gb3IgIiwNCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAiPHNwYW4gc3R5bGVzPSdjb2xvcjp0b21hdG8nPiIsDQogICAgICAgICAgICAgICAgICAgICAgICAgICAgIioqbmVnYXRpdmUqKjwvc3Bhbj4gIiwNCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAibGFiZWxzIGFzc2lnbmVkIGJ5IG5hdGl2ZSBzcGVha2Vycy4iKSkgKw0KICBsYWJzKGNhcHRpb24gPSAiU291cmNlOiAqKkFmcmlTZW50aSoqIHZpYSAqKkBTaG11aGFtbWFkZCoqIHwgVGlkeSBUdWVzZGF5IikgKw0KICBmYWNldF9ncmlkKGNvbHMgPSB2YXJzKGxhbmd1YWdlKSwgc2NhbGUgPSAiZnJlZSIsIHNwYWNlID0gImZyZWUiLCBzaHJpbmsgPSBUUlVFKSArDQogIHNjYWxlX2ZpbGxfbWFudWFsKHZhbHVlcyA9IGMoInBvc2l0aXZlIiA9ICJzZWFncmVlbiIsDQogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIm5ldXRyYWwiID0gIm9yYW5nZSIsDQogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIm5lZ2F0aXZlIiA9ICJ0b21hdG8iKSkgKw0KICB0aGVtZV92b2lkKCkgKw0KICBzY2FsZV9zaXplKGd1aWRlID0gIm5vbmUiKSArDQogIHRoZW1lKHN0cmlwLmJhY2tncm91bmQgPSBlbGVtZW50X2JsYW5rKCksDQogICAgICAgIHN0cmlwLnRleHQueCA9IGVsZW1lbnRfYmxhbmsoKSwNCiAgICAgICAgdGV4dCA9IGVsZW1lbnRfdGV4dChmYW1pbHkgPSAiRG9zaXMiKSwNCiAgICAgICAgcGxvdC5iYWNrZ3JvdW5kID0gZWxlbWVudF9yZWN0KGZpbGwgPSAiZ3JheTI1IiwNCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGNvbG9yID0gImdyYXkyNSIpLA0KICAgICAgICBwYW5lbC5zcGFjaW5nID0gdW5pdCgwLCAibGluZXMiKSwNCiAgICAgICAgbGVnZW5kLnBvc2l0aW9uID0gIm5vbmUiLA0KICAgICAgICBwbG90LnRpdGxlID0gZWxlbWVudF9tYXJrZG93bihjb2xvciA9ICJ3aGl0ZSIsIGZhY2UgPSAiYm9sZCIsIHNpemUgPSA0MiksDQogICAgICAgIHBsb3Quc3VidGl0bGUgPSBlbGVtZW50X21hcmtkb3duKGNvbG9yID0gIndoaXRlIiwgc2l6ZSA9IDIwKSwNCiAgICAgICAgcGxvdC5jYXB0aW9uID0gZWxlbWVudF9tYXJrZG93bihjb2xvciA9ICJ3aGl0ZSIsIHNpemUgPSAxNCksDQogICAgICAgIHBsb3QubWFyZ2luID0gbWFyZ2luKDAuNSwgMC4yNSwgMC41LCAwLjI1LCB1bml0ID0gImNtIikpDQpgYGANCg0KYGBge3IgU2F2ZX0NCmdnc2F2ZShwbG90ID0gcGxvdEZpbmFsLCBwYXRoID0gaGVyZTo6aGVyZSgiMjAyMy8yMDIzLTAyLTI4X0FmcmljYW5MYW5ndWFnZVNlbnRpbWVudCIpLA0KICAgICAgIHBhc3RlMChmb3JtYXQoU3lzLkRhdGUoKSwgIiVZLSVtLSVkIiksICJfVFQiLCAiLnBuZyIpLCBzY2FsZSA9IDAuNSwgZHBpID0gMzAwLA0KICAgICAgIGhlaWdodCA9IDgsIHdpZHRoID0gMTEsIHVuaXQgPSAiaW4iKQ0KYGBgICAgIA0K</div>
 
 
 
