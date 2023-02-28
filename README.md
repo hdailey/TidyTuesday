@@ -27,10 +27,10 @@ Tidy Tuesday Data Analysis
   </td>
 
 <td align="center">
-  <a href="https://github.com/hdailey/TidyTuesday/tree/main/2023/">
-  Week 09 - TBD
+  <a href="https://github.com/hdailey/TidyTuesday/tree/main/2023/2023-02-28_AfricanLanguageSentiment">
+  Week 09 - African Language Sentiment 
   </a>
-<img src=""> 
+<img src="https://github.com/hdailey/TidyTuesday/blob/main/2023/2023-02-28_AfricanLanguageSentiment/2023-02-28_TT.png"> 
 </td>
 </tr>
  
