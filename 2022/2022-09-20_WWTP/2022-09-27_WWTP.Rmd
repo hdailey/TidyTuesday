@@ -33,35 +33,37 @@ hydroWaste_sf_WWTF <- hydroWaste %>%
   st_as_sf(coords = c("LON_WWTP", "LAT_WWTP"),
            crs = 4326,
            remove = FALSE)
-
-hydroWaste_sf_OUT <- hydroWaste %>%
-  st_as_sf(coords = c("LON_OUT", "LAT_OUT"),
-           crs = 4326,
-           remove = FALSE)
 ```
 
 ```{r Data Visualization}
 plotFinal <- ggplot() +
-  geom_sf(data = usMap, colour = "#1b1d46", fill = "#1b1d46") +
+  geom_sf(data = usMap, colour = "#141861", fill = "#141861") +
   geom_sf(data = hydroWaste_sf_WWTF, mapping = aes(colour = log(1+WASTE_DIS)),
-          size = 1) +
+          size = 0.25) +
   theme_void() +
   labs(title = "Advanced Wastewater Treatment Plants in the United States",
-       subtitle = str_wrap("There are 5,550 wastewater treatment plants located within the continental United States. Only five plants discharge more than one million cubic meters, whereas the average volume discharged from the other 5,545 plants is just over 12,000 cubic meters.", width = 100),
-       caption = "Macedo et al. 2022 | TidyTuesday, Week 38")+
+       subtitle = str_wrap("There are 5,550 wastewater treatment plants located within the continental United States. Of these, five discharge more than one million cubic meters, whereas the average volume discharged from the other 5,545 plants is just over 12,000 cubic meters.", width = 100, ),
+       caption = "Macedo et al. 2022 | Inspired by @KittJonathan | TidyTuesday, Week 38")+
   scale_colour_distiller(palette = "Blues") +
-  guides(colour = guide_colorbar(title.position = "top",
-                                 title = "Treated Wastewater Discharge (m^3)",
+  guides(colour = guide_colorbar(title = "Treated Wastewater Discharge (m^3)",
+                                 title.position = "top",
                                  direction = "horizontal",
-                                 title.hjust = 0.5)) +
-  theme(text = element_text(family ="Zilla Slab", colour = "#cccdc5"),
+                                 barheight = unit(0.25, "cm"))) +
+  theme(text = element_text(family ="Zilla Slab", colour = "#eeeeee"),
         legend.position = "bottom",
-        legend.title.align = 0.5,
-        legend.title = element_text(size = 16, hjust = 0.5),
-        plot.title = element_text(family = "Cabin Sketch", size = 40, hjust = 0.5, face = "bold"),
-        plot.subtitle = element_text(hjust = 0.5, size = 20),
+        legend.title = element_text(size = 16, hjust = 0.5, vjust = 0.5),
+        legend.text = element_text(size = 16),
+        plot.title = element_text(family = "Cabin Sketch", size = 42, hjust = 0.5, face = "bold"),
+        plot.subtitle = element_text(hjust = 0.5, size = 20, lineheight = 0.5),
         plot.caption = element_text(size = 14),
-        panel.background = element_rect(fill = "#01000e", colour = "#01000e"),
-        plot.background = element_rect(fill = "#01000e", colour = "#01000e"),
-        plot.margin = margin(0.2, 0.2, 0.2, 0.2, unit = "cm"))
+        plot.caption.position = "plot",
+        panel.background = element_rect(fill = "#0f101d", colour = "#0f101d"),
+        plot.background = element_rect(fill = "#0f101d", colour = "#0f101d"),
+        plot.margin = margin(0.2, 0, 0.2, 0.2, unit = "cm"))
+```
+
+```{r Save}
+ggsave(plot = plotFinal, path = here::here("2022/2022-09-20_WWTP"),
+       paste0(format(Sys.Date(), "%Y-%m-%d"), "_TT", ".png"), scale = 0.5, dpi = 300,
+       height = 8, width = 11, unit = "in")
 ```
