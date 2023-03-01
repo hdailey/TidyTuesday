@@ -32,6 +32,10 @@ Week 01 - Bring Your Own Data
 <img src="https://user-images.githubusercontent.com/91282117/211414698-75f3151a-3534-493c-9d27-76257cd6e7c2.png"> 
 
 ## 2022
+<a href="https://github.com/hdailey/TidyTuesday/tree/main/2022/2022-09-20_WWTP">
+Week 38 - Wastewater Treatment Plants
+<img src="https://github.com/hdailey/TidyTuesday/blob/main/2022/2022-09-20_WWTP/2023-03-01_TT.png"> 
+
 <a href="https://github.com/hdailey/TidyTuesday/tree/main/2022/2022-08-09_FerrisWheels">
 Week 32 - Ferris Wheels
 <img src="https://user-images.githubusercontent.com/91282117/186250644-ad38d7dd-836b-417e-b5cf-8ce107d622c0.png"> 
