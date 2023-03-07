@@ -4,6 +4,13 @@
 <tr>
 
 <td align="center">
+  <a href="https://github.com/hdailey/TidyTuesday/tree/main/2023/2023-03-07_NumbatsAU">
+  Week 10 - Australian Numbats
+  </a>
+<img src="https://github.com/hdailey/TidyTuesday/blob/main/2023/2023-03-07_NumbatsAU/2023-03-07_TT.png"> 
+</td>
+
+<td align="center">
   <a href="https://github.com/hdailey/TidyTuesday/tree/main/2023/2023-02-28_AfricanLanguageSentiment">
   Week 09 - African Language Sentiment 
   </a>
