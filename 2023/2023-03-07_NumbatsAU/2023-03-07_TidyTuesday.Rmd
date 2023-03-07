@@ -6,11 +6,100 @@ output: html_notebook
 ```{r Libraries, Fonts, Data}
 library(tidyverse)
 library(showtext)
+library(patchwork)
 
 #fonts
-font_add_google("")
+font_add_google("Fraunces")
+font_add_google("Commissioner")
 showtext_auto()
 
 #Read in data
 tuesdata <- tidytuesdayR::tt_load(2023, week = 10)
 ```
+
+```{r Data Exploration}
+numbatsData <- tuesdata$numbats %>%
+  janitor::clean_names() %>%
+  filter(!is.na(decimal_latitude),
+         !is.na(decimal_longitude))
+
+numbatsMonth <- numbatsData %>%
+  count(month) %>%
+  filter(!is.na(month)) %>%
+  mutate(month = month.abb,
+         month_num = seq(1, 12),
+         month = fct_reorder(month, month_num))
+
+sumNumbats <- numbatsData %>%
+  group_by(scientific_name) %>%
+  summarise(n = n()) %>%
+  mutate(label_pos = cumsum(n) - 0.75 * n)
+
+summaryNumbats <- glue::glue(str_wrap("The Numbat (Myremecobius fasciatus) is a small, insectivorous marsupial found in Australia. Historically, the species was widespread across Southern Australia, but is now restricted to several small colonies in Western Australia. Currently, the Numbat is considered an endangered species and is protected by conservation programs."), "\n\n", str_wrap("This analysis examined 722 reported sightings of Myremecobius fasciatus and Myremecobius fasciatus rufus. Most sightings of either species were reported in October or March. Approximately 97% of Numbats reported during the time frame 1856-2023 were Myremecobius fasciatus species, with only 3% of reports consisting of the Myremecobius fasciatus rufus species."))
+```
+
+```{r Data Visualization}
+mapAU <- ozmaps::ozmap_states %>%
+  filter(NAME != "Other Territories")
+
+bckgdColor <- colorspace::lighten("#373B3E", amount = 0.7)
+
+whereNumbats <- ggplot() +
+  geom_sf(data = mapAU) +
+  geom_point(data = numbatsData, aes(decimal_longitude, decimal_latitude, color = scientific_name), size = 0.25) +
+  scale_color_manual(values = c("#759666", "#FDC500")) +
+  coord_sf() +
+  theme_void() +
+  theme(legend.position = "none",
+        plot.background = element_rect(fill = bckgdColor, colour = bckgdColor))
+
+countNumbats <- ggplot(data = numbatsMonth, aes(month, n)) +
+  geom_point(shape = 21, size = 4, fill = "#759666", colour = "black") +
+  geom_segment(aes(x = month, xend = month, y = -1, yend = n), colour = "#759666") +
+  geom_text(aes(label = n), size = 4, family = "Fraunces", colour = "#FDC500") +
+  theme_void() +
+  theme(axis.text.x = element_text(angle = 45, color = "#759666", size = 14, family = "Fraunces"),
+        axis.ticks.x = element_line(colour = "#759666"),
+        axis.ticks.length.x = unit(0.25, "cm"),
+        plot.background = element_rect(fill = bckgdColor, colour = bckgdColor))
+        
+speciesNumbats <- ggplot(sumNumbats, aes(x = "", y = n, fill = scientific_name)) +
+  geom_bar(stat = "identity", width = 1) +
+  coord_polar("y", start = 0) +
+  annotate("rect", xmin = -1, xmax = 1, ymin = 1, ymax = 1, fill = "#FDC500") +
+  annotate("text", x = 2, y = 0, label = substitute(paste(italic("Myrecobius fasciatus rufus"))), 
+           colour = "#FDC500", size = 6, hjust = 0.5, family = "Fraunces") +
+  annotate("text", x = 2, y = 360, label = substitute(paste(italic("Myrecobius fasciatus"))), 
+           colour = "#759666",size = 6, hjust = 0.5, family = "Fraunces") +
+  scale_fill_manual(values = c("#759666", "#FDC500")) +
+  scale_colour_manual(values = c("#759666", "#FDC500")) +
+  theme_void() +
+  theme(legend.position = "none",
+        plot.background = element_rect(fill = bckgdColor, colour = bckgdColor))
+
+textNumbat <- ggplot() +
+  annotate("text", x = 0, y = 1, label = summaryNumbats, family = "Commissioner", 
+           size = 4.75, colour = "white", lineheight = 0.5) +
+  theme_void() +
+  theme(plot.background = element_rect(fill = bckgdColor, colour = bckgdColor))
+
+plotFinal <- (textNumbat | whereNumbats | speciesNumbats) / (countNumbats)
+plotFinal <- plotFinal + plot_annotation(title = "Numbats in Australia",
+                                         caption = "Source: Atlas of Living Australia | TidyTuesday",
+                                         theme = theme(text = element_text(family = "Fraunces",
+                                                                           colour = "white"),
+                                                       plot.background = element_rect(fill = bckgdColor, 
+                                                                                      colour = bckgdColor),
+                                                       panel.background = element_rect(fill = bckgdColor, 
+                                                                                       colour = bckgdColor),
+                                                       plot.title = element_text(size = 56, hjust = 0.5, face = "bold"),
+                                                       plot.caption = element_text(size = 12),
+                                                       plot.margin = margin(0.5, 0.2, 0.3, 0.2, unit = "cm"))) 
+  
+```
+
+```{r Save}
+ggsave(plot = plotFinal, path = here::here("2023/2023-03-07_NumbatsAU"),
+       paste0(format(Sys.Date(), "%Y-%m-%d"), "_TT", ".png"), scale = 0.5, dpi = 300,
+       height = 8, width = 11, unit = "in")
+```    
