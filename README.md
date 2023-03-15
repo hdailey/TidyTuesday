@@ -26,11 +26,6 @@ Week 07 - Hollywood Age Gaps
  </a>
 <img src="https://user-images.githubusercontent.com/91282117/212170837-1657688f-c6be-4671-b359-2df36af75f96.png"> 
 
-<a href="https://github.com/hdailey/TidyTuesday/tree/main/2023/2023-01-03_BringYourOwn">
-Week 01 - Bring Your Own Data
-</a>
-<img src="https://user-images.githubusercontent.com/91282117/211414698-75f3151a-3534-493c-9d27-76257cd6e7c2.png"> 
-
 ## 2022
 <a href="https://github.com/hdailey/TidyTuesday/tree/main/2022/2022-09-20_WWTP">
 Week 38 - Wastewater Treatment Plants
