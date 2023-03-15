@@ -75,7 +75,8 @@ plotFinal <- ggplot(drugsEU) +
             fontface = "bold",
             family = "Archivo") +
   labs(x = "",
-       y = "") +
+       y = "",
+       caption = "Source: European Medicines Agency | TidyTuesday | Inspired by @nrennie") +
   ggtitle("Veterinary Drug Authorisation by the European Medicines Agency",
        subtitle = str_wrap("The European Medicines Agency (EMA) regulates and directs drug development
                           in humans and animals, as well as decides on whether to \n\nauthorise marketing 
@@ -91,6 +92,8 @@ plotFinal <- ggplot(drugsEU) +
                                       margin = margin(t = 0.2, b = 0.2, unit = "cm")),
         plot.subtitle = element_textbox_simple(lineheight = 0.5, colour = "black", family = "Archivo", size = 20,
                                                hjust = 0.5, margin = margin(0.2, 0.2, 0, 0.2, unit = "cm")),
+        plot.caption = element_markdown(colour = "black", family = "Archivo", size = 12, hjust = 1,
+                                        margin = margin(0, 0.1, 0.05, 0, unit = "cm")),
         plot.background = element_rect(fill = "gray97", colour = "gray97"),
         panel.background = element_rect(fill = "gray97", colour = "gray97"))
 ```
