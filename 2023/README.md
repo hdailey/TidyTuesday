@@ -3,10 +3,10 @@
 <th colspan="4">2023</th>
 <tr>
 <td align="center">
-  <a href="">
-  Week 12 - TBD
+  <a href="https://github.com/hdailey/TidyTuesday/tree/main/2023/2023-03-21_ProgrammingLanguages">
+  Week 12 - Programming Languages
   </a>
-<img src=""> 
+<img src="https://github.com/hdailey/TidyTuesday/tree/main/2023/2023-03-21_ProgrammingLanguages/2023-03-21_TT.png"> 
 </td>
   
 <td align="center">
