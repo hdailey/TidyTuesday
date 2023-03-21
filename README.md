@@ -8,7 +8,7 @@ TidyTuesday is a weekly data project aimed at the R ecosystem. The project was b
 <a href="https://github.com/hdailey/TidyTuesday/tree/main/2023/2023-03-21_ProgrammingLanguages">
 Week 12 - Programming Languages
 </a>
-<img src="https://github.com/hdailey/TidyTuesday/tree/main/2023/2023-03-21_ProgrammingLanguages/2023-03-21_TT.png"> 
+<img src="https://github.com/hdailey/TidyTuesday/blob/main/2023/2023-03-21_ProgrammingLanguages/2023-03-21_TT.png"> 
 
 <a href="https://github.com/hdailey/TidyTuesday/tree/main/2023/2023-02-28_AfricanLanguageSentiment">
 Week 09 - African Language Sentiment
