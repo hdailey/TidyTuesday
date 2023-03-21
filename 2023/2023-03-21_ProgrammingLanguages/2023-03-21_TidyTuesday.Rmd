@@ -69,7 +69,8 @@ plotFinal <- ggplot(programLang) +
                                   margin = margin(0, 0, 0.1, 0, unit = "lines")),
         axis.line.x = element_line(colour = "#00ff00"),
         axis.text.x = element_text(family = "Share Tech", colour = "#00ff00", size = 20,
-                                   margin = margin(0.1, 0, 0.1, 0, unit = "lines")))
+                                   margin = margin(0.1, 0, 0.1, 0, unit = "lines")),
+        plot.margin = margin(0, 1, 0, 1, unit = "lines"))
 ```
 
 ```{r Save}
