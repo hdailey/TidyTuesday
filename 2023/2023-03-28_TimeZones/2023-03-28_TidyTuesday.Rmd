@@ -1,0 +1,29 @@
+---
+title: "Tidy Tuesday - March 28, 2023"
+output: html_notebook
+---
+
+```{r Libraries, Fonts, Data}
+library(tidyverse)
+
+#fonts
+font_add_google("Roboto")
+showtext_auto()
+
+#Read in data
+tuesdata <- tidytuesdayR::tt_load(2023, week = 13)
+```
+
+```{r Data Exploration}
+timeZones <- tuesdata$timezones
+```
+
+```{r Data Visualization}
+plotFinal <- ggplot()
+```
+
+```{r Save}
+ggsave(plot = plotFinal, path = here::here("2023/2023-03-21_TimeZones"),
+       paste0(format(Sys.Date(), "%Y-%m-%d"), "_TT", ".png"), scale = 0.6, dpi = 300,
+       height = 8, width = 11, unit = "in")
+```
