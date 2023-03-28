@@ -5,6 +5,9 @@ output: html_notebook
 
 ```{r Libraries, Fonts, Data}
 library(tidyverse)
+library(showtext)
+library(sf)
+library(rnaturalearth)
 
 #fonts
 font_add_google("Roboto")
@@ -12,18 +15,48 @@ showtext_auto()
 
 #Read in data
 tuesdata <- tidytuesdayR::tt_load(2023, week = 13)
+#tzCountries <- tuesdata$timezone_countries
+
 ```
 
 ```{r Data Exploration}
-timeZones <- tuesdata$timezones
+transitions <- tuesdata$transitions %>%
+  mutate(begin = lubridate::as_datetime(begin),
+         end = lubridate::as_datetime(end),
+         yrbegin = lubridate::year(begin)) %>%
+  filter(yrbegin == 2023)
+
+timeZones <- tuesdata$timezones %>%
+  left_join(transitions, by = "zone") %>%
+  mutate(dst = as.character(dst)) %>%
+  mutate(dst = replace_na(dst, "No"),
+         dst = case_when(dst == "TRUE" ~ "yes", TRUE ~ dst)) %>%
+  filter(dst != "FALSE")
+
+world <- ne_countries(returnclass = "sf") %>%
+  st_transform(crs = 4326)
+
+worldTZ <- read_sf("ne_10m_time_zones.shp") %>%     # from https://www.naturalearthdata.com/
+  st_transform(crs = 4326) %>%
+  mutate(zone = as.factor(zone))
+
 ```
 
 ```{r Data Visualization}
-plotFinal <- ggplot()
+plotFinal <- ggplot() +
+  geom_sf(data = world, fill = NA, color = "black", linewidth = 0.05) +
+  geom_sf(data = worldTZ, mapping = aes(fill = zone), color = "black", alpha = 0.3, linewidth = 0.1) +
+  ggnewscale::new_scale("fill") +
+  geom_text(data = tibble(x = seq(-165, 165, 15), y = -84, label = c(as.character(glue::glue("{seq(-11, 0, 1)}")),
+                                                                     as.character(glue::glue("+{seq(1, 11, 1)}")))),
+            aes(x = x, y = y, label = label)) +
+  geom_point(data = timeZones, mapping = aes(x = longitude, y = latitude, fill = fct_rev(dst)), pch = 21) +
+  scale_fill_manual(name = "Has Daylight Savings?", values = c( "#01996F", "#FF930A"))
+
 ```
 
 ```{r Save}
-ggsave(plot = plotFinal, path = here::here("2023/2023-03-21_TimeZones"),
+ggsave(plot = plotFinal, path = here::here("2023/2023-03-28_TimeZones"),
        paste0(format(Sys.Date(), "%Y-%m-%d"), "_TT", ".png"), scale = 0.6, dpi = 300,
        height = 8, width = 11, unit = "in")
 ```

@@ -24,10 +24,10 @@
 </td>
 
 <td align="center">
-  <a href="">
-  Week 13 - TBD
+  <a href="https://github.com/hdailey/TidyTuesday/tree/main/2023/2023-03-28_TimeZones">
+  Week 13 - Time Zones
   </a>
-<img src=""> 
+<img src="https://github.com/hdailey/TidyTuesday/blob/main/2023/2023-03-28_TimeZones/2023-03-28_TT.png"> 
 </td>
 </tr>
 
