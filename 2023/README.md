@@ -94,7 +94,7 @@
 <tr>
 <td align="center">
   <a href="https://github.com/hdailey/TidyTuesday/tree/main/2023/2023-01-24_Alone">
-     Week 04 - Along (TV Series)
+     Week 04 - Alone (TV Series)
   </a>
 <img src="https://user-images.githubusercontent.com/91282117/214370615-6b6e6b79-07cd-4665-a24d-9bbe47dd13a8.png"> 
   </td>
