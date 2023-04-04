@@ -6,10 +6,11 @@ output: html_notebook
 ```{r Libraries, Fonts, Data}
 library(tidyverse)
 library(showtext)
-
+library(ggtext)
+library(patchwork)
 
 #fonts
-font_add_google("")
+font_add_google("Noto Sans")
 showtext_auto()
 
 #Read in data
@@ -17,9 +18,126 @@ tuesdata <- tidytuesdayR::tt_load(2023, week = 14)
 ```
 
 ```{r Data Exploration}
+soccer <- tuesdata$`soccer21-22` %>%
+  mutate(Date = lubridate::dmy(Date),
+         id = row_number(),
+         colour = case_when(HomeTeam == "Chelsea"~"#034694",
+                            HomeTeam == "Tottenham"~"#132257",
+                            HomeTeam == "Arsenal"~"#DB0007",
+                            HomeTeam == "West Ham"~"#7A263A",
+                            .default = "#8D99AE"))
+standings = c("Man City","Liverpool","Chelsea","Tottenham","Arsenal",
+           "Man United","West Ham","Leicester","Brighton","Wolves",
+           "Newcastle","Crystal Palace","Brentford","Aston Villa","Southampton",
+           "Everton","Leeds","Burnley","Watford","Norwich")
+
+soccer_YC <- soccer %>%
+  select(c(Date, HomeTeam, AwayTeam, HY, AY, id, colour)) %>%
+  pivot_longer(HomeTeam:AwayTeam, names_to = "Home_Away", values_to = "team") %>%
+  mutate(Home_Away = ifelse(Home_Away == "HomeTeam", "Home", "Away")) %>%
+  select(-c(Home_Away)) %>%
+  pivot_longer(HY:AY) %>%
+  group_by(id) %>%
+  mutate(id_grouped = row_number()) %>%
+  ungroup() %>%
+  filter(id_grouped %in% c(1,4)) %>%
+  select(-c(id_grouped, name)) %>%
+  group_by(team) %>%
+  arrange(factor(team, levels = standings)) %>%
+  mutate(colour = case_when(team == "Chelsea"~"#034694",
+                            team == "Tottenham"~"#132257",
+                            team == "Arsenal"~"#DB0007",
+                            team == "West Ham"~"#7A263A",
+                            TRUE~"#8D99AE"),
+         team_colors = case_when(team %in% c("Chelsea", "Tottenham", "Arsenal", "West Ham")~glue::glue("<span style='color:{colour}'>**{team}**</span>"), .default = team)) %>%
+  mutate(sum_YC = sum(value)) %>%
+  ungroup() %>%
+  mutate(team_colors = fct_reorder(factor(team_colors), value))
+
+soccer_YC$team_colors <- factor(soccer_YC$team_colors, levels = c("Man City", "Liverpool", 
+                                                                  "<span style='color:#034694'>**Chelsea**</span>", 
+                                                                  "<span style='color:#132257'>**Tottenham**</span>", 
+                                                                  "<span style='color:#DB0007'>**Arsenal**</span>", 
+                                                                  "Man United", 
+                                                                  "<span style='color:#7A263A'>**West Ham**</span>", 
+                                                                  "Leicester",
+                                                                  "Brighton", "Wolves", "Newcastle", 
+                                                                  "Crystal Palace","Brentford","Aston Villa",
+                                                                  "Southampton", "Everton", "Leeds", "Burnley",
+                                                                  "Watford", "Norwich"))
+
+soccer_RC <- soccer %>%
+  select(c(Date, HomeTeam, AwayTeam, HR, AR, id, colour)) %>%
+  pivot_longer(HomeTeam:AwayTeam, names_to = "Home_Away", values_to = "team") %>%
+  mutate(Home_Away = ifelse(Home_Away == "HomeTeam", "Home", "Away")) %>%
+  select(-c(Home_Away)) %>%
+  pivot_longer(HR:AR) %>%
+  group_by(id) %>%
+  mutate(id_grouped = row_number()) %>%
+  ungroup() %>%
+  filter(id_grouped %in% c(1,4)) %>%
+  select(-c(id_grouped, name)) %>%
+  group_by(team) %>%
+  arrange(factor(team, levels = standings)) %>%
+  mutate(colour = case_when(team == "Chelsea"~"#034694",
+                            team == "Tottenham"~"#132257",
+                            team == "Arsenal"~"#DB0007",
+                            team == "West Ham"~"#7A263A",
+                            .default = "#8D99AE"),
+         team_colors = case_when(team %in% c("Chelsea", "Tottenham", "Arsenal", "West Ham")~glue::glue("<span style='color:{colour}'>**{team}**</span>"), .default = team)) %>%
+  mutate(sum_RC = sum(value)) %>%
+  ungroup() %>%
+  mutate(team_colors = fct_reorder(factor(team_colors), value))
+
+soccer_RC$team_colors <- factor(soccer_YC$team_colors, levels = c("Man City", "Liverpool", 
+                                                                  "<span style='color:#034694'>**Chelsea**</span>", 
+                                                                  "<span style='color:#132257'>**Tottenham**</span>", 
+                                                                  "<span style='color:#DB0007'>**Arsenal**</span>", 
+                                                                  "Man United", 
+                                                                  "<span style='color:#7A263A'>**West Ham**</span>", 
+                                                                  "Leicester",
+                                                                  "Brighton", "Wolves", "Newcastle", 
+                                                                  "Crystal Palace","Brentford","Aston Villa",
+                                                                  "Southampton", "Everton", "Leeds", "Burnley",
+                                                                  "Watford", "Norwich"))
 ```
 
 ```{r Data Visualization}
+plotYC <- ggplot(soccer_YC, aes(x = sum_YC, y = team_colors, group = team, fill = colour)) +
+  geom_bar(position = "dodge", stat = "identity")  +
+  scale_x_reverse(position = "top",
+                  name = "# of Yellow Cards") +
+  scale_y_discrete(limits = rev) +
+  scale_fill_identity()  +
+  theme_minimal(12) +
+  theme(text = element_text(family = "Noto Sans"),
+        axis.title.x = element_text(size = 14),
+        axis.text.x = element_text(size = 14),
+        axis.ticks.y = element_blank(),
+        axis.title.y = element_blank(),
+        axis.text.y = element_blank())
+
+plotRC <- ggplot(soccer_RC, aes(x = sum_RC, y = team_colors, group = team, fill = colour)) +
+  geom_bar(position = "dodge", stat = "identity") +
+  scale_x_continuous(position = "top",
+                     name = "# of Red Cards") +
+  scale_y_discrete(limits = rev) +
+  scale_fill_identity() +
+  theme_minimal(12) +
+  theme(text = element_text(family = "Noto Sans"),
+        axis.title.x = element_text(size = 14),
+        axis.text.x = element_text(size = 14),
+        axis.ticks.y = element_blank(),
+        axis.title.y = element_blank(),
+        axis.text.y = element_markdown(hjust = 0.5, size = 18))
+
+plotFinal <- plotYC + plotRC + plot_annotation(title = "2021-2022 Premier League",
+                                               subtitle = str_wrap("Number of yellow and red cards by team from the 2021-2022 season. Teams are sorted by final standings for the 2021-2022 season", width = 100),
+                                               caption = "Source: Premier League Match Data 2021-2022 via Evan Gower on Kaggle | TidyTuesday | Inspired by @leeolney3",
+                                               theme = theme(text = element_text(family = "Noto Sans"),
+                                                             plot.title = element_text(size = 42, face = "bold"),
+                                                             plot.subtitle = element_text(size = 20, lineheight = 0.5),
+                                                             plot.caption = element_text(size = 12)))
 ```
 
 ```{r Save}
