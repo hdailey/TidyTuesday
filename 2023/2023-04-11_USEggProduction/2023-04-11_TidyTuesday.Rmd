@@ -16,9 +16,13 @@ tuesdata <- tidytuesdayR::tt_load(2023, week = 15)
 ```
 
 ```{r Data Exploration}
+eggProduction <- tuesdata$`egg-production`
+cageFree <- tuesdata$`cage-free-percentages`
 ```
 
 ```{r Data Visualization}
+plotFinal <- ggplot() +
+       labs(caption = "Source: The Human League | TidyTuesday"
 ```
 
 ```{r Save}
