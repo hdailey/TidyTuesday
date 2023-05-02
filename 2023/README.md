@@ -12,10 +12,10 @@
 
 <tr>
 <td align="center">
-  <a href="">
-  Week 17 - TBD
+  <a href="https://github.com/hdailey/TidyTuesday/tree/main/2023/2023-04-19_NeolithicFounderCrops">
+  Week 16 - Neolithic Founder Crops
   </a>
-<img src=""> 
+<img src="https://github.com/hdailey/TidyTuesday/tree/main/2023/2023-04-19_NeolithicFounderCrops/2023-04-19_TT.png"> 
 </td>
 
 <td align="center">
