@@ -1,19 +1,34 @@
 <table>
 <thread>
-<th colspan="4">2023</th>
+  <th colspan="4">2023</th>
+ 
 <tr>
+  <td align="center">
+  <a href="">
+  Week 20 - TBD
+  </a>
+<img src="">
+</td>
+  
+<td align="center">
+  <a href="">
+  Week 19 - TBD
+  </a>
+<img src="">
+</td>
+  
 <td align="center">
   <a href="https://github.com/hdailey/TidyTuesday/tree/main/2023/2023-05-02_PortalProject">
   Week 18 - Portal Project
   </a>
-<img src="https://github.com/hdailey/TidyTuesday/tree/main/2023/2023-05-02_PortalProject/2023-05-02_TT.png">
+<img src="https://github.com/hdailey/TidyTuesday/blob/main/2023/2023-05-02_PortalProject/2023-05-02_TT.png">
 </td>
   
 <td align="center">
  <a href="https://github.com/hdailey/TidyTuesday/tree/main/2023/2023-04-25_LondonMarathon">
  Week 17 - London Marathon
  </a>
-<img src="https://github.com/hdailey/TidyTuesday/tree/main/2023/2023-04-25_LondonMarathon/2023-05-02_TT.png">
+<img src="https://github.com/hdailey/TidyTuesday/blob/main/2023/2023-04-25_LondonMarathon/2023-05-02_TT.png">
 </td>
 </tr>
 
@@ -22,7 +37,7 @@
   <a href="https://github.com/hdailey/TidyTuesday/tree/main/2023/2023-04-18_NeolithicFounderCrops">
   Week 16 - Neolithic Founder Crops
   </a>
-<img src="https://github.com/hdailey/TidyTuesday/tree/main/2023/2023-04-18_NeolithicFounderCrops/2023-04-19_TT.png">
+<img src="https://github.com/hdailey/TidyTuesday/blob/main/2023/2023-04-18_NeolithicFounderCrops/2023-04-19_TT.png">
 </td>
 
 <td align="center">
