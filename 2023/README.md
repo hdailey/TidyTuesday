@@ -11,10 +11,10 @@
 </td>
   
 <td align="center">
-  <a href="">
-  Week 19 - TBD
+  <a href="https://github.com/hdailey/TidyTuesday/tree/main/2023/2023-05-09_ChildcareCosts">
+  Week 19 - Childcare Costs
   </a>
-<img src="">
+<img src="https://github.com/hdailey/TidyTuesday/blob/main/2023/2023-05-09_ChildcareCosts/2023-05-09_TT.png">
 </td>
   
 <td align="center">
