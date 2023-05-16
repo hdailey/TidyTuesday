@@ -4,10 +4,10 @@
  
 <tr>
   <td align="center">
-  <a href="">
-  Week 20 - TBD
+  <a href="https://github.com/hdailey/TidyTuesday/tree/main/2023/2023-05-16_Tornados">
+  Week 20 - Tornados
   </a>
-<img src="">
+<img src="https://github.com/hdailey/TidyTuesday/blob/main/2023/2023-05-16_Tornados/2023-05-16_TT.png">
 </td>
   
 <td align="center">
