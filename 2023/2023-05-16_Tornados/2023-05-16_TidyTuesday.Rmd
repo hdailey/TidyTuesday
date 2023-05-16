@@ -1,0 +1,31 @@
+---
+title: "Tidy Tuesday - May 16, 2023"
+output: html_notebook
+---
+```{r Libraries, Fonts, Data}
+# Libraries
+library(tidyverse)
+library(showtext)
+
+
+# Fonts
+font_add_google("Roboto Condensed")
+font_add_google("Roboto")
+
+showtext_auto()
+
+# Data
+# tuesdata <- tidytuesdayR::tt_load(2023, week = 20)
+```
+
+```{r data wrangling}
+```
+
+```{r data visualization}
+```
+
+```{r Save}
+ggsave(plot = plotFinal, path = here::here("2023/2023-05-16_Tornados"),
+       paste0(format(Sys.Date(), "%Y-%m-%d"), "_TT", ".png"), scale = 0.8, dpi = 300,
+       height = 8, width = 11, unit = "in")
+```
