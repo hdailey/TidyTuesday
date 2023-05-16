@@ -68,6 +68,6 @@ plotFinal <- tornados %>%
 
 ```{r Save}
 ggsave(plot = plotFinal, path = here::here("2023/2023-05-16_Tornados"),
-       paste0(format(Sys.Date(), "%Y-%m-%d"), "_TT", ".png"), scale = 1, dpi = 300,
+       paste0(format(Sys.Date(), "%Y-%m-%d"), "_TT", ".png"), scale = 0.8, dpi = 300,
        height = 8, width = 11, unit = "in") 
 ```
