@@ -1,0 +1,30 @@
+---
+title: "Tidy Tuesday - May 23, 2023"
+output: html_notebook
+---
+```{r Libraries, Fonts, Data}
+# Libraries
+library(tidyverse)
+library(showtext)
+
+# Fonts
+font_add_google("Barlow Condensed")
+font_add_google("Barlow")
+showtext_auto()
+
+# Data
+tuesdata <- tidytuesdayR::tt_load(2023, week = 21)
+```
+
+```{r data wrangling}
+squirrels <- tuesdata$squirrel_data
+```
+
+```{r data visualization}
+plotFinal 
+```
+
+```{r Save}
+ggsave(plot = plotFinal, path = here::here("2023/2023-05-23_Squirrels"),
+       paste0(format(Sys.Date(), "%Y-%m-%d"), "_TT", ".png"), scale = 0.8, dpi = 300,
+       ```
