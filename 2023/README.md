@@ -18,10 +18,10 @@
 </td>
   
 <td align="center">
-  <a href="">
-  Week 22 - TBD
+  <a href="https://github.com/hdailey/TidyTuesday/tree/main/2023/2023-05-30_OldestPeople">
+  Week 22 - Verified Oldest People
   </a>
-<img src="">
+<img src="https://github.com/hdailey/TidyTuesday/blob/main/2023/2023-05-30_OldestPeople/2023-05-30_TT.png">
 </td>
   
 <td align="center">
