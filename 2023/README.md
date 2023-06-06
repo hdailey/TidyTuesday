@@ -11,10 +11,10 @@
 </td>
   
 <td align="center">
-  <a href="">
-  Week 23 - TBD
+  <a href="https://github.com/hdailey/TidyTuesday/tree/main/2023/2023-06-06_Energy">
+  Week 23 - Energy
   </a>
-<img src="">
+<img src="https://github.com/hdailey/TidyTuesday/blob/main/2023/2023-06-06_Energy/2023-06-06_TT.png">
 </td>
   
 <td align="center">
