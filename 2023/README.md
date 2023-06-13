@@ -4,10 +4,10 @@
 
 <tr>
   <td align="center">
-  <a href="">
-  Week 24 - TBD
+  <a href="https://github.com/hdailey/TidyTuesday/tree/main/2023/2023-06-13_SAFI">
+  Week 24 - SAFI Data
   </a>
-<img src="">
+<img src="https://github.com/hdailey/TidyTuesday/blob/main/2023/2023-06-13_SAFI/2023-06-13_TT.png">
 </td>
   
 <td align="center">
