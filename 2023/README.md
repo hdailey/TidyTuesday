@@ -18,10 +18,10 @@
 </td>
   
 <td align="center">
-  <a href="">
-  Week 26 - TBD
+  <a href="https://github.com/hdailey/TidyTuesday/tree/main/2023/2023-06-27_HistoricalMarkers">
+  Week 26 - US Historical Markers
   </a>
-<img src="">
+<img src="https://github.com/hdailey/TidyTuesday/blob/main/2023/2023-06-27_HistoricalMarkers/2023-06-27_TT.png">
 </td>
   
 <td align="center">
