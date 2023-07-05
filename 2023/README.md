@@ -11,10 +11,10 @@
 </td>
   
 <td align="center">
-  <a href="">
-  Week 27 - TBD
+  <a href="https://github.com/hdailey/TidyTuesday/tree/main/2023/2023-07-04_HistoricalMarkers">
+  Week 27 - Historical Markers
   </a>
-<img src="">
+<img src="https://github.com/hdailey/TidyTuesday/blob/main/2023/2023-07-04_HistoricalMarkers/2023-07-05_TT.png">
 </td>
   
 <td align="center">
