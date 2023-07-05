@@ -24,10 +24,14 @@ placeNames <- tuesdata$us_place_names %>%
   filter(!state_name %in% c("American Samoa", "Commonwealth of the Northern Mariana Islands", "Puerto Rico",
                             "United States Virgin Islands", "U.S. Minor Outlying Islands", "Guam", "Alaska", "Hawaii"))
 
+placeNames_city <- placeNames %>%
+  mutate(cityTrue = case_when(str_detect(feature_name, "City") == TRUE ~ TRUE, .default = FALSE))
+
 usMap <- map_data("state") %>%
   fortify(region = "region")
 
-placeNames_grouped <- placeNames %>%
+placeNames_grouped <- placeNames_city %>%
+  filter(cityTrue == TRUE) %>%
   group_by(state_name) %>%
   summarise(n = n()) %>%
   arrange(desc(n))
@@ -35,12 +39,12 @@ placeNames_grouped <- placeNames %>%
 
 ```{r Data Visualization}
 plotFinal <- ggplot() +
-  geom_point(data = placeNames %>% drop_na(prim_long_dec), aes(x = prim_long_dec, y = prim_lat_dec), shape = 20,
+  geom_point(data = placeNames_city %>% drop_na(prim_long_dec), aes(x = prim_long_dec, y = prim_lat_dec), shape = 20,
              colour = "#AC1D1C", size = 0.1, alpha = 0.2) +
   geom_map(data = usMap, map = usMap, aes(map_id = region, group = group), fill = NA, colour = "#074E67") +
-  labs(title = "Historical Markers in the United States",
-       subtitle = glue::glue("Geographical distribution of historical markers in the conterminous United States. The top three states with the most historical markers are {placeNames_grouped[1,1]} with {placeNames_grouped[1,2]}, {placeNames_grouped[2,1]} with {placeNames_grouped[2,2]}, and {placeNames_grouped[3,1]} with {placeNames_grouped[3,2]}."),
-       caption = "Source: Historical Marker Database USA Index | #TidyTuesday | Week 26") +
+  labs(title = "What's in a Name?",
+       subtitle = glue::glue("Geographical distribution of cities across the conterminous United States with 'city' in the name. The top three states with the greatest number of cities with 'city' in the name are {placeNames_grouped[1,1]} with {placeNames_grouped[1,2]}, {placeNames_grouped[2,1]} with {placeNames_grouped[2,2]}, and {placeNames_grouped[3,1]} with {placeNames_grouped[3,2]}."),
+       caption = "Source: National Map Staged Products Directory via US Board of Geographic Names | #TidyTuesday | Week 26") +
   theme_void() +
   theme(text = element_text(family = "Barlow Condensed"),
         plot.title = element_text(family = "Barlow", face = "bold", size = 72),

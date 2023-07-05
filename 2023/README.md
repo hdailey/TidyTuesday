@@ -18,10 +18,10 @@
 </td>
   
 <td align="center">
-  <a href="https://github.com/hdailey/TidyTuesday/tree/main/2023/2023-06-27_HistoricalMarkers">
-  Week 26 - U.S. Historical Markers
+  <a href="https://github.com/hdailey/TidyTuesday/tree/main/2023/2023-06-27_USPopulatedPlaces">
+  Week 26 - U.S. Populated Places
   </a>
-<img src="https://github.com/hdailey/TidyTuesday/blob/main/2023/2023-06-27_HistoricalMarkers/2023-06-27_TT.png">
+<img src="https://github.com/hdailey/TidyTuesday/blob/main/2023/2023-06-27_USPopulatedPlaces/2023-07-05_TT.png">
 </td>
   
 <td align="center">
