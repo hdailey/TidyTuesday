@@ -1,2 +1,2 @@
 * linguist-vendored
-*.R linguist-detectable=FALSE
+*.R linguist-vendored=FALSE
