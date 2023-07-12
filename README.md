@@ -1,7 +1,44 @@
 <h1 align="center">
 #TidyTuesday
 </h1>
-TidyTuesday is a weekly data project aimed at the R ecosystem. The project was borne out of the R4DS Online Learning Community and the R for Data Science textbook, with an emphasis on understanding how to summarize and arrange data to make meaningful charts with ggplot2, tidyr, dplyr, and other tools in the tidyverse ecosystem. Check it out at: <a href="https://github.com/rfordatascience/tidytuesday/blob/master/README.md"> github.com/rfordatascience/tidytuesday</a>. 
+TidyTuesday is a weekly data project aimed at the R ecosystem. The project was borne out of the R4DS Online Learning Community and the R for Data Science textbook, with an emphasis on understanding how to summarize and arrange data to make meaningful charts with ggplot2, tidyr, dplyr, and other tools in the tidyverse ecosystem. Check it out at: <a href="https://github.com/rfordatascience/tidytuesday/blob/master/README.md"> github.com/rfordatascience/tidytuesday</a>. <br>
+
+# List of Contributions
+
+<details>
+  <summary><b>2023</b> (click to expand)</summary>
+  
+<!-- toc -->
+* 2023/28 [Global Surface Temperatures](https://github.com/hdailey/TidyTuesday/tree/main/2023/2023-07-11_GlobalSurfaceTemperatures)
+* 2023/27 [Historical Markers](https://github.com/hdailey/TidyTuesday/tree/main/2023/2023-07-04_HistoricalMarkers)
+* 2023/26 [US Populated Places](https://github.com/hdailey/TidyTuesday/tree/main/2023/2023-06-27_USPopulatedPlaces)
+* 2023/25 [UFO Sightings Redux](https://github.com/hdailey/TidyTuesday/tree/main/2023/2023-06-20_UFO)
+* 2023/24 [SAFI Survey Data](https://github.com/hdailey/TidyTuesday/tree/main/2023/2023-06-13_SAFI)
+* 2023/23 [Energy Data](https://github.com/hdailey/TidyTuesday/tree/main/2023/2023-06-06_Energy)
+* 2023/22 [Verified Oldest People](https://github.com/hdailey/TidyTuesday/tree/main/2023/2023-05-30_OldestPeople)
+* 2023/21 [Central Park Squirrels](https://github.com/hdailey/TidyTuesday/tree/main/2023/2023-05-23_Squirrels)
+* 2023/20 [Tornados](https://github.com/hdailey/TidyTuesday/tree/main/2023/2023-05-16_Tornados)
+* 2023/19 [Childcare Prices](https://github.com/hdailey/TidyTuesday/tree/main/2023/2023-05-09_ChildcareCosts)
+* 2023/18 [The Portal Project](https://github.com/hdailey/TidyTuesday/tree/main/2023/2023-05-02_PortalProject)
+* 2023/17 [London Marathon](https://github.com/hdailey/TidyTuesday/tree/main/2023/2023-04-25_LondonMarathon)
+* 2023/16 [Neolithic Founder Crops](https://github.com/hdailey/TidyTuesday/tree/main/2023/2023-04-18_NeolithicFounderCrops)
+* 2023/15 [US Egg Production](https://github.com/hdailey/TidyTuesday/tree/main/2023/2023-04-11_USEggProduction)
+* 2023/14 [Premier League Match Data](https://github.com/hdailey/TidyTuesday/tree/main/2023/2023-04-04_PremierLeague)
+* 2023/13 [Time Zones](https://github.com/hdailey/TidyTuesday/tree/main/2023/2023-03-28_TimeZones)
+* 2023/12 [Programming Languages](https://github.com/hdailey/TidyTuesday/tree/main/2023/2023-03-21_ProgrammingLanguages)
+* 2023/11 [European Drug Development](https://github.com/hdailey/TidyTuesday/tree/main/2023/2023-03-14_EUDrugDevelopment)
+* 2023/10 [Numbats in Australia](https://github.com/hdailey/TidyTuesday/tree/main/2023/2023-03-07_NumbatsAU)
+* 2023/09 [African Language Sentiment](https://github.com/hdailey/TidyTuesday/tree/main/2023/2023-02-28_AfricanLanguageSentiment)
+* 2023/08 [Bob Ross Paintings](https://github.com/hdailey/TidyTuesday/tree/main/2023/2023-02-21_BobRoss)
+* 2023/07 [Hollywood Age Gap](https://github.com/hdailey/TidyTuesday/tree/main/2023/2023-02-14_HollywoodAgeGaps)
+* 2023/06 [Big Tech Stocks](https://github.com/hdailey/TidyTuesday/tree/main/2023/2023-02-07_BigTechStockPrice)
+* 2023/05 [Pet Cats UK](https://github.com/hdailey/TidyTuesday/tree/main/2023/2023-01-31_CatsUK)
+* 2023/04 [Alone TV series](https://github.com/leeolney3/TidyTuesday/tree/main/2023/week_04)
+* 2023/03 [Art History](https://github.com/hdailey/TidyTuesday/tree/main/2023/2023-01-17_Artists)
+* 2023/02 [Project FeederWatch](https://github.com/hdailey/TidyTuesday/tree/main/2023/2023-01-10_BirdFeederWatch)
+* 2023/01 [BYO Data](https://github.com/hdailey/TidyTuesday/tree/main/2023/2023-01-03_BringYourOwn)
+<!-- tocstop -->
+</details>
 
 # Highlights
 ## 2023
