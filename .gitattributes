@@ -1,2 +1,3 @@
 * linguist-vendored
-*.R linguist-detectable
+*.R linguist-vendored=FALSE
+*.html linguist-vendored=TRUE
