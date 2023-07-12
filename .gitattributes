@@ -1,3 +1,2 @@
-* linguist-vendored
-*.R linguist-vendored=FALSE
-*.html linguist-vendored=TRUE
+*.Rmd linguist-language=R
+*.nb.html linguist-vendored
