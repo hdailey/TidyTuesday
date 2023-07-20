@@ -4,6 +4,36 @@
   
 <tr>
   <td align="center">
+  <a href="">
+  Week 32 - TBD
+  </a>
+<img src="">
+</td>
+  
+<td align="center">
+  <a href="">
+  Week 31 - TBD
+  </a>
+<img src="">
+</td>
+  
+<td align="center">
+  <a href="">
+  Week 30 - TBD
+  </a>
+<img src="">
+</td>
+  
+<td align="center">
+ <a href="https://github.com/hdailey/TidyTuesday/tree/main/2023/2023-07-18_GPTDetection">
+ Week 29 - GPT Detectors
+ </a>
+<img src="https://github.com/hdailey/TidyTuesday/blob/main//2023/2023-07-18_GPTDetection/2023-07-18_TT.png">
+</td>
+</tr>
+  
+<tr>
+  <td align="center">
   <a href="https://github.com/hdailey/TidyTuesday/tree/main/2023/2023-07-11_GlobalSurfaceTemperatures">
   Week 28 - Global Surface Temperatures
   </a>
