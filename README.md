@@ -9,6 +9,7 @@ TidyTuesday is a weekly data project aimed at the R ecosystem. The project was b
   <summary><b>2023</b> (click to expand)</summary>
   
 <!-- toc -->
+* 2023/29 [GPT Detection](https://github.com/hdailey/TidyTuesday/tree/main/2023/2023-07-18_GPTDetection)
 * 2023/28 [Global Surface Temperatures](https://github.com/hdailey/TidyTuesday/tree/main/2023/2023-07-11_GlobalSurfaceTemperatures)
 * 2023/27 [Historical Markers](https://github.com/hdailey/TidyTuesday/tree/main/2023/2023-07-04_HistoricalMarkers)
 * 2023/26 [US Populated Places](https://github.com/hdailey/TidyTuesday/tree/main/2023/2023-06-27_USPopulatedPlaces)
@@ -42,6 +43,11 @@ TidyTuesday is a weekly data project aimed at the R ecosystem. The project was b
 
 # Highlights
 ## 2023
+<a href="https://github.com/hdailey/TidyTuesday/tree/main/2023/2023-07-11_GlobalSurfaceTemperatures">
+Week 28 - Global Surface Temperatures
+</a>
+<img src="https://github.com/hdailey/TidyTuesday/blob/main/2023/2023-07-11_GlobalSurfaceTemperatures/2023-07-20_TT.png"> 
+
 <a href="https://github.com/hdailey/TidyTuesday/tree/main/2023/2023-05-16_Tornados">
 Week 20 - Tornados
 </a>
