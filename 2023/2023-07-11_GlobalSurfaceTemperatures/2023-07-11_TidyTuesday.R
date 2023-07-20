@@ -4,6 +4,8 @@
 ## libraries
 library(tidyverse)
 library(showtext)
+library(patchwork)
+library(ggtext)
 
 ## fonts
 font_add_google("Roboto")
@@ -38,7 +40,9 @@ surface_temps <- rbind(global_temps, nh_temps, sh_temps) %>%
                         ID == "sh_temps" ~ "Southern Hemisphere"))
 
 # Data Visualization ####
-plotFinal <- surface_temps %>%
+## Line Plot -- Quarterly
+plotFinal_lines <- surface_temps %>%
+  filter(ID == "Global") %>%
   ggplot(aes(x = months, y = monthly_mean, group = Year)) +
   geom_line(aes(colour = year_range, alpha = year_range, linewidth = year_range)) +
   annotate(geom = 'segment', y = Inf, yend = Inf, color = '#eeeeee', x = -Inf, xend = Inf, linewidth = 0.5) +
@@ -48,36 +52,64 @@ plotFinal <- surface_temps %>%
   scale_alpha_manual(values = c(0.4, 0.4, 0.5, 1)) +
   scale_colour_manual(values = wesanderson::wes_palette("Darjeeling1", n = 4)) +
   coord_cartesian(clip = "off") +
-  facet_wrap(~ID) +
   cowplot::theme_minimal_vgrid(colour = "#eeeeee") +
-  labs(title = "Global Surface Temperatures",
-       subtitle = glue::glue("This visualization explores quarterly global and hemispheric means from 1880 to May 2023. ",
-                             "Land-surface, air and sea-surface water temperature anomalies are combined to estimate global surface temperature changes. ",
-                             "The values on the y-axis correspond to deviations from the base period of 1950 through 1980 and the color of each line corresponds to the century ", 
-                             "(<span style='color:#FF0000'>**1800s**</span>, ", "<span style='color:#00A08A'>**1900s**</span>, ",
-                             "<span style='color:#F2AD00'>**2000s**</span>, ", "or <span style='color:#F98400'>**2023**</span>). ",
-                             "The meteorical year runs from December 1 to November 30 of the next year."),
-       caption = glue::glue("Source: NASA GISTEMP | #TidyTuesday | Week 28", 
-                            "<br>", 
-                            "Citation: GISTEMP Team, 2023: GISS Surface Temperature Analysis (GISTEMP), version 4. NASA Goddard Institute for Space Studies.")) +
-  theme(text = element_text(family = "Roboto Condensed", colour = "#eeeeee", size = 40),
-        plot.title = element_text(family = "Roboto", face = "bold", size = 48),
-        plot.title.position = "plot",
-        plot.subtitle = ggtext::element_textbox_simple(lineheight = 0.3),
-        plot.caption = ggtext::element_textbox_simple(lineheight = 0.3, size = 24),
-        plot.caption.position = "plot",
+  theme(text = element_text(family = "Roboto Condensed", colour = "#eeeeee"),
+        plot.caption = element_textbox_simple(hjust = 1),
         axis.ticks = element_blank(),
         axis.line.x.bottom = element_line(colour = "#eeeeee"),
-        axis.text = element_text(colour = "#eeeeee", size = 28),
+        axis.text = element_text(colour = "#eeeeee", size = 18),
         axis.text.x = element_text(hjust = 1, angle = 45),
         axis.title = element_blank(),
-        panel.spacing = unit(2, "lines"),
-        strip.text = element_text(hjust = 0.5, colour = "#eeeeee", face = "bold"),
         legend.title = element_blank(),
         legend.position = "none",
         panel.background = element_rect(fill = "#0f101d", colour = "#0f101d"),
-        plot.background = element_rect(fill = "#0f101d", colour = "#0f101d"))
+        plot.background = element_rect(fill = "#0f101d", colour = "#0f101d"),
+        plot.margin = margin(20, 20, 0, 0, "pt"))
 
-# Save ####
-ggsave(plot = plotFinal, path = here::here("2023/2023-07-11_GlobalSurfaceTemperatures/"),
-       paste0(format(Sys.Date(), "%Y-%m-%d"), "_TT", ".png"), height = 8, width = 11, unit = "in")
+## Heat Map -- Monthly and Annotation
+surface_temps_circ <- tuesdata$global_temps %>%
+  pivot_longer(Jan:Dec, names_to = "month") %>% 
+  mutate(month = fct_inorder(month))
+
+plotFinal_text <- ggplot() +
+  geom_textbox(aes(x = 10, y = 10, label = str_wrap(glue::glue("<span style='color:#eeeeee;font-weight:bold;font-family:Roboto;font-size:32pt'>Global Surface Temperatures</span>",
+                                                               "<br><br>",
+                                                               "This visualization explores monthly and quarterly global surface temperature means from 1880 to May 2023 (as the meteoric year (Dec. 1 - Nov. 30). ",
+                                                               "Land-surface, air and sea-surface water temperature anomalies are combined to estimate global surface temperature changes. ",
+                                                               "Centuries correspond to their respective color ",
+                                                               "(<span style='color:#FF0000'>**1800s**</span>, ", "<span style='color:#00A08A'>**1900s**</span>, ",
+                                                               "<span style='color:#F2AD00'>**2000s**</span>, ", "or <span style='color:#F98400'>**2023**</span>). ",
+                                                               "The figure below explores the monthly deviation in degrees celsius during the same time period with overall increases in average monthly global surface temperature observed from the late 1880s to present." ))),
+               width = unit(10, "cm"), fill = NA, box.colour = NA, halign = 0.5, colour = "#eeeeee", family = "Roboto Condensed", size = 4.85) +
+  theme_void() +
+  theme(panel.background = element_rect(fill = "#0f101d", colour = "#0f101d"),
+        plot.background = element_rect(fill = "#0f101d", colour = "#0f101d"),
+        plot.margin = margin(0, 0, 0, 0, "pt"))
+
+plotFinal_circ <- surface_temps_circ %>%
+  ggplot() +
+  geom_tile(aes(month, Year, fill = value, colour = value)) +
+  labs(x = "",
+       y = "", 
+       fill = "°C",
+       colour = "°C") +
+  scale_y_continuous(labels = NULL) +
+  scale_fill_gradientn(colours = cetcolor::cet_pal(name = "d1a", n = 7)) +
+  scale_colour_gradientn(colours = cetcolor::cet_pal(name = "d1a", n = 7)) +
+  coord_polar(start = -pi/12) +
+  theme_void() +
+  theme(text = element_text(colour = "#eeeeee", family = "Roboto Condensed", size = 18),
+        panel.background = element_rect(fill = "#0f101d", colour = "#0f101d"),
+        plot.background = element_rect(fill = "#0f101d", colour = "#0f101d"),
+        axis.text.x = element_text(colour = "#eeeeee"),
+        legend.direction = "horizontal",
+        legend.position = "bottom",
+        legend.background = element_rect(fill = "#0f101d", colour = "#0f101d"),
+        legend.margin = margin(t = -10),
+        plot.margin = margin(0, 0, 0, 0, "pt")) +
+  guides(fill = guide_colourbar(title.vjust = 0.75, barwidth = unit(5, "cm")))
+
+plotFinal <- ((plotFinal_text / plotFinal_circ) | plotFinal_lines) 
+plotFinal <- plotFinal + plot_layout(widths = c(3, 11)) + plot_annotation(caption = glue::glue("Source: NASA GISTEMP,  GISTEMP Team, 2023: GISS Surface Temperature Analysis (GISTEMP), version 4. NASA Goddard Institute for Space Studies. | #TidyTuesday | Week 28"))
+                                                                                              
+# Save Plot Manually

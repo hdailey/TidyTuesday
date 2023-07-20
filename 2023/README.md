@@ -37,7 +37,7 @@
   <a href="https://github.com/hdailey/TidyTuesday/tree/main/2023/2023-07-11_GlobalSurfaceTemperatures">
   Week 28 - Global Surface Temperatures
   </a>
-<img src="https://github.com/hdailey/TidyTuesday/blob/main/2023/2023-07-11_GlobalSurfaceTemperatures/2023-07-12_TT.png">
+<img src="https://github.com/hdailey/TidyTuesday/blob/main/2023/2023-07-11_GlobalSurfaceTemperatures/2023-07-20_TT.png">
 </td>
   
 <td align="center">
