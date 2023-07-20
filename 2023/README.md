@@ -28,7 +28,7 @@
  <a href="https://github.com/hdailey/TidyTuesday/tree/main/2023/2023-07-18_GPTDetection">
  Week 29 - GPT Detectors
  </a>
-<img src="https://github.com/hdailey/TidyTuesday/blob/main//2023/2023-07-18_GPTDetection/2023-07-18_TT.png">
+<img src="https://github.com/hdailey/TidyTuesday/blob/main/2023/2023-07-18_GPTDetection/2023-07-20_TT.png">
 </td>
 </tr>
   
