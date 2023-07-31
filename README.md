@@ -9,6 +9,7 @@ TidyTuesday is a weekly data project aimed at the R ecosystem. The project was b
   <summary><b>2023</b> (click to expand)</summary>
   
 <!-- toc -->
+* 2023/30 [Scurvy](https://github.com/hdailey/TidyTuesday/tree/main/2023/2023-07-25_Scurvy)
 * 2023/29 [GPT Detection](https://github.com/hdailey/TidyTuesday/tree/main/2023/2023-07-18_GPTDetection)
 * 2023/28 [Global Surface Temperatures](https://github.com/hdailey/TidyTuesday/tree/main/2023/2023-07-11_GlobalSurfaceTemperatures)
 * 2023/27 [Historical Markers](https://github.com/hdailey/TidyTuesday/tree/main/2023/2023-07-04_HistoricalMarkers)
