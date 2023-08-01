@@ -11,10 +11,10 @@
 </td>
   
 <td align="center">
-  <a href="">
-  Week 31 - TBD
+  <a href="https://github.com/hdailey/TidyTuesday/tree/main/2023/2023-08-01_USStates_Scurvy">
+  Week 31 - US States
   </a>
-<img src="">
+<img src="https://github.com/hdailey/TidyTuesday/blob/main/2023/2023-08-01_USStates_Scurvy/2023-08-01_TT.png">
 </td>
   
 <td align="center">
