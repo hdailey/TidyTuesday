@@ -9,6 +9,7 @@ TidyTuesday is a weekly data project aimed at the R ecosystem. The project was b
   <summary><b>2023</b> (click to expand)</summary>
   
 <!-- toc -->
+* 2023/31 [US States](https://github.com/hdailey/TidyTuesday/tree/main/2023/2023-08-01_USStates)
 * 2023/30 [Scurvy](https://github.com/hdailey/TidyTuesday/tree/main/2023/2023-07-25_Scurvy)
 * 2023/29 [GPT Detection](https://github.com/hdailey/TidyTuesday/tree/main/2023/2023-07-18_GPTDetection)
 * 2023/28 [Global Surface Temperatures](https://github.com/hdailey/TidyTuesday/tree/main/2023/2023-07-11_GlobalSurfaceTemperatures)
@@ -42,17 +43,36 @@ TidyTuesday is a weekly data project aimed at the R ecosystem. The project was b
 <!-- tocstop -->
 </details>
 
+<details>
+<summary><b>2022</b> (click to expand)</summary>
+
+<!-- toc -->
+* 2022/38 [Wastewater Treatment Plants](https://github.com/hdailey/TidyTuesday/tree/main/2022/2022-09-20_WWTP)
+* 2022/35 [Pell Grants](https://github.com/hdailey/TidyTuesday/tree/main/2022/2022-08-30_PellGrant)
+* 2022/34 [CHIP Dataset](https://github.com/hdailey/TidyTuesday/tree/main/2022/2022-08-23_CHIPDataset)
+* 2022/33 [Psychometrics](https://github.com/hdailey/TidyTuesday/tree/main/2022/2022-08-16_Psychometrics)
+* 2022/32 [Ferris Wheels](https://github.com/hdailey/TidyTuesday/tree/main/2022/2022-08-09_FerrisWheels)
+* 2022/31 [OR Spotted Frog](https://github.com/hdailey/TidyTuesday/tree/main/2022/2022-08-02_ORSpottedFrog)
+* 2022/29 [Technology Adaptation](https://github.com/hdailey/TidyTuesday/tree/main/2022/2022-07-19_TechnologyAdoption)
+* 2022/28 [EU Flights](https://github.com/hdailey/TidyTuesday/tree/main/2022/2022-07-12_EUFlights)
+* 2022/27 [SF Rentals](https://github.com/hdailey/TidyTuesday/tree/main/2022/2022-07-05_SFRent)
+* 2022/26 [UK Pay Gap](https://github.com/hdailey/TidyTuesday/tree/main/2022/2022-06-28_UKPay)
+* 2022/25 [Juneteenth](https://github.com/hdailey/TidyTuesday/tree/main/2022/2022-06-21_Juneteenth)
+* 2022/24 [Drought](https://github.com/hdailey/TidyTuesday/tree/main/2022/2022-06-14_Drought)
+<!-- tocstop -->
+</details>
+
 # Highlights
 ## 2023
+<a href="https://github.com/hdailey/TidyTuesday/tree/main/2023/2023-08-01_USStates">
+Week 31 - US States
+</a>
+<img src="https://github.com/hdailey/TidyTuesday/blob/main/2023/2023-08-01_USStates/2023-08-01_TT.png"> 
+
 <a href="https://github.com/hdailey/TidyTuesday/tree/main/2023/2023-07-11_GlobalSurfaceTemperatures">
 Week 28 - Global Surface Temperatures
 </a>
 <img src="https://github.com/hdailey/TidyTuesday/blob/main/2023/2023-07-11_GlobalSurfaceTemperatures/2023-07-20_TT.png"> 
-
-<a href="https://github.com/hdailey/TidyTuesday/tree/main/2023/2023-05-16_Tornados">
-Week 20 - Tornados
-</a>
-<img src="https://github.com/hdailey/TidyTuesday/blob/main/2023/2023-05-16_Tornados/2023-05-16_TT.png"> 
 
 <a href="https://github.com/hdailey/TidyTuesday/tree/main/2023/2023-03-21_ProgrammingLanguages">
 Week 12 - Programming Languages
@@ -73,12 +93,6 @@ Week 08 - Bob Ross Paintings
 Week 07 - Hollywood Age Gaps
 </a>
 <img src="https://user-images.githubusercontent.com/91282117/218871188-d7b4407e-923f-4161-b95d-2ebe7f6e8d16.png"> 
-  
-
- <a href="https://github.com/hdailey/TidyTuesday/tree/main/2023/2023-01-10_BirdFeederWatch">
- Week 02 - Bird FeederWatch
- </a>
-<img src="https://user-images.githubusercontent.com/91282117/212170837-1657688f-c6be-4671-b359-2df36af75f96.png"> 
 
 ## 2022
 <a href="https://github.com/hdailey/TidyTuesday/tree/main/2022/2022-09-20_WWTP">
