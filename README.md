@@ -9,6 +9,7 @@ TidyTuesday is a weekly data project aimed at the R ecosystem. The project was b
   <summary><b>2023</b> (click to expand)</summary>
   
 <!-- toc -->
+* 2023/33 [Email Spam](https://github.com/hdailey/TidyTuesday/tree/main/2023/2023-08-15_Spam)
 * 2023/31 [US States](https://github.com/hdailey/TidyTuesday/tree/main/2023/2023-08-01_USStates)
 * 2023/30 [Scurvy](https://github.com/hdailey/TidyTuesday/tree/main/2023/2023-07-25_Scurvy)
 * 2023/29 [GPT Detection](https://github.com/hdailey/TidyTuesday/tree/main/2023/2023-07-18_GPTDetection)
@@ -64,6 +65,11 @@ TidyTuesday is a weekly data project aimed at the R ecosystem. The project was b
 
 # Highlights
 ## 2023
+<a href="https://github.com/hdailey/TidyTuesday/tree/main/2023/2023-08-15_Spam">
+Week 33 - Spam
+</a>
+<img src="https://github.com/hdailey/TidyTuesday/blob/main/2023/2023-08-15_Spam/2023-08-15_TT.png"> 
+
 <a href="https://github.com/hdailey/TidyTuesday/tree/main/2023/2023-08-01_USStates">
 Week 31 - US States
 </a>
