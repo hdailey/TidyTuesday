@@ -1,11 +1,41 @@
 <table>
 <thread>
   <th colspan="4">2023</th>
-  
+
 <tr>
   <td align="center">
   <a href="">
-  Week 32 - TBD
+  Week 36 - TBD
+  </a>
+<img src="">
+</td>
+  
+<td align="center">
+  <a href="">
+  Week 35 - TBD
+  </a>
+<img src="">
+</td>
+  
+<td align="center">
+  <a href="">
+  Week 34 - TBD
+  </a>
+<img src="">
+</td>
+  
+<td align="center">
+ <a href="https://github.com/hdailey/TidyTuesday/tree/main/2023/2023-08-15_Spam">
+ Week 33 - Email Spam
+ </a>
+<img src="https://github.com/hdailey/TidyTuesday/blob/main/2023/2023-08-15_Spam/2023-08-15_TT.png">
+</td>
+</tr>
+  
+<tr>
+  <td align="center">
+  <a href="https://github.com/hdailey/TidyTuesday/tree/main/2023/2023-08-08_HotOnes">
+  Week 32 - Hot Ones
   </a>
 <img src="">
 </td>
