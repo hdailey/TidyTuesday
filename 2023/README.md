@@ -37,7 +37,7 @@
   <a href="https://github.com/hdailey/TidyTuesday/tree/main/2023/2023-08-08_HotOnes">
   Week 32 - Hot Ones
   </a>
-<img src="">
+<img src="https://github.com/hdailey/TidyTuesday/blob/main/2023/2023-08-08_HotOnes/2023-08-15_TT.png">
 </td>
   
 <td align="center">
