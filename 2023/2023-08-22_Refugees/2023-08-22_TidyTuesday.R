@@ -5,6 +5,7 @@
 library(tidyverse)
 library(showtext)
 library(ggtext)
+
 ## fonts
 font_add_google("Nova Flat", db_cache = FALSE)
 font_add_google("Roboto", db_cache = FALSE)
@@ -14,37 +15,9 @@ showtext_auto()
 tuesdata <- tidytuesdayR::tt_load(2023, week = 34)
 
 # Data Exploration ####
-population <- tuesdata$population #%>%
-  # mutate(coo_name = case_when(coo_name == "Venezuela (Bolivarian Republic of)" ~ "Venezuela",
-  #                             .default = coo_name))
+population <- tuesdata$population 
 
-# population2022_destination <- population %>%
-#   filter(year == 2022) %>%
-#   group_by(coa_name) %>%
-#   summarise(n = sum(asylum_seekers)) %>%
-#   arrange(desc(n)) %>%
-#   slice_head(n = 5)
-# 
-# destination <- population2022_destination[1]
-# 
-# population2022_origin <- population %>%
-#   filter(year == 2022) %>%
-#   group_by(coo_name) %>%
-#   summarise(n = sum(asylum_seekers)) %>%
-#   arrange(desc(n)) %>%
-#   slice_head(n = 5) %>%
-#   mutate(coo_name = case_when(coo_name == "Venezuela (Bolivarian Republic of)" ~ "Venezuela",
-#                               .default = coo_name)) %>%
-#   slice_head(n = 5)
-# 
-# origin <- population2022_origin[1]
-# 
-# populationDestination <- population %>% 
-#   filter(coa_name %in% c(destination$coa_name)) %>%
-#   group_by(year, coa_name) %>%
-#   summarise(n = sum(asylum_seekers))
-
-populationOrigin <- population %>%
+populationUkraine <- population %>%
   filter(coo_name == "Ukraine") %>%
   select(year, refugees, idps, ooc) %>%
   group_by(year) %>%
@@ -53,15 +26,15 @@ populationOrigin <- population %>%
   mutate(category = as.factor(category))
 
 # Data Visualization ####
-plotUkraine <- populationOrigin %>%
+plotUkraine <- populationUkraine %>%
   ggplot(aes(factor(year), count, fill = category)) +
   geom_bar(stat = "identity", show.legend = FALSE) +
-  annotate("label", x = 8, y = 7500000, label = "Forcibly Displaced Persons Originating From Ukraine", family = "Nova Flat", size = 18, colour = "grey95", fill = "grey25", label.size = NA) +
-  annotate("richtext", x = 5.75, y = 7500000, label = glue::glue("The United Nations High Commissioner for Refugees (UNHCR) Data Finder database <br> covers forcibly displaced populations ",
+  annotate("label", x = 8, y = 7500000, label = "Forcibly Displaced Persons Originating From Ukraine", family = "Nova Flat", size = 12.5, colour = "grey95", fill = "grey25", label.size = NA) +
+  annotate("richtext", x = 6, y = 7500000, label = glue::glue("The United Nations High Commissioner for Refugees (UNHCR) Data Finder database <br> covers forcibly displaced populations ",
                                                               "including <span style='color:#0057B7'>refugees</span>, <span style='color:#ABABAB'>individuals of concern</span> and <br>",
                                                               "<span style='color:#FFDD00'>internaly displaced persons</span>. ",
                                                               "This graphic explores the forcibly displaced populations <br> originating from Ukraine in the UNHCR database with a significant increase observed <br> in 2022."),
-          family = "Roboto", size = 8, colour = "grey95", fill = "grey25", label.size = NA, lineheight = 0.3) +
+          family = "Roboto", size = 7, colour = "grey95", fill = "grey25", label.size = NA, lineheight = 0.4) +
   coord_flip() +
   scale_fill_discrete(type = c("#FFDD00", "#ABABAB", "#0057B7")) +
   labs(y = "",
@@ -69,18 +42,15 @@ plotUkraine <- populationOrigin %>%
        caption = "{refugees} R package | #TidyTuesday | Week 34 | @hdailey") +
   ggthemes::theme_clean() +
   theme(text = element_text(family = "Roboto", colour = "grey95"),
-        plot.title = element_text(family = "Nova Flat"),
-        plot.subtitle = ggtext::element_textbox_simple(),
-        plot.caption = element_text(family = "Roboto", size = 12),
+        plot.caption = element_text(family = "Roboto", size = 14),
         plot.caption.position = "plot",
         axis.line.x = element_line(colour = "grey95"),
         axis.line.y = element_line(colour = "grey95"),
         axis.ticks = element_blank(),
-        axis.text = element_text(family = "Nova Flat", colour = "grey95", size = 12),
+        axis.text = element_text(family = "Nova Flat", colour = "grey95", size = 16),
         plot.background = element_rect(fill = "grey25", colour = "grey25"),
-        panel.background = element_rect(fill = "grey25", colour = "grey25"))
-
-plotFinal <- plotDestination / plotOrigin
+        panel.background = element_rect(fill = "grey25", colour = "grey25"),
+        plot.margin = margin(10, 10, 2, 0))
 
 # Save ####
 ggsave(plot = plotUkraine, path = here::here("2023/2023-08-22_Refugees/"),
