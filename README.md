@@ -9,6 +9,7 @@ TidyTuesday is a weekly data project aimed at the R ecosystem. The project was b
   <summary><b>2023</b> (click to expand)</summary>
   
 <!-- toc -->
+* 2023/35 [Fair Use](https://github.com/hdailey/TidyTuesday/tree/main/2023/2023-08-29_FairUse)
 * 2023/34 [Refugees](https://github.com/hdailey/TidyTuesday/tree/main/2023/2023-08-22_Refugees)
 * 2023/33 [Email Spam](https://github.com/hdailey/TidyTuesday/tree/main/2023/2023-08-15_Spam)
 * 2023/31 [US States](https://github.com/hdailey/TidyTuesday/tree/main/2023/2023-08-01_USStates)
