@@ -11,10 +11,10 @@
 </td>
   
 <td align="center">
-  <a href="">
-  Week 35 - TBD
+  <a href="https://github.com/hdailey/TidyTuesday/tree/main/2023/2023-08-29_FairUse">
+  Week 35 - Fair Use
   </a>
-<img src="">
+<img src="https://github.com/hdailey/TidyTuesday/blob/main/2023/2023-08-29_FairUse/2023-08-29_TT.png">
 </td>
   
 <td align="center">
