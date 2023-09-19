@@ -7,7 +7,7 @@
   <a href="https://github.com/hdailey/TidyTuesday/tree/main/2023/2023-09-19_CRAN">
   Week 38 - CRAN Package Authors
   </a>
-<img src="https://github.com/hdailey/TidyTuesday/blob/main/2023/2023-09-19_CRAN/2023-09-19_TT.png>"
+<img src="https://github.com/hdailey/TidyTuesday/blob/main/2023/2023-09-19_CRAN/2023-09-19_TT.png">
 </td>
 
   <td align="center">
