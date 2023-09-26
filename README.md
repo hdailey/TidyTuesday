@@ -9,6 +9,7 @@ TidyTuesday is a weekly data project aimed at the R ecosystem. The project was b
   <summary><b>2023</b> (click to expand)</summary>
   
 <!-- toc -->
+* 2023/39 [Roy Kent F**k Count](https://github.com/hdailey/TidyTuesday/tree/main/2023/2023-09-26_RoyKent)
 * 2023/38 [CRAN Package Authors](https://github.com/hdailey/TidyTuesday/tree/main/2023/2023-09-19_CRAN)
 * 2023/37 [Global Human Day](https://github.com/hdailey/TidyTuesday/tree/main/2023/2023-09-12_GlobalHumanDay)
 * 2023/36 [Unions](https://github.com/hdailey/TidyTuesday/tree/main/2023/2023-09-05_Unions)
