@@ -4,6 +4,13 @@
 
 <tr>
   <td align="center">
+  <a href="https://github.com/hdailey/TidyTuesday/tree/main/2023/2023-10-03_USGrants">
+  Week 40 - US Grants
+  </a>
+<img src="https://github.com/hdailey/TidyTuesday/blob/main/2023/2023-10-03_USGrants/2023-10-03_TT.png"
+</td>
+
+  <td align="center">
   <a href="https://github.com/hdailey/TidyTuesday/tree/main/2023/2023-09-26_RoyKent">
   Week 39 - Roy Kent F**k Count
   </a>
