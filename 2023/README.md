@@ -5,7 +5,7 @@
 <tr>
   <td align="center">
   <a href="https://github.com/hdailey/TidyTuesday/tree/main/2023/2023-10-17_TaylorSwift">
-  Week 41 - Taylor Swift
+  Week 42 - Taylor Swift
   </a>
 <img src="https://github.com/hdailey/TidyTuesday/blob/main/2023/2023-10-17_TaylorSwift/2023-10-17_TT.png"
 </td>
