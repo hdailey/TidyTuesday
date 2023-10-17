@@ -4,10 +4,24 @@
 
 <tr>
   <td align="center">
+  <a href="https://github.com/hdailey/TidyTuesday/tree/main/2023/2023-10-17_TaylorSwift">
+  Week 41 - Taylor Swift
+  </a>
+<img src="https://github.com/hdailey/TidyTuesday/blob/main/2023/2023-10-17_TaylorSwift/2023-10-17_TT.png"
+</td>
+  
+  <td align="center">
+  <a href="">
+  Week 41
+  </a>
+</tr>
+
+<tr>
+  <td align="center">
   <a href="https://github.com/hdailey/TidyTuesday/tree/main/2023/2023-10-03_USGrants">
   Week 40 - US Grants
   </a>
-<img src="https://github.com/hdailey/TidyTuesday/blob/main/2023/2023-10-03_USGrants/2023-10-03_TT.png"
+<img src="https://github.com/hdailey/TidyTuesday/blob/main/2023/2023-10-03_USGrants/2023-10-03_TT.png">
 </td>
 
   <td align="center">
