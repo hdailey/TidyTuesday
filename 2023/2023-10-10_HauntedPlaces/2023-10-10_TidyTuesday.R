@@ -64,7 +64,7 @@ sfSideStreets <- sfMap_bb %>%
 plotFinal <- ggplot() +
   geom_sf(data = sfSideStreets$osm_lines, colour = "#890EF2", size = 0.1, alpha = 0.2) +
   geom_sf(data = sfStreets$osm_lines, colour = "#890EF2", size = 0.2, alpha = 0.8) +
-  ggfx::with_outer_glow(colour = "#FF5124", 
+  ggfx::with_outer_glow(colour = "#FF5124", sigma = 10,
                         emoGG::geom_emoji(data = hauntedPlaces, aes(x = longitude, y = latitude, emoji = emoji), 
                                           size = 0.03)) +
   annotate("text", x = -122.82, y = 37.8, label = str_wrap("San Francisco's Haunted Schools", width = 30),
@@ -85,5 +85,5 @@ plotFinal <- ggplot() +
   
 # Save ####
 ggsave(plot = plotFinal, path = here::here("2023/2023-10-10_HauntedPlaces/"),
-       paste0(format(Sys.Date(), "%Y-%m-%d"), "_TT", ".png"), height = 9, width = 8, unit = "in")
+       paste0(format(Sys.Date(), "%Y-%m-%d"), "_TT", ".png"), height = 6, width = 8, unit = "in")
 

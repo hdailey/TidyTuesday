@@ -10,7 +10,7 @@ TidyTuesday is a weekly data project aimed at the R ecosystem. The project was b
   
 <!-- toc -->
 * 2023/42 [Taylor Swift](https://github.com/hdailey/TidyTuesday/tree/main/2023/2023-10-17_TaylorSwift)
-* 2023/41 [US Haunted Places](https://github.com/hdailey/TidyTuesday/tree/main/2023/2023-10-10_HauntedPlace)
+* 2023/41 [US Haunted Places](https://github.com/hdailey/TidyTuesday/tree/main/2023/2023-10-10_HauntedPlaces)
 * 2023/40 [US Grants](https://github.com/hdailey/TidyTuesday/tree/main/2023/2023-10-03_USGrants)
 * 2023/39 [Roy Kent F**k Count](https://github.com/hdailey/TidyTuesday/tree/main/2023/2023-09-26_RoyKent)
 * 2023/38 [CRAN Package Authors](https://github.com/hdailey/TidyTuesday/tree/main/2023/2023-09-19_CRAN)
