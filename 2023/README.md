@@ -11,9 +11,10 @@
 </td>
   
   <td align="center">
-  <a href="">
-  Week 41
+  <a href="https://github.com/hdailey/TidyTuesday/tree/main/2023/2023-10-10_HauntedPlaces">
+  Week 41 - Haunted Places
   </a>
+<img src="https://github.com/hdailey/TidyTuesday/blob/main/2023/2023-10-10_HauntedPlaces/2023-10-18_TT.png">
 </tr>
 
 <tr>
