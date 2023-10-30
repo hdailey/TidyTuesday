@@ -40,7 +40,7 @@ patientRisk <- patientRisk %>%
 # Data Visualization ####
 plotFinal <- patientRisk %>%
   ggplot() +
-  ggforce::geom_arc(aes(x0 = 0, y0 = 0, r = 1, start = 0, end = 2*pi), size = 2, color = "#000000") +
+  ggforce::geom_arc(aes(x0 = 0, y0 = 0, r = 1, start = 0, end = 2*pi), size = 2, colour = "#000000") +
   ggforce::geom_arc(aes(x0 = 0, y0 = 0, r = 1, start = 0, end = 2*pi*meanRisk, colour = meanRiskCategory), size = 2) +
   scale_colour_discrete(type = wesanderson::wes_palette("Darjeeling1", n = 5)) +
   facet_wrap(~ageGroup, ncol = 4) +

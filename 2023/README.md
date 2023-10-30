@@ -4,6 +4,13 @@
 
 <tr>
   <td align="center">
+  <a href="https://github.com/hdailey/TidyTuesday/tree/main/2023/2023-10-24_PatientRiskProfiles">
+  Week 43 - Patient Risk Profiles
+  </a>
+<img src="https://github.com/hdailey/TidyTuesday/blob/main/2023/2023-10-24_PatientRiskProfiles/2023-10-30_TT.png"
+</td>
+
+  <td align="center">
   <a href="https://github.com/hdailey/TidyTuesday/tree/main/2023/2023-10-17_TaylorSwift">
   Week 42 - Taylor Swift
   </a>
