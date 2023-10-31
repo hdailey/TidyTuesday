@@ -3,14 +3,15 @@
   <th colspan="4">2023</th>
   
 <tr>
+</tr>
+
+<tr>
   <td align="center">
   <a href="https://github.com/hdailey/TidyTuesday/tree/main/2023/2023-10-31_HorrorArticles">
   Week 44 - Horror Articles
   <img src="https://github.com/hdailey/TidyTuesday/blob/main/2023/2023-10-31_HorrorArticles/2023-10-31_TT.png">
   </td>
-</tr>
-
-<tr>
+    
   <td align="center">
   <a href="https://github.com/hdailey/TidyTuesday/tree/main/2023/2023-10-24_PatientRiskProfiles">
   Week 43 - Patient Risk Profiles
