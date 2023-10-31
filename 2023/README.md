@@ -5,7 +5,7 @@
 <tr>
   <td align="center">
   <a href="https://github.com/hdailey/TidyTuesday/tree/main/2023/2023-10-31_HorrorArticles">
-  Week 44 - Snopes Horror Articles
+  Week 44 - Horror Articles
   <img src="https://github.com/hdailey/TidyTuesday/blob/main/2023/2023-10-31_HorrorArticles/2023-10-31_TT.png">
   </td>
 </tr>
