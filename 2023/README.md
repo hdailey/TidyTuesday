@@ -3,7 +3,7 @@
   <th colspan="4">2023</th>
   
 <tr>
-  <td align="center"
+  <td align="center">
   <a href="https://github.com/hdailey/TidyTuesday/tree/main/2023/2023-11-07_USHouse">
   Week 45 - US House Representatives
   <img src="https://github.com/hdailey/TidyTuesday/blob/main/2023/2023-11-07_USHouse/2023-11-08_TT.png">
