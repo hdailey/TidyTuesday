@@ -4,9 +4,15 @@
   
 <tr>
   <td align="center">
+  <a href="https://github.com/hdailey/TidyTuesday/tree/main/2023/2023-11-14_Diwali">
+  Week 46 - Diwali
+  <img src="https://github.com/hdailey/Tidyverse/blob/main/2023/2023-11-14_Diwali/2023-11-14_TT.png">
+  </td>
+  <td align="center">
   <a href="https://github.com/hdailey/TidyTuesday/tree/main/2023/2023-11-07_USHouse">
   Week 45 - US House Representatives
   <img src="https://github.com/hdailey/TidyTuesday/blob/main/2023/2023-11-07_USHouse/2023-11-08_TT.png">
+  </td>
 </tr>
 
 <tr>
