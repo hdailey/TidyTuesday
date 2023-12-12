@@ -1,6 +1,14 @@
 <table>
 <thread>
   <th colspan="4">2023</th>
+<tr>
+  <td align="center">
+  <a href="https://github.com/hdailey/TidyTuesday/tree/main/2023/2023-12-05_LifeExpectancy">
+  Week 49 - Life Expectancy
+  </a>
+  <img src="https://github.com/hdailey/TidyTuesday/blob/main/2023/2023-12-05_LifeExpectancy/2023-12-12_TT.png">
+  </td>
+</tr>
   
 <tr>
   <td align="center">
