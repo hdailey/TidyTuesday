@@ -119,7 +119,6 @@ Week 07 - Hollywood Age Gaps
 <img src="https://user-images.githubusercontent.com/91282117/218871188-d7b4407e-923f-4161-b95d-2ebe7f6e8d16.png"> 
 
 ## 2022
-# Year End Summary
 <img src="https://github.com/hdailey/TidyTuesday/blob/main/2022/finalImage.png">
 
 
