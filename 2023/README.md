@@ -3,6 +3,13 @@
   <th colspan="4">2023</th>
 <tr>
   <td align="center">
+  <a href="https://github.com/hdailey/TidyTuesday/tree/main/2023/2023-12-19_HolidayEpisodes">
+  Week 51 - Holiday Episodes
+  </a>
+  <img src="https://github.com/hdailey/TidyTuesday/blob/main/2023/2023-12-19_HolidayEpisodes/2023-12-20_TT.png">
+  </td>
+  
+  <td align="center">
   <a href="https://github.com/hdailey/TidyTuesday/tree/main/2023/2023-12-12_HolidayMovies">
   Week 50 - Holiday Movies
   </a>
