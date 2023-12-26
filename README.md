@@ -9,6 +9,7 @@ TidyTuesday is a weekly data project aimed at the R ecosystem. The project was b
   <summary><b>2023</b> (click to expand)</summary>
   
 <!-- toc -->
+* 2023/52 [R Package Structure](https://github.com/hdailey/TidyTuesday/tree/main/2023/2023-12-26_RPackageStructure)
 * 2023/51 [Holiday Episodes](https://github.com/hdailey/TidyTuesday/tree/main/2023/2023-12-19_HolidayEpisodes)
 * 2023/50 [Holiday Movies](https://github.com/hdailey/TidyTuesday/tree/main/2023/2023-12-12_HolidayMovies)
 * 2023/49 [Life Expectancy](https://github.com/hdailey/TidyTuesday/tree/main/2023/2023-12-05_LifeExpectancy)
