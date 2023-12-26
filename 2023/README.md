@@ -3,6 +3,13 @@
   <th colspan="4">2023</th>
 <tr>
   <td align="center">
+  <a href="https://github.com/hdailey/TidyTuesday/tree/main/2023/2023-12-26_RPackageStructure">
+  Week 52 - R Package Structure
+  </a>
+  <img src="https://github.com/hdailey/TidyTuesday/blob/main/2023/2023-12-26_RPackageStructure/2023-12-26_TT.png">
+  </td>
+  
+  <td align="center">
   <a href="https://github.com/hdailey/TidyTuesday/tree/main/2023/2023-12-19_HolidayEpisodes">
   Week 51 - Holiday Episodes
   </a>
