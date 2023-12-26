@@ -84,40 +84,7 @@ TidyTuesday is a weekly data project aimed at the R ecosystem. The project was b
 
 # Highlights
 ## 2023
-<a href="https://github.com/hdailey/TidyTuesday/tree/main/2023/2023-08-15_Spam">
-Week 33 - Spam
-</a>
-<img src="https://github.com/hdailey/TidyTuesday/blob/main/2023/2023-08-15_Spam/2023-08-15_TT.png"> 
-
-<a href="https://github.com/hdailey/TidyTuesday/tree/main/2023/2023-08-01_USStates">
-Week 31 - US States
-</a>
-<img src="https://github.com/hdailey/TidyTuesday/blob/main/2023/2023-08-01_USStates/2023-08-01_TT.png"> 
-
-<a href="https://github.com/hdailey/TidyTuesday/tree/main/2023/2023-07-11_GlobalSurfaceTemperatures">
-Week 28 - Global Surface Temperatures
-</a>
-<img src="https://github.com/hdailey/TidyTuesday/blob/main/2023/2023-07-11_GlobalSurfaceTemperatures/2023-07-20_TT.png"> 
-
-<a href="https://github.com/hdailey/TidyTuesday/tree/main/2023/2023-03-21_ProgrammingLanguages">
-Week 12 - Programming Languages
-</a>
-<img src="https://github.com/hdailey/TidyTuesday/blob/main/2023/2023-03-21_ProgrammingLanguages/2023-03-21_TT.png"> 
-
-<a href="https://github.com/hdailey/TidyTuesday/tree/main/2023/2023-02-28_AfricanLanguageSentiment">
-Week 09 - African Language Sentiment
-</a>
-<img src="https://github.com/hdailey/TidyTuesday/blob/main/2023/2023-02-28_AfricanLanguageSentiment/2023-02-28_TT.png"> 
-
-<a href="https://github.com/hdailey/TidyTuesday/tree/main/2023/2023-02-21_BobRoss">
-Week 08 - Bob Ross Paintings
-</a>
-<img src="https://github.com/hdailey/TidyTuesday/blob/main/2023/2023-02-21_BobRoss/2023-02-21_TT.png"> 
-
-<a href="https://github.com/hdailey/TidyTuesday/tree/main/2023/2023-02-14_HollywoodAgeGaps">
-Week 07 - Hollywood Age Gaps
-</a>
-<img src="https://user-images.githubusercontent.com/91282117/218871188-d7b4407e-923f-4161-b95d-2ebe7f6e8d16.png"> 
+<img src="https://github.com/hdailey/TidyTuesday/blob/main/2023/finalImage.png">
 
 ## 2022
 <img src="https://github.com/hdailey/TidyTuesday/blob/main/2022/finalImage.png">
