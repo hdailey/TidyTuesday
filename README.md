@@ -10,6 +10,7 @@ TidyTuesday is a weekly data project aimed at the R ecosystem. The project was b
   
 <!-- toc -->
 * 2024/01 [Bring Your Own Data](https://github.com/hdailey/TidyTuesday/tree/main/2024/2024-01-02_BringYourOwn)
+</details>
 
 <details>
   <summary><b>2023</b> (click to expand)</summary>
