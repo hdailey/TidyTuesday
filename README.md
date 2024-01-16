@@ -9,6 +9,7 @@ TidyTuesday is a weekly data project aimed at the R ecosystem. The project was b
   <summary><b>2024</b> (click to expand)</summary>
   
 <!-- toc -->
+# 2024/03 [US Polling Places](https://github.com/hdailey/TidyTuesday/tree/main/2024/2024-01-16_USPollingPlaces)
 * 2024/02 [NHL Birthdays](https://github.com/hdailey/TidyTuesday/tree/main/2024/2024-01-09_NHLBirthdays)
 * 2024/01 [Bring Your Own Data](https://github.com/hdailey/TidyTuesday/tree/main/2024/2024-01-02_BringYourOwn)
 </details>
