@@ -4,6 +4,12 @@
 <tr> 
 
 <td align="center">
+  <a href="https://github.com/hdaiey/TidyTuesday/tree/main/2024/2024-01-23_UKEducation">
+  Week 04 - Education Attainment of Young People (UK)
+<img src="https://github.com/hdailey/TidyTuesday/blob/main/2024/2024-01-23_UKEducation/2024-01-23_TT.png">
+</td>
+
+<td align="center">
   <a href="https://github.com/hdailey/TidyTuesday/tree/main/2024/2024-01-16_USPollingPlaces">
   Week 03 - US Polling Places
   </a>
