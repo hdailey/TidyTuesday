@@ -53,4 +53,4 @@ plotGroundhog = (ggplot(groundhogPredictions, aes("x", "y"))
                          legend_position = "top",
                          legend_title = element_blank()))
 plotGroundhog
-ggplot.save(plotGroundhog, filename = "2024-02-06_TT.png", path = "C:/Users/hdailey/OneDrive - Water Boards/Reference/DataViz/TidyTuesday/2024/2024-01-31_GroundhogDay")
+ggplot.save(plotGroundhog, filename = "2024-02-06_TT.png")
