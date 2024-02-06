@@ -1,8 +1,15 @@
 <table>
 <thread>
   <th colspan="4">2024</th>
+<tr>
+ <td align="center">
+  <a href="https://github.com/hdaiey/TidyTuesday/tree/main/2024/2024-01-31_GroundhogDay">
+  Week 05 - Groundhog Day
+<img src="https://github.com/hdailey/TidyTuesday/blob/main/2024/2024-01-31_GroundhogDay/2024-02-06_TT.png">
+</td> 
+</tr>
+    
 <tr> 
-
 <td align="center">
   <a href="https://github.com/hdaiey/TidyTuesday/tree/main/2024/2024-01-23_UKEducation">
   Week 04 - Education Attainment of Young People (UK)
