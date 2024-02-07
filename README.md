@@ -9,6 +9,7 @@ TidyTuesday is a weekly data project aimed at the R ecosystem. The project was b
   <summary><b>2024</b> (click to expand)</summary>
   
 <!-- toc -->
+* 2024/06 [World Heritage Sites](https://github.com/hdailey/TidyTuesday/tree/main/2024/2024-02-06_UNESCO)
 * 2024/05 [Groundhog Day](https://github.com/hdailey/TidyTuesday/tree/main/2024/2024-01-31_GroundhogDay)
 * 2024/04 [UK Educational Attainment of Young People](https://github.com/hdailey/TidyTuesday/tree/main/2024/2024-01-23_UKEducation)
 * 2024/03 [US Polling Places](https://github.com/hdailey/TidyTuesday/tree/main/2024/2024-01-16_USPollingPlaces)
