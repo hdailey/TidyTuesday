@@ -2,9 +2,17 @@
 <thread>
   <th colspan="4">2024</th>
 <tr>
+  <td align="center">
+    <a href="https://github.com/hdailey/TidyTuesday/tree/main/2024/2024-02-06_UNESCO">
+    Week 06 - World Heritage Sites
+    </a>
+  <img src="https://github.com/hdailey/TidyTuesday/blob/main/2024/2024-02-06_UNESCO/2024-02-06_TT.png">
+  </td>
+  
  <td align="center">
   <a href="https://github.com/hdaiey/TidyTuesday/tree/main/2024/2024-01-31_GroundhogDay">
   Week 05 - Groundhog Day
+  </a>
 <img src="https://github.com/hdailey/TidyTuesday/blob/main/2024/2024-01-31_GroundhogDay/2024-02-06_TT.png">
 </td> 
 </tr>
@@ -13,6 +21,7 @@
 <td align="center">
   <a href="https://github.com/hdaiey/TidyTuesday/tree/main/2024/2024-01-23_UKEducation">
   Week 04 - Education Attainment of Young People (UK)
+  </a>
 <img src="https://github.com/hdailey/TidyTuesday/blob/main/2024/2024-01-23_UKEducation/2024-01-23_TT.png">
 </td>
 
