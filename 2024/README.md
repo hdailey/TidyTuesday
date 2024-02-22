@@ -3,6 +3,13 @@
   <th colspan="4">2024</th>
 <tr>
   <td align="center">
+    <a href="https://github.com/hdailey/TidyTuesday/tree/main/2024/2024-02-20_RGrants">
+      Week 08 - R Consortium ISC Grants
+    </a>
+    <img src="https://github.com/hdailey/TidyTuesday/blob/main/2024/2024-02-20_RGrants/2024-02-20_TT.png">
+  </td>
+  
+  <td align="center">
     <a href="https://github.com/hdailey/TidyTuesday/tree/main/2024/2024-02-13_ValentinesDay">
     Week 07 - Valentine's Day
     </a>
