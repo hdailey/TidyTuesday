@@ -3,6 +3,15 @@
   <th colspan="4">2024</th>
 <tr>
   <td align="center">
+    <a href="https://github.com/hdailey/TidyTuesday/tree/main/2024/2024-02-27_LeapYear">
+      Week 09 - Leap Year
+    </a>
+    <img src="https://github.com/hdailey/TidyTuesday/blob/main/2024/2024-02-27_LeapYear/2024-02-29_TT.png">
+  </td>
+</tr>
+  
+<tr>
+  <td align="center">
     <a href="https://github.com/hdailey/TidyTuesday/tree/main/2024/2024-02-20_RGrants">
       Week 08 - R Consortium ISC Grants
     </a>
