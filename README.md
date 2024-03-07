@@ -9,6 +9,7 @@ TidyTuesday is a weekly data project aimed at the R ecosystem. The project was b
   <summary><b>2024</b> (click to expand)</summary>
   
 <!-- toc -->
+* 2024/10 [Mr. Trash Wheel](https://github.com/hdailey/TidyTuesday/tree/main/2024/2024-03-05_MrTrash)
 * 2024/09 [Leap Year](https://github.com/hdailey/TidyTuesday/tree/main/2024/2024-02-27_LeapYear)
 * 2024/08 [R Consortium ISC Grants](https://github.com/hdailey/TidyTuesday/tree/main/2024/2024-02-20_RGrants)
 * 2024/07 [Valentine's Day](https://github.com/hdailey/TidyTuesday/tree/main/2024/2024-02-13_ValentinesDay)
