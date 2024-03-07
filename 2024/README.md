@@ -2,6 +2,13 @@
 <thread>
   <th colspan="4">2024</th>
 <tr>
+    <td align="center">
+      <a href=https://github.com/hdailey/TidyTuesday/tree/main/2024/2024-03-05_MrTrash">
+        Week 10 - Mr. Trash Wheel
+      </a>
+      <img src="https://github.com/hdailey/TidyTuesday/blob/main/2024/2024-03-05_MrTrash/2024-03-07_TT.png">
+    </td>
+  
   <td align="center">
     <a href="https://github.com/hdailey/TidyTuesday/tree/main/2024/2024-02-27_LeapYear">
       Week 09 - Leap Year
