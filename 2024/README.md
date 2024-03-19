@@ -3,6 +3,20 @@
   <th colspan="4">2024</th>
 <tr>
     <td align="center">
+      <a href=https://github.com/hdailey/TidyTuesday/tree/main/2024/2024-03-19_XMen">
+        Week 12 - X-Men Mutant Moneyball
+      </a>
+      <img src="https://github.com/hdailey/TidyTuesday/blob/main/2024/2024-03-19_Xmen">
+    </td>
+  
+   <td align="center">
+      <a href=https://github.com/hdailey/TidyTuesday/tree/main/2024/2024-03-12_FiscalSponsors">
+        Week 11 - Fiscal Sponsors
+      </a>
+      <img src="https://github.com/hdailey/TidyTuesday/blob/main/2024/2024-03-12_FiscalSponsors/2024-03-19_TT.png">
+    </td>
+  
+   <td align="center">
       <a href=https://github.com/hdailey/TidyTuesday/tree/main/2024/2024-03-05_MrTrash">
         Week 10 - Mr. Trash Wheel
       </a>
