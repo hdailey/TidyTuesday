@@ -6,7 +6,7 @@
       <a href=https://github.com/hdailey/TidyTuesday/tree/main/2024/2024-03-19_XMen">
         Week 12 - X-Men Mutant Moneyball
       </a>
-      <img src="https://github.com/hdailey/TidyTuesday/blob/main/2024/2024-03-19_Xmen">
+      <img src="https://github.com/hdailey/TidyTuesday/blob/main/2024/2024-03-19_XMen/2024-03-20_TT.png">
     </td>
   
    <td align="center">
