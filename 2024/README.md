@@ -7,7 +7,7 @@
       <a href="https://github.com/hdailey/TidyTuesday/tree/main/2024/2024-03-26_MarchMadness">
         Week 13 - NCAA March Madness
       </a>
-      <img src="https://github.com/hdailey/TidyTuesday/blob/main/2024/2024-03-26_MarchMadness/2024-03-28_TT.png">
+      <img src="https://github.com/hdailey/TidyTuesday/blob/main/2024/2024-03-26_MarchMadness/2024-03-28_TT.png" width = "250">
     </td>
 </tr>
 
