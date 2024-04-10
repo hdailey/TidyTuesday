@@ -3,7 +3,21 @@
   <th colspan="4">2024</th>
 
 <tr>
-    <td align="center">
+  <td align="center">
+      <a href="https://github.com/hdailey/TidyTuesday/tree/main/2024/2024-04-02_Eclipse">
+        Week 15 - 2024 Eclipse
+      </a>
+      <img src="https://github.com/hdailey/TidyTuesday/blob/main/2024/2024-04-02_Eclipse/2024-04-09_TT.png" width = "250">
+  </td>
+  
+  <td align="center">
+      <a href="">
+        Week 14 - TBD
+      </a>
+      <img src="">
+  </td>
+  
+  <td align="center">
       <a href="https://github.com/hdailey/TidyTuesday/tree/main/2024/2024-03-26_MarchMadness">
         Week 13 - NCAA March Madness
       </a>
