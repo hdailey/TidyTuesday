@@ -11,6 +11,13 @@
   </td>
   
   <td align="center">
+      <a href="https://github.com/hdailey/TidyTuesday/tree/main/2024/2024-05-14_Coffee">
+        Week 20 - Great American Coffee Taste Test
+      </a>
+      <img src="https://github.com/hdailey/TidyTuesday/blob/main/2024/2024-05-14_Coffee/2024-08-06_TT.png" width = "250">
+  </td>
+  
+  <td align="center">
       <a href="https://github.com/hdailey/TidyTuesday/tree/main/2024/2024-04-02_Eclipse">
         Week 15 - 2024 Eclipse
       </a>
