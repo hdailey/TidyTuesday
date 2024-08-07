@@ -3,6 +3,15 @@
   <th colspan="4">2024</th>
 
 <tr>
+  <td align="center">
+    <a href="https://github.com/hdaily/TidyTuesday/tree/main/2024/2024-08-06_Olympics">
+      Week 32 - Olympic Medals
+    </a>
+    <img src="https://github.com/hdailey/TidyTuesday/blob/main/2024/2024-08-06_Olympics/2024-08-07_TT.png" width = "250">
+  </td>
+</tr>
+
+<tr>
     <td align="center">
       <a href="https://github.com/hdailey/TidyTuesday/tree/main/2024/2024-07-16_EnglishWomensFootball">
         Week 29 - English Women's Football
