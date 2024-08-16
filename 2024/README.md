@@ -4,7 +4,14 @@
 
 <tr>
   <td align="center">
-    <a href="https://github.com/hdaily/TidyTuesday/tree/main/2024/2024-08-06_Olympics">
+    <a href=https://github.com/hdailey/TidyTuesday/tree/main/2024/2024-08-13_WorldsFairs">
+      Week 33 - World's Fair
+    </a>
+    <img src="https://github.com/hdailey/TidyTuesday/blob/main/2024/2024-08-13_WorldsFairs/2024-08-16_TT.png" width = "250">
+  </td>
+  
+  <td align="center">
+    <a href="https://github.com/hdailey/TidyTuesday/tree/main/2024/2024-08-06_Olympics">
       Week 32 - Olympic Medals
     </a>
     <img src="https://github.com/hdailey/TidyTuesday/blob/main/2024/2024-08-06_Olympics/2024-08-07_TT.png" width = "250">
