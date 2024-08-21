@@ -9,6 +9,7 @@ TidyTuesday is a weekly data project aimed at the R ecosystem. The project was b
   <summary><b>2024</b> (click to expand)</summary>
   
 <!-- toc -->
+* 2024/34 [English Monarchs and Marriages](https://github.com/hdailey/TidyTuesday/tree/main/2024/2024-08-20_EnglishMonarchs)
 * 2024/33 [World's Fair](https://github.com/hdailey/TidyTuesday/tree/main/2024/2024-08-13_WorldsFairs)
 * 2024/32 [Olympic Medals](https://github.com/hdailey/TidyTuesday/tree/main/2024/2024-08-06_Olympics)
 * 2024/29 [English Women's Football](https://github.com/hdailey/TidyTuesday/tree/main/2024/2024-07-16_EnglishWomensFootball)
