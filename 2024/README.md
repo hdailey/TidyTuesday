@@ -3,7 +3,14 @@
   <th colspan="4">2024</th>
 
 <tr>
-    <td align="center">
+  <td align="center">
+    <a href=https://github.com/hdailey/TidyTuesday/tree/main/2024/2024-10-01_Chess">
+      Week 40 - Chess Matches
+    </a>
+      <img src="https://github.com/hdailey/TidyTuesday/blob/main/2024/2024-10-01_Chess/2024-10-10_TT.png" width = "250">
+  </td>
+  
+  <td align="center">
     <a href=https://github.com/hdailey/TidyTuesday/tree/main/2024/2024-08-20_EnglishMonarchs">
       Week 34 - English Monarchs and Marriages
     </a>
