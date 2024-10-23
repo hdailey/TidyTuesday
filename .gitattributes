@@ -1,3 +1,4 @@
 *.Rmd linguist-language=R
 *.nb.html linguist-vendored
 *.html linguist-vendored
+*ipynb linguist-language=python
