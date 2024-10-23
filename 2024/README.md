@@ -1,7 +1,16 @@
 <table>
 <thread>
   <th colspan="4">2024</th>
-
+<tr>
+  <td align="center">
+    <a href="https://github.com/hdailey/TidyTuesday/tree/main/2024/2024-10-22_CIA">
+      Week 43 - CIA Factbook
+    </a>
+    <img src="https://github.com/hdailey/TidyTuesday/blob/main/2024/2024-10-22_CIA/2024-10-23_TT.png" width = "250">
+  </td>
+</tr>
+  
+</tr>
 <tr>
   <td align="center">
     <a href=https://github.com/hdailey/TidyTuesday/tree/main/2024/2024-10-01_Chess">
