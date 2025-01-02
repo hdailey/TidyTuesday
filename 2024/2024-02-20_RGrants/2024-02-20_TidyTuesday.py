@@ -8,7 +8,7 @@ import os
 import numpy as np
 from plotnine import *
 from matplotlib import rc
-from mizani.formatters import dollar_format
+from mizani.formatters import label_dollar
 
 rc("font", **{"family":"serif", "serif":["Georgia"]})
 
@@ -27,15 +27,18 @@ plotFinal = (ggplot(isc_grantsByYear)
              + geom_text(aes(x = 2018, y = 310000), label = "Maximum Funding (2018)\n$289,972", color = "yellow")
              + geom_text(aes(x = 2021, y = 52000), label = "Minimum Funding (2023)\n$51,015", color = "yellow")
              + geom_text(aes(x = 2021.5, y = 200000), label = "Funding is on\nthe decline", color = "yellow", size = 18)
-             + scale_y_continuous(labels = dollar_format(digits = 0, big_mark = ","))
+             + scale_y_continuous(labels = label_dollar())
              + labs(x = "",
                     y = "Total R Consortium ISC Grant\nFunding Awarded",
-                    title = "R Consortium ISC Grant Funding (2016-2023)",
+                    title = "R Consortium ISC Grant Funding",
+                    subtitle = "(2016-2023)",
                     caption = "Source: R Consortium ISC | #TidyTuesday | Week 8 | @hdailey | Inspired by @curatedmess")
              + theme_tufte()
-             + theme(text = element_text(family = "Georgia", color = "white", size = 18),
-                     plot_title = element_text(hjust = 0.5, size = 24, face = "bold"),
-                     plot_caption = element_text(hjust = 0.5, colour = "white", size = 6),
+             + theme(text = element_text(family = "Georgia", color = "white", size = 14),
+                     plot_background = element_rect(fill = "black"),
+                     plot_title = element_text(hjust = -1, size = 16, face = "bold"),
+                     plot_subtitle = element_text(ha = "center"),
+                     plot_caption = element_text(ha = "center", colour = "white", size = 6),
                      axis_line = element_line(color = "white"),
                      axis_title_y = element_text(size = 14, hjust = 0.5, lineheight = 1.5)))
 plotFinal
