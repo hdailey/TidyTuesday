@@ -9,6 +9,7 @@ TidyTuesday is a weekly data project aimed at the R ecosystem. The project was b
   <summary><b>2025</b> (click to expand)</summary>
 
 <!-- toc -->
+* 2025/02 [posit::conf](https://github.com/hdailey/TidyTuesday/tree/main/2025/2025-01-14_posit)
 * 2025/01 [BYO Data](https://github.com/hdailey/TidyTuesday/tree/main/2025/2025-01-01_BringYourOwn)
 </details>
 
