@@ -4,10 +4,10 @@
 
 <tr>
 <td align="center">
-   <a href="">
-  Week 02 - TBD
+   <a href="https://github.com/hdailey/TidyTuesday/tree/main/2025/2025-01-14_posit">
+  Week 02 - posit::conf
   </a>
-<img src="" width = "250"> 
+<img src="https://github.com/hdailey/TidyTuesday/blob/main/2025/2022-01-14_posit/2025-01-30_TT.png"> 
 </td>
   
 <td align="center">
