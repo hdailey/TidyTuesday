@@ -4,6 +4,13 @@
 
 <tr>
 <td align="center">
+   <a href="https://github.com/hdailey/TidyTuesday/tree/main/2025/2025-01-28_WaterInsecurity">
+  Week 04 - Water Insecurity
+  </a>
+<img src="https://github.com/hdailey/TidyTuesday/blob/main/2025/2025-01-28_WaterInsecurity/2025-02-06_TT.png"> 
+</td>
+
+<td align="center">
    <a href="https://github.com/hdailey/TidyTuesday/tree/main/2025/2025-01-21_HimalayanMountaineering">
   Week 03 - Himalayan Database
   </a>
