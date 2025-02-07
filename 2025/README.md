@@ -1,6 +1,14 @@
 <table>
 <thread>
   <th colspan="4">2025</th>
+<tr>
+<td align="center">
+   <a href="https://github.com/hdailey/TidyTuesday/tree/main/2025/2025-02-04_Simpsons">
+  Week 05 - Simpsons
+  </a>
+<img src="https://github.com/hdailey/TidyTuesday/blob/main/2025/2025-02-04_Simpsons/2025-02-06_TT.png" width = "250"> 
+</td>
+</tr>
 
 <tr>
 <td align="center">
