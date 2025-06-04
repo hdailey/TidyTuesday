@@ -3,6 +3,13 @@
   <th colspan="4">2025</th>
 <tr>
 <td align="center">
+  <a href="https://github.com/hdailey/TidyTuesday/tree/main/2025/2025-05-20_WaterQuality">
+    Week 20 - Australia Water Quality
+  </a>
+<img src="https://github.com/hdailey/TidyTuesday/blob/main/2025/2025-05-20_WaterQuality/2025-06-04_TT.png" width = "250">
+</td>
+  
+<td align="center">
    <a href="https://github.com/hdailey/TidyTuesday/tree/main/2025/2025-05-06_NSFGrants">
   Week 18 - NSF Grants
   </a>
