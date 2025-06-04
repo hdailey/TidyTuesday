@@ -9,6 +9,7 @@ TidyTuesday is a weekly data project aimed at the R ecosystem. The project was b
   <summary><b>2025</b> (click to expand)</summary>
 
 <!-- toc -->
+* 2025/20 [Australia Water Quality](https://github.com/hdailey/TidyTuesday/tree/main/2025/2025-05-20_WaterQuality)
 * 2025/18 [NSF Grants](https://github.com/hdailey/TidyTuesday/tree/main/2025/2025-05-06_NSFGrants)
 * 2025/09 [Long Beach ACS](https://github.com/hdailey/TidyTuesday/tree/main/2025/2025-03-04_LBAnimalShelter)
 * 2025/05 [Simpsons](https://github.com/hdailey/TidyTuesday/tree/main/2025/2025-02-04_Simpsons)
