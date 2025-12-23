@@ -2,6 +2,14 @@
 <thread>
   <th colspan="4">2025</th>
 <tr>
+  <td align="center">
+    <a href="https://github.com/hdailey/TidyTuesday/tree/main/2025/2025-12-23_Languages">
+      Week 51 - Languages of the World
+    </a>
+  <img src="https://github.com/hdaily/TidyTuesday/blob/main/2025/2025-12-23_Languages/2025-12-23_TT.png" width = "250">
+</tr>
+  
+<tr>
 <td align="center">
   <a href="https://github.com/hdailey/TidyTuesday/tree/main/2025/2025-05-20_WaterQuality">
     Week 20 - Australia Water Quality
