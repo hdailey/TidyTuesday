@@ -23,11 +23,11 @@ roundaboutClean = pd.read_csv('roundabouts_clean.csv')
 ## Filter for Icelandic roundabouts
 icelandRoundabout = roundaboutClean[roundaboutClean['country'].str.contains("Iceland")]
 
-# Data Visulization
+# Data Visualization
 ## Setup Folium Map
 icelandMap = folium.Map(location = (64.9631, -19.0208), zoom_start = 7, tiles = "OpenStreetMap")
 
-## Setting up icon
+## Setting up icon and badge
 roundaboutIcon = "roundabouts_hex.png"
 bounds = [[63.623199, -17.379612], [62.623199, -14.379612]]
 with open(roundaboutIcon, 'rb') as lf:
@@ -66,17 +66,6 @@ icelandMap.get_root().html.add_child(folium.Element(title_html))
 
 folium.plugins.FloatImage(img_src,bottom = 0, left = 75, width = "150px").add_to(icelandMap)
 
-# img = folium.raster_layers.ImageOverlay(
-#     name="Folium logo overlay",
-#     image=roundaboutIcon,
-#     bounds=bounds,
-#     opacity=0.6,
-#     interactive=True,
-#     cross_origin=False,
-#     zindex=1
-# )
-
-# img.add_to(icelandMap)
-
 # Save
 icelandMap.save('icelandMap.html')
+
