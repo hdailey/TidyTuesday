@@ -128,6 +128,9 @@ TidyTuesday is a weekly data project aimed at the R ecosystem. The project was b
 </details>
 
 # Year End Summary
+## 2025
+<img src="https://github.com/hdailey/TidyTuesday/blob/main/2025/finalImage.png">
+
 ## 2024
 <img src="https://github.com/hdailey/TidyTuesday/blob/main/2024/finalImage.png">
 
@@ -136,6 +139,7 @@ TidyTuesday is a weekly data project aimed at the R ecosystem. The project was b
 
 ## 2022
 <img src="https://github.com/hdailey/TidyTuesday/blob/main/2022/finalImage.png">
+
 
 
 
