@@ -17,6 +17,7 @@ font_path = os.path.join(projDir, "fonts/AsapCondensed-Black.ttf")
 prop = fm.FontProperties(fname = font_path)
 
 ## Data
+# IRL: https://www.kaggle.com/datasets/heesoo37/120-years-of-olympic-history-athletes-and-results
 athleteEvents = pd.read_csv('data/athlete_events.csv')
 nocRegions = pd.read_csv('data/noc_regions.csv')
 
@@ -78,4 +79,5 @@ plotFinal
 plotFinal.save("2026-01-07.svg", height = 5, width = 7, units = "in", dpi = 300)
 
 # Make Edits in Inkscape
+
 
