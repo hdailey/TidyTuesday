@@ -6,8 +6,16 @@ TidyTuesday is a weekly data project aimed at the R ecosystem. The project was b
 # List of Contributions
 
 <details>
-  <summary><b>2025</b> (click to expand)</summary>
+<summary><b>2026</b> (click to expand)</summary>
 
+<!-- toc -->
+* 2026/01 [BYO Data](https://github.com/hdailey/TidyTuesday/tree/main/2026/2026-01-07_BringYourOwn)
+<!-- tocstop -->
+</details>
+
+<details>  
+<summary><b>2025</b> (click to expand)</summary>
+  
 <!-- toc -->
 * 2025/52 [Christmas Novels](https://github.com/hdailey/TidyTuesday/tree/main/2025/2025-12-30_ChristmasNovels)
 * 2025/51 [Languages of the World](https://github.com/hdailey/TidyTuesday/tree/main/2025/2025-12-23_Languages)
@@ -21,10 +29,11 @@ TidyTuesday is a weekly data project aimed at the R ecosystem. The project was b
 * 2025/03 [Himalayan Database](https://github.com/hdailey/TidyTuesday/tree/main/2025/2025-01-21_HimalayanMountaineering)
 * 2025/02 [posit::conf](https://github.com/hdailey/TidyTuesday/tree/main/2025/2025-01-14_posit)
 * 2025/01 [BYO Data](https://github.com/hdailey/TidyTuesday/tree/main/2025/2025-01-01_BringYourOwn)
+<!-- tocstop -->
 </details>
 
 <details>
-  <summary><b>2024</b> (click to expand)</summary>
+<summary><b>2024</b> (click to expand)</summary>
   
 <!-- toc -->
 * 2024/43 [CIA Lookbook](https://github.com/hdailey/TidyTuesday/tree/main/2024/2024-10-22_CIA)
@@ -48,10 +57,11 @@ TidyTuesday is a weekly data project aimed at the R ecosystem. The project was b
 * 2024/03 [US Polling Places](https://github.com/hdailey/TidyTuesday/tree/main/2024/2024-01-16_USPollingPlaces)
 * 2024/02 [NHL Birthdays](https://github.com/hdailey/TidyTuesday/tree/main/2024/2024-01-09_NHLBirthdays)
 * 2024/01 [Bring Your Own Data](https://github.com/hdailey/TidyTuesday/tree/main/2024/2024-01-02_BringYourOwn)
+<!-- tocstop -->
 </details>
 
 <details>
-  <summary><b>2023</b> (click to expand)</summary>
+<summary><b>2023</b> (click to expand)</summary>
   
 <!-- toc -->
 * 2023/52 [R Package Structure](https://github.com/hdailey/TidyTuesday/tree/main/2023/2023-12-26_RPackageStructure)
@@ -139,6 +149,7 @@ TidyTuesday is a weekly data project aimed at the R ecosystem. The project was b
 
 ## 2022
 <img src="https://github.com/hdailey/TidyTuesday/blob/main/2022/finalImage.png">
+
 
 
 
