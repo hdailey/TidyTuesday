@@ -22,6 +22,13 @@
     </a>
   <img src="https://github.com/hdailey/TidyTuesday/blob/main/2025/2025-12-16_Roundabouts/2025-12-30_TT.png" width = "250">
   </td>
+
+  <td align="center">
+    <a href="https://github.com/hdailey/TidyTuesday/tree/main/2025/2025-07-29_Netflix">
+      Week 31 - Netflix
+    </a>
+  <img src="https://github.com/hdailey/TidyTuesday/blob/main/2025/2025-07-29_Netflix/2026-01-07.png" width = "250">
+  </td>
 </tr>
   
 <tr>
