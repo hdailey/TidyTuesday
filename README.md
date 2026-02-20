@@ -9,6 +9,7 @@ TidyTuesday is a weekly data project aimed at the R ecosystem. The project was b
 <summary><b>2026</b> (click to expand)</summary>
 
 <!-- toc -->
+* 2026/02 [Languages of Africa](https://github.com/hdailey/TidyTuesday/tree/main/2026/2026-01-13_LanguagesOfAfrica)
 * 2026/01 [BYO Data](https://github.com/hdailey/TidyTuesday/tree/main/2026/2026-01-07_BringYourOwn)
 <!-- tocstop -->
 </details>
@@ -149,6 +150,7 @@ TidyTuesday is a weekly data project aimed at the R ecosystem. The project was b
 
 ## 2022
 <img src="https://github.com/hdailey/TidyTuesday/blob/main/2022/finalImage.png">
+
 
 
 
