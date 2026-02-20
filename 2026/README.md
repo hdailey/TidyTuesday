@@ -18,9 +18,9 @@
   
   <td align="center">
     <a href="">
-      Week ## - TBD
+      Week 02 - Languages of Africa
     </a>
-  <img src="" width = "250">
+  <img src="https://github.com/hdailey/TidyTuesday/blob/main/2026/2026-01-13_LanguagesOfAfrica/2026-02-19_TT.png" width = "250">
   </td>
   
   <td align="center">
